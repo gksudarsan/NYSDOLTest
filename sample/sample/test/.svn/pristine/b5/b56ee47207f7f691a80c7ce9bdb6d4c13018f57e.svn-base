@@ -1,0 +1,207 @@
+package com.ui.pages;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.ClickAction;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.locators.claimsIntake;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+public class Add_TRA_Claimant extends TestBase{
+	
+	static Wc_locators wcl = new Wc_locators();
+    static 	claimsIntake cit = new claimsIntake();
+	static screenShot screen = new screenShot();
+	public static Object add_tra_applicant;
+	static FutureDatePastDate fdpd = new FutureDatePastDate();
+	static PageHeading h = new PageHeading() ;
+	
+	
+	
+	public static void add_tra_applicant(WebDriver driver , String snapshotPath , String className) throws InterruptedException{
+		
+	 cit.TRA_Entitlement().click();
+	 Thread.sleep(2000);
+	 driver=screen.getScreenShot(driver, snapshotPath, className);
+	 
+	 cit.ADD_Potential_TRA_Claimant().click();
+	 Thread.sleep(2000);
+	 driver=screen.getScreenShot(driver, snapshotPath, className);
+	 
+	 
+	 cit.Petition_Number().sendKeys("82135");
+	 driver=screen.getScreenShot(driver, snapshotPath, className);
+	 wcl.clickSearch().click();
+	 Thread.sleep(3000);
+	 driver=screen.getScreenShot(driver, snapshotPath, className);
+	 cit.Petition_Employer_selec().click();
+	 wcl.clickNext().click();
+		
+	 Thread.sleep(2000);
+	 driver=screen.getScreenShot(driver, snapshotPath, className);
+	 cit.Petition_Add_Employee().click();
+	 Thread.sleep(2000);
+	 
+	 cit.Petition_Employee_ssn().click();
+	 cit.Petition_Employee_ssn().sendKeys(prop.getProperty("TRAssn"));
+	 cit.Petition_Employee_Fname().sendKeys("romeo");
+	 cit.Petition_Employee_Lname().sendKeys("Patrick");
+	 Thread.sleep(1000);
+	 driver=screen.getScreenShot(driver, snapshotPath, className);
+	 wcl.clickNext().click();
+	 
+	 Thread.sleep(2000);
+	 cit.Petition_Employee_ssn_select().click();
+	 driver=screen.getScreenShot(driver, snapshotPath, className);
+	 wcl.clickNext().click();
+	 Thread.sleep(2000);
+	 
+	 cit.Petition_Employee_ssn_again_select().click();
+	 Thread.sleep(2000);
+	 driver=screen.getScreenShot(driver, snapshotPath, className);
+	 wcl.submit().click();
+	}
+	
+	public static void File_tra_claim(WebDriver driver ,String snapshotPath , String className ) throws InterruptedException{
+		
+	   String ed =	fdpd.previousyeardate(-15);
+	   String ed1 = fdpd.previousyeardate(-1);
+		
+		
+		wcl.homeTabs("Unemployment Claim").click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		
+		wcl.homeTabs("TRA Claim Application").click();
+		Thread.sleep(2000);
+		
+		
+		wcl.ssn1().sendKeys(prop.getProperty("TRAssn"));
+		wcl.confirmssn1().sendKeys(prop.getProperty("TRAssn"));
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		
+		cit.TRA_claim_reason_of_seperation().click();
+		Thread.sleep(2000);
+		cit.TRA_claim_reason_of_seperation_select().click();
+		cit.TAR_claim_emp_start_date().click();
+		Thread.sleep(2000);
+		cit.TAR_claim_emp_start_date().sendKeys(ed);
+		cit.TAR_claim_emp_end_date().click();
+		Thread.sleep(2000);
+		cit.TAR_claim_emp_end_date().sendKeys(ed1);
+		cit.TRA_claim_no_of_weeks().sendKeys("40");
+		cit.TRA_Claim_Job_Title().sendKeys("A");
+		cit.TAR_claim_job_location().sendKeys("PARIS");	
+		cit.TAR_claim_good_prospect_of_returning().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.clickHome();
+		
+		
+		
+		
+	}
+	
+	public static void TRA_claim_Approve(WebDriver driver , String snapshotPath , String className) throws InterruptedException{
+		
+		 String ed1 = fdpd.previousyeardate(-1);
+		 
+		wcl.homeTabs("TRA Entitlement").click();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		
+		wcl.homeTabs("Approve TRA Claim Application").click();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		
+		wcl.ssn1().sendKeys(prop.getProperty("TRAssn"));
+		wcl.confirmssn1().sendKeys(prop.getProperty("TRAssn"));
+		cit.TRA_claim_petition_num().sendKeys("82135");
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		wcl.clickNext().click();
+		
+		Thread.sleep(2000);
+		cit.TRA_claim_1st_qualifying_seperation_date().click();
+		Thread.sleep(1000);
+		cit.TRA_claim_1st_qualifying_seperation_date().sendKeys(ed1);
+		cit.TRA_claim_generate_eta855().click();
+		cit.TRA_claim_update_eta855().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		wcl.clickNext().click();
+		
+		
+		
+	}
+	
+	
+	public static void TRA_claim_create_Petition(WebDriver driver , String snapshotPath , String className) throws InterruptedException{
+		
+		 String ed1 = fdpd.previousyeardate(-1);
+		 String ed = fdpd.previousmonthdate(-13);
+		 String ed2 = fdpd.previousmonthdate(2);
+		 String ed3 = fdpd.previousmonthdate(-12);
+		 
+		wcl.homeTabs("Benefit Maintenance").click();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		
+		wcl.homeTabs("TRA Petition").click();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		
+		wcl.homeTabs("Add CT Petition").click();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		
+		cit.TRA_claim_employer_name().sendKeys("test");
+		wcl.clickSearch().click();
+		Thread.sleep(3000);
+		cit.TRA_claim_employer_name_select().click();
+		driver=screen.getScreenShot(driver, snapshotPath, className);
+		wcl.clickNext().click();
+		
+		Thread.sleep(2000);
+		cit.TRA_claim_petition_number().sendKeys(prop.getProperty("petitionNum"));
+		cit.TRA_claim_petition_file_date().click();
+		Thread.sleep(2000);
+		cit.TRA_claim_petition_file_date().sendKeys(ed3);
+		cit.TRA_claim_Impact_date().click();
+		Thread.sleep(2000);
+		cit.TRA_claim_Impact_date().sendKeys(ed);
+	    cit.TRA_claim_certification_date().click();
+	    Thread.sleep(2000);
+	    cit.TRA_claim_certification_date().sendKeys(ed1);
+	    cit.TRA_claim_expiration_date().click();
+	    Thread.sleep(2000);
+	    cit.TRA_claim_expiration_date().sendKeys(ed2);
+	    cit.TRA_claim_emailid().sendKeys("abc@test.com");
+	    cit.TRA_claim_type_of_work().sendKeys("Testing profile");
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, className);
+	    wcl.submit().click();
+	    
+	    
+	
+	    
+	    
+	    
+		
+		
+		
+		
+		
+	}
+
+
+}
+
+

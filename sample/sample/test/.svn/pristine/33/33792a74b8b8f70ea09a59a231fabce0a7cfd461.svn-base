@@ -1,0 +1,77 @@
+package com.ui.locators;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+
+public class OverpaymentMaintenance_Locators extends TestBase
+{
+
+	public void repaymentMode_focus(String selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Payment Mode')]//following::label[1]"))).click(); Thread.sleep(1000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '"+selection+"')]"))).click();
+	}
+
+	public void paymentAmount(String amount)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Payment Amount')]//following::input[1]"))).sendKeys(amount);
+	}
+
+	public void checkOrMoneyOrderNumber(String number)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Check/Money Order No.')]//following::input[1]"))).sendKeys(number);
+	}
+	
+	public void Date(String xpath, String date) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-month')]"))).click(); Thread.sleep(1000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-month')]"))).sendKeys(date);;
+	}
+	
+	public void receiptNumber(String number)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'CTDOL Receipt Number')]//following::input[1]"))).sendKeys(number);
+	}
+
+	public void enterSSN(String xpath, String SSN)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-ssn1')]"))).sendKeys(SSN);
+	}
+
+	public void clickSearch()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(), 'search')]"))).click();
+	}
+
+	public void repaymentAmount(String amount)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@name, 'repaymentAmount')]"))).sendKeys(amount);
+	}
+
+	public void selectOverpaymentRecord()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Select (*)')]//following::span[1]"))).click();
+	}
+
+	public void newModifiedAmount(String newAmount)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='newModifiedAmount']"))).sendKeys(newAmount);
+	}
+	
+	public void selectOverpaymentId()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(), 'Overpayment Details')]//following::td[contains(text(), 'Active')]//preceding::span[contains(@class, 'radiobutton')][1]"))).click();
+	}
+
+	public void selectRadioButton(String question, String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '"+question+"')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[contains(@class, 'radiobutton')][1]"))).click();
+	}
+
+	public void addWeeks()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), 'Add Weeks')]"))).click();
+	}
+}

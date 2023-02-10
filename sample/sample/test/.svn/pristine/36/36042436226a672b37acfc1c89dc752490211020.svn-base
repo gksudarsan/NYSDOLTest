@@ -1,0 +1,190 @@
+package com.Repayments;
+
+/** @author vsingh  */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.sun.media.sound.InvalidFormatException;
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.OverpaymentMaintenance;
+import com.ui.pages.ProcessRepayment;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_59321 extends TestBase
+{
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	OverpaymentMaintenance om;
+	ClaimSummary c = new ClaimSummary();
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath,est_date="", SSN = "";
+	TC_59321 ClassObject;
+	CreateDirectory CD;
+	
+
+	//Properties prop;
+	public TC_59321()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		est_date = f.d(-30);
+		est_date = est_date.substring(4, 8) + "-" + est_date.substring(0, 2) + "-" + est_date.substring(2, 4);
+         
+		System.out.println("Establish date of OP ="+ est_date);
+		String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B, T_OVERPAYMENT C WHERE A.CLAIMANT_ID = B.CLAIMANT_ID AND "
+				+ "B.CLAIM_ID = C.CLAIM_ID AND C.STATUS = 'ACTV' AND C.OVERPAYMENT_ISSUE_ID IS NOT NULL AND "
+				+ " C.OVERPAYMENT_BALANCE > '1' AND CLASS = 'FRAD' AND C.ESTABLISHMENT_DATE < '" + est_date + "' ORDER BY C.ESTABLISHMENT_DATE DESC";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_59321();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+		
+		
+	}
+
+	@Test( description = "CT 28858 REPAY Cancel Repayment - Cancel CC repay same month")
+	public void Testing_TC_59321() throws InterruptedException, ClassNotFoundException, SQLException, InvalidFormatException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		String penaltyBalance = q.getPenaltyBalance("SELECT TF_PENALTY_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT "
+				+ "CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER "
+				+ "BY UPDATED_TS DESC");
+		String overpaymentBalance = q.getOverpaymentBalance("SELECT OVERPAYMENT_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT "
+				+ "CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER "
+				+ "BY CREATED_TS DESC");
+		String interestBalance = q.getInterestBalance("SELECT INTEREST_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT "
+				+ "CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER "
+				+ "BY UPDATED_TS DESC");
+		String amount = String.valueOf(Double.parseDouble(penaltyBalance) + Double.parseDouble(overpaymentBalance) + Double.parseDouble(interestBalance));
+        System.out.println(" Total OP amount "+amount);
+        System.out.println("penaltyBalance = "+penaltyBalance);
+		System.out.println("interestBalance = "+interestBalance);
+		System.out.println("overpaymentBalance = "+overpaymentBalance);
+		
+		
+		// move to op screen
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//a[text()='Overpayments']")).click();
+		Thread.sleep(2000);
+		String paybleamount = 	driver.findElement(By.xpath("//div[text()='TOTAL AMOUNT DUE AS OF ']//following::span[1]")).getText();
+		System.out.println("total paybleamount = "+paybleamount);
+		Highlighter h = new Highlighter();
+		h.highlight(driver, "//div[text()='TOTAL AMOUNT DUE AS OF ']//following::span[1]");  
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(2000);
+		om = new OverpaymentMaintenance();
+		om.enterRepaymentDetails_Creditcard(driver, snapshotPath, SimpleClassname, "Credit Card", "",paybleamount , "", SSN);
+	
+		wcl.clickHome();
+		Thread.sleep(2000);
+		
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//a[text()='Overpayments']")).click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		h.highlight(driver, "//a[text()='Repayment Details']");  
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		String status = driver.findElement(By.xpath("//td[text()='Status']//following::td[5]")).getText();
+		
+		if(status == "processed")
+		{
+			System.out.println("cash repayment processed.");
+		}
+		
+		else
+		{
+			System.out.println("Batch need to check-- BatchApplyRepayment ");
+			Thread.sleep(15000);
+			
+		}
+		
+		wcl.clickHome();Thread.sleep(2000);
+		ProcessRepayment.cancel_repayment(driver, snapshotPath, SimpleClassname, SSN);
+		
+		
+		
+		// Run batch for repayment cancellaton------------------------------
+		
+		wcl.clickHome();Thread.sleep(2000);
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//a[text()='Overpayments']")).click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		h.highlight(driver, "//td[text()='Status']//following::td[5]");  
+		h.highlight(driver, "//td[contains(text(), 'Reason for cancellation of repayment')]");  
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		String status1 = driver.findElement(By.xpath("//td[text()='Status']//following::td[5]")).getText();
+		
+		Assert.assertEquals("Cancelled", status1);
+		
+		System.out.println("Repayment status is = " +status1);
+		
+		
+		
+
+
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		
+		//driver.close();
+		//driver.quit();
+	}
+}

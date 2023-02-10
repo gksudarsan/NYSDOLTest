@@ -1,0 +1,164 @@
+package com.Payments;
+
+/** @author mjape
+
+Payment batach pending*/
+
+import java.sql.SQLException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.ReportPage;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_59041 extends TestBase
+{
+	int CWE = -7;
+	
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	Wc_locators wcl = new Wc_locators();
+	UpdateIssueDates uid;
+	WeeklyCert  w;
+	ClaimSummary c;
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "072560665", ed, cd;
+	TC_59041 ClassObject;
+	CreateDirectory CD;
+	String query1 = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'SEB' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+
+	//Properties prop;
+	public TC_59041()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		cd = f.Sunday(CWE);
+		cd = cd.substring(4) + "-" + cd.substring(0, 2) + "-" + cd.substring(2, 4);
+		ed = f.Sunday(-70);
+		ed = ed.substring(4) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query1 = query1 + cd + "') and c.effective_date > '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query1);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query1);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_59041();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Process an EB claim week for a partial Payment. (Stat Earnings)")
+	public void Testing59041() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Update Future Issue Dates...
+		uid= new UpdateIssueDates();
+		uid.updateFutureIssueStartDate(driver, snapshotPath, SimpleClassname, SSN, CWE);
+
+		//File Weekly Certification Process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		w = new WeeklyCert();
+		w.fileWeeklyCertification59041(driver, snapshotPath, SimpleClassname, SSN, CWE);
+
+		//Payment Batch run...
+		System.out.println("Running payment batch...");
+		Thread.sleep(60000*5);
+		
+		//Running batch for Payment Date reflection in T_CLAIMANT_PAYMENT...
+		System.out.println("Running Payment Date reflection batch...");
+		Thread.sleep(60000*5);
+
+		//Running batch for report generation...
+		System.out.println("Running report generation batch...");
+		Thread.sleep(60000*5);
+		
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		
+		String weekEndingDate = f.Saturday(CWE);
+		weekEndingDate = weekEndingDate.substring(0, 2) + "/" + weekEndingDate.substring(2, 4) + "/" + weekEndingDate.substring(4);
+		driver.findElement(By.xpath("//a[contains(text(), '"+weekEndingDate+"')]")).click();
+		Thread.sleep(5000);
+		
+		//Weekly Certification Filing Details...
+		String heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Weekly Certification Filing Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		wcl.clickHome();
+		ReportPage.PdfReport(snapshotPath, SimpleClassname, "FA-DAILY-UI-PAYMENT-REGISTER");
+		
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

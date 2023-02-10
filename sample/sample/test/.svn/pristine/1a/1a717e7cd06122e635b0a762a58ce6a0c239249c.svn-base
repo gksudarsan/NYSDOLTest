@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="UI_Project" duration-ms="73560" started-at="2020-06-17T12:57:30Z" finished-at="2020-06-17T12:58:44Z">
+    <groups>
+    </groups>
+    <test name="Regression" duration-ms="73560" started-at="2020-06-17T12:57:30Z" finished-at="2020-06-17T12:58:44Z">
+      <class name="com.Payments.TC_56807">
+        <test-method status="PASS" signature="setup(java.lang.String)[pri:0, instance:com.Payments.TC_56807@78047b92]" name="setup" is-config="true" duration-ms="19539" started-at="2020-06-17T18:27:30Z" finished-at="2020-06-17T18:27:50Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="TC_56807_WC()[pri:0, instance:com.Payments.TC_56807@78047b92]" name="TC_56807_WC" duration-ms="54013" started-at="2020-06-17T18:27:50Z" description="TC_56807 Copy of Payment: Processing Reason Weekly Payment: Adjusted Earning is used of the weekly certification for weekly payment" finished-at="2020-06-17T18:28:44Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- TC_56807_WC -->
+        <test-method status="PASS" signature="tearDown()[pri:0, instance:com.Payments.TC_56807@78047b92]" name="tearDown" is-config="true" duration-ms="0" started-at="2020-06-17T18:28:44Z" finished-at="2020-06-17T18:28:44Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- com.Payments.TC_56807 -->
+    </test> <!-- Regression -->
+  </suite> <!-- UI_Project -->
+</testng-results>

@@ -1,0 +1,304 @@
+package com.Overpayments;
+
+/** @author nnegi 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.Add_dependent;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.Corrospondence_Forms;
+import com.ui.pages.CreateIssue;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.Reassign_WorkItem;
+import com.ui.pages.ResolveWorkItem;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_60341 extends TestBase
+{
+	String lumpsumpaid = "2000", claimantcontri = "1000";
+
+	FutureDatePastDate f = new FutureDatePastDate();
+	QuerySearch q;
+	LoginLogoutPage lp;
+	CreateIssue ci;
+	ResolveWorkItem rwi;
+	ClaimSummary cs;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "043724997", ed;
+	int a=0,  CWE = -14;
+	TC_60341 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID IN (SELECT A.CLAIMANT_ID FROM (SELECT A.CLAIM_ID,A.CLAIMANT_ID,A.WBA,A.MBA FROM "
+			+ "(SELECT * FROM DB2PRD1.t_claim where BYE_DATE > current date and effective_date > '2020-05-01') A "
+			+ "INNER JOIN DB2PRD1.T_CLAIMANT_PAYMENT B "
+			+ "ON A.CLAIMANT_ID = B.CLAIMANT_ID) A "
+			+ "INNER JOIN DB2PRD1.T_CLAIM_EMPLOYMENT C "
+			+ "ON A.CLAIM_ID = C.CLAIM_ID and A.CLAIM_ID not in (Select A.CLAIM_ID from T_OVERPAYMENT X where A.CLAIM_ID=X.CLAIM_ID ) ) "
+			+ "AND CLAIMANT_ID NOT IN (select CLAIMANT_ID from T_WEEKLY_CERTIFICATION where certification_date > '";
+
+	//Properties prop;
+	public TC_60341()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "')";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);		
+		System.out.println("SSN to be use : "+SSN); 
+
+		ClassObject =new TC_60341();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl")); 
+	}
+
+	@Test(priority=1, description = "Claimant Overpayment Predetermination Notice Workitem_Change in Overpayment class_Overpayment gets cancelled")
+	public void TestingTC_60341() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		f=new FutureDatePastDate();
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		//cs=new ClaimSummary();
+		//cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certifications");
+		wcl.clickHome();
+		Thread.sleep(3000);
+		cs=new ClaimSummary();
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		Thread.sleep(500);
+
+		String EndDate=null;
+
+		for(int i=1;i<100;i++)
+		{
+			if(i>0)
+			{
+
+				String st = driver.findElement(By.xpath("//td[contains(text(),'Processed Weekly Certification(s)')]//following::table[1]/tbody/tr["+i+"]/td[4]")).getText();
+				System.out.println("Element Text is " +st);
+				if (st.equalsIgnoreCase("Payment"))
+				{
+
+					EndDate = driver.findElement(By.xpath("//td[contains(text(),'Processed Weekly Certification(s)')]//following::table[1]/tbody/tr["+i+"]/td[1]")).getText();
+					System.out.println("Found Paid Week End Date " +EndDate);
+					break;
+				}
+				else
+				{
+					System.out.println("Finding Paid Week...." );
+
+				}
+			}   
+		}
+		//Create Issue...
+		Thread.sleep(500);
+		wcl.clickHome();
+		Thread.sleep(5000);
+		ci = new CreateIssue();
+		ci.createIssueDischarger(driver, snapshotPath, SimpleClassname, SSN, CWE);
+
+		//Issue Investigation...
+		Thread.sleep(5000);
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		rwi = new ResolveWorkItem();
+		rwi.resolveInvestigationDischargeOverpymnt(driver, snapshotPath, SimpleClassname, SSN, lumpsumpaid, claimantcontri);
+
+		//Issue Adjudication...
+
+		Thread.sleep(5000);
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		rwi = new ResolveWorkItem();
+		rwi.resolveAdjudicationDischargeManualIssue(driver, snapshotPath, SimpleClassname, SSN, "Deny",EndDate); 
+
+		//Payment Batch Run and Overpayments batches...
+		System.out.println("Waiting for Payment Batch to run...");
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), BatchProp.getProperty("PaymentBatches"));
+
+		Thread.sleep(10000);  
+
+
+		//Check Claim Summary...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		cs = new ClaimSummary();
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(text(), 'Overpayments')]"))).click();
+		Thread.sleep(5000);
+		String heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("Overpayment Inquiry - List of Overpayments"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 30 more seconds for page to load...");
+			Thread.sleep(30000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Run Batch Predetermination Notice batch to run... 
+		String ID = "";
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), BatchProp.getProperty("OverpaymentPreDeterminationBatch"));
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for Predetermination Notice batch to run...");
+
+			Thread.sleep(10000);
+			try
+			{
+				ID = q.getCorrespondenceID("SELECT CORRESPONDENCE_ID FROM T_CORRESPONDENCE WHERE CORRESPONDENCE_CODE = 'OVPPREDENF' "
+						+ "AND CREATED_BY = 'Pay030EstablishOverpaymentFrom' AND DATE(CREATED_TS) = CURRENT_DATE  AND CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+				System.out.println("CORRESPONDENCE_ID : "+ID);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(ID.isEmpty());
+		System.out.println("Predetermination Notice generated successfully...");
+
+
+
+		//MAIL_DATE
+
+		//Run Batch Predetermination Notice batch to run... 
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), " runJob BatchUpdateBarcodeOnCorrespondenceNonMon corr_nonmon;"
+				+ "./qclient.sh runJob BatchUpdateBarcodeOnCorrespondenceBulkBPC corr_bpc_tra ;"
+				+ "./qclient.sh runJob BatchUpdateBarcodeOnCorrespondenceBulkBenefits corr_benefits");
+
+		String MDate= "";
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for Predetermination Notice batch to run...");
+			Thread.sleep(10000);
+			try
+			{
+				MDate = q.MailDate("SELECT MAIL_DATE FROM T_CORRESPONDENCE WHERE CORRESPONDENCE_CODE = 'OVPPREDENF' "
+						+ "AND CREATED_BY = 'Pay030EstablishOverpaymentFrom' AND DATE(CREATED_TS) = CURRENT_DATE  AND CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+				System.out.println("Mail_Date : "+MDate);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(MDate.isEmpty());
+		System.out.println("Mail Date Updated successfully...");  
+		String CorresponDate=FutureDatePastDate.ConvertDate1(MDate);
+
+		//Submit Forms/Corres Response
+		Thread.sleep(5000);
+		wcl.clickHome();
+		Corrospondence_Forms.CorrospondenceResponse(driver, snapshotPath, SimpleClassname, "SSN", CorresponDate);
+		Thread.sleep(5000);
+		//Resolove WorkItem
+		Thread.sleep(5000);
+		wcl.clickHome();
+		Thread.sleep(3000);
+		Reassign_WorkItem.resolveWICorrospondence60341(driver, snapshotPath, SimpleClassname, SSN, "Claimant Overpayment Predetermination Notice");
+
+		//Run Batch for update 
+
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchProcessOverpaymentOrWaiver on_demand");
+
+		//Check Claim Summary...
+		Thread.sleep(5000);
+		wcl.clickHome();
+		Thread.sleep(3000);
+		ClaimSummary c=new ClaimSummary();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+
+		//JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(text(), 'Overpayments')]"))).click();
+		Thread.sleep(5000);
+		heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("Overpayment Inquiry - List of Overpayments"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 30 more seconds for page to load...");
+			Thread.sleep(30000);
+		}
+		Highlighter hl=new Highlighter();
+		hl.highlight(driver, "//td[contains(text(), 'Active')]");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

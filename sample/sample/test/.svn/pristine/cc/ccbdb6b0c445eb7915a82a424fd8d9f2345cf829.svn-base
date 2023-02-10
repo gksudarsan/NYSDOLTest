@@ -1,0 +1,105 @@
+package com.Payments;
+
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+
+import com.ui.pages.Add_dependent;
+import com.ui.pages.Add_dependent_spouse;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.SearchWorkItem;
+import com.ui.pages.UpdateClaimBalance;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+
+
+public class TC_58893 extends TestBase
+{
+	
+	static LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_59019 ClassObject;
+
+	static  CreateDirectory CD;
+	
+	//static Payments_Locators pml=new Payments_Locators();
+	static ClaimSummary cs;
+	static UpdateClaimBalance ucb;
+	
+   
+	
+	
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException
+
+	{
+		ClassObject =new TC_59019();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+
+	}
+	@Test(description ="TC_58893" )
+	public void TC_59018() throws InterruptedException, ParseException
+	{
+		System.out.println("@test initiated");
+		cs= new ClaimSummary();
+		ucb= new UpdateClaimBalance();
+		
+		//cs.claimsummary(prop.getProperty("ssn_58893"), snapshotPath, SimpleClassname, "Pending");
+		System.out.println("claim summary page displayed.now moving to update mba.");
+		//ucb.updateMBAToZero(driver,snapshotPath, SimpleClassname,prop.getProperty("ssn_58893"));
+		
+		System.out.println("balance updated ,value=0 ");
+		
+		Add_dependent_spouse.dependent_add (driver,snapshotPath,SimpleClassname,prop.getProperty("ssn_58893"));
+			
+		  System.out.println("dependet added suvvessfully.");
+		  
+	  cs.claimsummary(prop.getProperty("ssn_58893"), snapshotPath, SimpleClassname, "Balance ");
+	  System.out.println("ready for adding dependent");
+	  
+	 
+	
+	
+	
+	}
+}

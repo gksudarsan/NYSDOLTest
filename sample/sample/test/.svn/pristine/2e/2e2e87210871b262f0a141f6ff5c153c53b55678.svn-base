@@ -1,0 +1,179 @@
+package com.Payments;
+
+/** @author nnegi */
+
+/** Weekly Certification Batch pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.ResolveWorkItem;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_59030 extends TestBase
+{
+	LoginLogoutPage lp;
+	Wc_locators wcl = new Wc_locators();
+	ClaimSummary cs;
+	QuerySearch q;
+	FutureDatePastDate f;
+	WeeklyCert w;
+	String heading;
+	UpdateIssueDates uid;
+	Highlighter h;
+	Random rand = new Random();
+	ResolveWorkItem rwi;
+	screenShot screen=new screenShot();
+	JavascriptExecutor js = ((JavascriptExecutor)driver);
+	//String classname, SimpleClassname, snapshotPath, SPI = "4769", SSN = "049682459", CWE = "05232020";
+	String classname, SimpleClassname, snapshotPath,SPI,  SSN = "127665911", CWE = "05232020";
+	String[] details = {"", ""};
+	TC_59030 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT UNIQUE(C.SHAREDWORK_PLAN_ID) FROM T_CT_SHAREDWORK_UNIT_EMPLOYEE A, T_CT_SHAREDWORK_UNIT B, T_CT_SHAREDWORK_PLAN C "
+			+ "WHERE A.SHAREDWORK_UNIT_ID = B.SHAREDWORK_UNIT_ID AND B.SHAREDWORK_PLAN_ID = C.SHAREDWORK_PLAN_ID "
+			+ "AND A.SHAREDWORK_CLAIM_STATUS = 'ACTV' and A.IS_ACTIVE = 1 AND B.UNIT_STATUS = 'APPR' AND C.PLAN_STATUS = 'APPR' "
+			+ "AND B.UNIT_END_DATE > CURRENT_DATE AND C.APPLICATION_END_DATE > CURRENT_DATE "
+			+ "AND A.SHAREDWORK_UNIT_ID NOT IN (SELECT SHAREDWORK_UNIT_ID FROM  T_CT_SHAREDWORK_EMPLOYER_WEEKLY_CERT D "
+			+ "WHERE A.SHAREDWORK_UNIT_ID = D.SHAREDWORK_UNIT_ID AND D.CWE = '";
+
+	//Properties prop;
+	public TC_59030()
+	{
+		super();
+	}
+	
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Searching for the SHAREDWORK PLAN ID in the database...
+		f = new FutureDatePastDate();
+		CWE = f.Saturday(-7);
+		CWE = CWE.substring(4, 8) + "-" + CWE.substring(0, 2) + "-" + CWE.substring(2, 4);
+		System.out.println("CWE : "+CWE);
+		query = query + CWE + "')";
+		System.out.println("Query being hit to fetch SHAREDWORK PLAN ID from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SPI = q.SHAREDWORK_PLAN_ID(query);
+		System.out.println("SHAREDWORK PLAN ID to be use : "+SPI);
+
+		ClassObject =new TC_59030();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		
+		//Opening browser... Hitting URL...
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+	
+	@Test(priority=1, description = "CT 10542 Common Processing Flow Stat Earnings Shared Work")
+	public void TC_59030_SharedWork() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		/**Pre-condition*/
+		//Shared Work Employer Weekly Certification Process...
+		w = new WeeklyCert();
+		details = w.sharedworkweeklycertification(driver, snapshotPath, SimpleClassname, SPI);
+		SSN = details[1];
+		CWE = details[0];
+
+		uid= new UpdateIssueDates();
+		uid.updateFutureIssueStartDate(driver, snapshotPath, SimpleClassname, SSN, Integer.parseInt(CWE));
+		//File Weekly Certification Process...
+		wcl.clickHome();
+		
+		Thread.sleep(5000);
+		WeeklyCert.fileWeeklyCertificationPensionSharedClaimant(driver, snapshotPath, SimpleClassname, SSN, CWE);
+		
+		//Run Weekly Certification Batch...
+		
+		/**Main test script*/
+		Thread.sleep(2000);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		lp.login("sttestingcsr", "Msui@#12345");
+		wcl.clickHome();
+		Thread.sleep(5000);
+		rwi = new ResolveWorkItem();
+		rwi.resolveWIWeeklyCertificationReject59030(driver, snapshotPath, SimpleClassname, "049682459");
+		
+		Thread.sleep(2000);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		
+		Thread.sleep(2000);
+		wcl.clickHome();
+		rwi = new ResolveWorkItem();
+		rwi.resolveInvestigationPensionOther(driver, snapshotPath, SimpleClassname, "049682459", "100", "50");
+		Thread.sleep(2000);
+		wcl.clickHome();
+		Thread.sleep(2000);
+		rwi.resolveAdjudicationPensionOther59030(driver, snapshotPath, SimpleClassname, "049682459", "Allow", "Pension reductions",CWE);
+		
+		
+		wcl.clickHome();
+		Thread.sleep(2000);
+		cs=new ClaimSummary();
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		
+		Thread.sleep(2500);
+		wcl.proceesWC_link().click();
+		
+		wcl.PaidAmount().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		
+		
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		/*wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();*/
+	}
+
+}

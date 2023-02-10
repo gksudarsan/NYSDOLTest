@@ -1,0 +1,110 @@
+package com.Overpayments;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_55819 extends TestBase
+{
+	int CWE = -14;
+
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	Overpayment o;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN= "001018068", ed;
+	TC_55819 ClassObject;
+	CreateDirectory CD;
+
+	String query = "SELECT UNIQUE(A.SSN) FROM T_CLAIMANT A, T_CLAIM B, T_WEEKLY_CERTIFICATION C, T_PROCESSED_WEEKLY_CERT D WHERE "
+			+ "A.CLAIMANT_ID = B.CLAIMANT_ID AND B.CLAIMANT_ID = C.CLAIMANT_ID AND C.WEEKLY_CERTIFICATION_ID = D.WEEKLY_CERTIFICATION_ID "
+			+ "AND B.ENTITLEMENT_TYPE = 'REG' AND B.STATUS = 'ACTV' AND C.CERTIFICATION_DATE > '";
+
+	//Properties prop;
+	public TC_55819()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "'";
+		ed = f.Saturday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("CWE date : "+ed);
+		query = query + "AND C.CERTIFICATION_DATE < '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_55819();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "To verify that batch 'BatchCTGenerateOvpPredeterminationNotice' generated Fraud Overpayment "
+			+ "Predetermination Notice upon receiving employer's response to the wage request (when multiple employers are "
+			+ "associated with the issue).")
+	public void Testing55819() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Creating Overpayment Issue...
+		o = new Overpayment();
+		o.createOverpaymentIssue(driver, snapshotPath, SimpleClassname,  SSN, CWE);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		/*wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();*/
+	}
+}

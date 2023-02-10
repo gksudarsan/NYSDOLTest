@@ -1,0 +1,101 @@
+package com.Overpayments;
+
+/** @author mjape */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.Add_Overpayment;
+import com.ui.pages.FileDUAclaimpage;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.ManualPaymentRequest;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC59462_Addoverpayment extends TestBase
+{
+	FutureDatePastDate f = new FutureDatePastDate();
+	int CWE = -21;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	FileDUAclaimpage fdc;
+	Wc_locators wcl = new Wc_locators();	
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "029743762", ed;
+	TC59462_Addoverpayment ClassObject;
+	CreateDirectory CD;
+	Add_Overpayment addo ;
+	
+	//Properties prop;
+	public TC59462_Addoverpayment()
+	{
+		super();
+	}
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+	
+		
+		ClassObject =new TC59462_Addoverpayment();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		//Opening browser... Hitting URL...
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1,description="Log into CT ACCESS system")
+	public void applicationLogin() throws InterruptedException
+	{
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+	}
+	
+	@Test(priority=2, description = "Add overpayment scenario")
+	public void Addoverpaymenttc() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		
+		
+		
+		//Add overpayment
+		addo = new Add_Overpayment();
+	   addo.Add_Overpayment_case(driver, SimpleClassname, snapshotPath,"Fraud","Discharge","Quality Control");
+		
+	   
+		
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		//wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

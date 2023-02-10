@@ -1,0 +1,65 @@
+package com.ui.utilities;
+
+/**@author mjape*/
+
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+
+public class WINSCP
+{
+	public void uploadFile(String hostName, int portNumber, String userName, String password, String fileName, String winscpDirectory, String localPath)
+	{
+		try
+		{
+			JSch jsch = new JSch();
+			Session session = jsch.getSession(userName, hostName, portNumber);
+			session.setPassword(password);
+			session.setConfig("StrictHostKeyChecking", "no");
+			System.out.println("Establishing Connection...");
+			session.setConfig("PreferredAuthentications",
+					"publickey,keyboard-interactive,password");
+			session.connect();
+			System.out.println("Connection established...");
+			System.out.println("Creating SFTP Channel...");
+			ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
+			sftpChannel.connect();
+			System.out.println("SFTP Channel created...");
+			System.out.println("Uploading file...");
+			sftpChannel.put(localPath, winscpDirectory);
+			System.out.println("File uploaded successfully...");
+			System.out.println("File size : "+ sftpChannel.lstat(winscpDirectory));
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	public void downloadFile(String hostName, int portNumber, String userName, String password, String fileName, String winscpDirectory, String localPath)
+	{
+		try
+		{
+			JSch jsch = new JSch();
+			Session session = jsch.getSession(userName, hostName, portNumber);
+			session.setPassword(password);
+			session.setConfig("StrictHostKeyChecking", "no");
+			System.out.println("Establishing Connection...");
+			session.setConfig("PreferredAuthentications",
+					"publickey,keyboard-interactive,password");
+			session.connect();
+			System.out.println("Connection established...");
+			System.out.println("Creating SFTP Channel...");
+			ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
+			sftpChannel.connect();
+			System.out.println("SFTP Channel created...");
+			System.out.println("Downloading file...");
+			sftpChannel.get(winscpDirectory, localPath);
+			System.out.println("File downloaded successfully...");
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+}

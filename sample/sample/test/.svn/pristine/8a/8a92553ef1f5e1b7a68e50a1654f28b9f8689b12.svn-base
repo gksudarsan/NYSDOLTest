@@ -1,0 +1,117 @@
+
+package com.Overpayments;
+
+/** @author vsingh  */
+
+import static org.testng.Assert.assertEquals;
+
+import java.sql.SQLException;
+
+/** @author vsingh  */
+
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+
+import com.ui.pages.Add_dependent;
+import com.ui.pages.ChangeReportedEarnings;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.ResolveWorkItem;
+import com.ui.pages.SearchWorkItem;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.pages.weekly_cert_pension;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+
+
+public class TC_56521 extends TestBase
+{
+
+
+
+	static LoginLogoutPage lp;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_56521 ClassObject;
+
+	static  CreateDirectory CD;
+	
+	static ChangeReportedEarnings cre;
+
+	int CWE = -21;
+	static Overpayment op;
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException
+
+	{
+		ClassObject =new TC_56521();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+
+
+
+	}
+	@Test(description ="TC_56521_MS:7261:OP:Adjust Final Earnings" )
+	public void TC_56521_op() throws InterruptedException, ParseException, ClassNotFoundException, SQLException
+	{
+		System.out.println("@test initiated");
+		cre= new ChangeReportedEarnings();
+		cre.changeEarning_overpayment( driver,  snapshotPath,  SimpleClassname, prop.getProperty("ssn_56521"), CWE);
+		
+		String expected = "The reported earnings were changed successfully.";
+		String Actual = driver.findElement(By.xpath("//td[contains (text(), 'The reported earnings')]")).getText();
+		assertEquals(Actual, expected);
+		System.out.println(Actual+ " test case executed.");
+		
+		
+
+	}
+	@AfterTest
+	public void close_browser()
+	{
+		driver.close();
+		driver.quit();
+		System.out.println("Testcase executed and browser closed");
+	}
+
+}

@@ -1,0 +1,17 @@
+package com.ui.locators;
+
+import com.ui.base.TestBase;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+public class Payments_Locators extends TestBase
+{
+	public WebElement mbaBalance()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, 'mbaBalance')]")));
+		return driver.findElement(By.xpath("//input[contains(@name, 'mbaBalance')]"));
+	}
+	
+	
+}

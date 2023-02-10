@@ -1,0 +1,99 @@
+package com.ui.pages;
+
+/** @author mjape */
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+public class AddUpdateTRAWaiver extends TestBase
+{
+	static Wc_locators wcl;
+	static FutureDatePastDate f;
+	static screenShot screen=new screenShot();
+	static String heading;
+
+	public void addTRAWaiver(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String newstatus, String waiverType) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("TRA Entitlement").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Add/Update TRA Waiver Details')]")).click();
+		Thread.sleep(2500);
+		wcl.enterSSN().sendKeys(SSN);	Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+
+		//Submitting Add/Update TRA Waiver Details page...
+		wcl.enterWaiverStatus(newstatus).click();
+		wcl.enterDate("waiverReviewDate").sendKeys(f.d(7)); Thread.sleep(500);
+		wcl.enterDate("waiverExpirationDate").sendKeys(f.d(10)); Thread.sleep(500);
+		wcl.enterWaiverType(waiverType).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//TRA Waiver Details Confirmation page...
+		heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("TRA Waiver Details Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 5 more seconds for page to load...");
+			Thread.sleep(5000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	public void updateTRAWaiver(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String currentstatus, String newstatus) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("TRA Entitlement").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Add/Update TRA Waiver Details')]")).click();
+		Thread.sleep(2500);
+		wcl.enterSSN().sendKeys(SSN);	Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Submitting Add/Update TRA Waiver Details page...
+		wcl.enterWaiverStatus(newstatus).click(); Thread.sleep(500);
+		if(currentstatus.equalsIgnoreCase(newstatus))
+			wcl.enterDate("waiverExpirationDate").sendKeys(f.d(11)); Thread.sleep(500);
+		if(newstatus.equalsIgnoreCase("Revoked"))
+			wcl.enterDate("waiverRevokeDate").sendKeys(f.d(0)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//TRA Waiver Details Confirmation page...
+		heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("TRA Waiver Details Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 5 more seconds for page to load...");
+			Thread.sleep(5000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

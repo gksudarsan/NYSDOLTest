@@ -1,0 +1,47 @@
+package com.ui.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.locators.claimsIntake;
+
+public class Fileclaim_Medical_questioniare extends TestBase{
+
+	claimsIntake cit = new claimsIntake();
+	Wc_locators wcl = new Wc_locators();
+	
+	
+
+		
+		
+        /* public WebElement unable_to_perform_work_medical_question1(){
+		  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[@id='j_id_34:0:j_id_98:0:j_id_co_label']")));
+		  return driver.findElement(By.xpath("//label[@id='j_id_34:0:j_id_98:0:j_id_co_label']"));
+	   } 
+	   
+		
+	   public WebElement unable_to_perform_work_selection(){
+			  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[text()='Illness']")));
+			  return driver.findElement(By.xpath("//label[text()='Illness']"));
+		   }
+	   
+	   public WebElement able_to_perform_any_other_type_of_work_no(){
+			  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d1:1']")));
+			  return driver.findElement(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d1:1']"));
+		   }
+	   
+	   public WebElement under_doctor_care(){
+			  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d1:1']")));
+			  return driver.findElement(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d1:1']"));
+		   }
+	 
+	   public WebElement date_unable_to_perform_work(){
+			  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='j_id_34:8:j_id_98:0:j_id_a4_-month']")));
+			  return driver.findElement(By.xpath("//input[@id='j_id_34:8:j_id_98:0:j_id_a4_-month']"));
+		   }  */
+	
+	
+}

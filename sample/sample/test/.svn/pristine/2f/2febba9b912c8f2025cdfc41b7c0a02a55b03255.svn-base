@@ -1,0 +1,86 @@
+package com.ui.pages;
+
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.screenShot;
+
+
+public class EB_claim extends TestBase {
+	LoginLogoutPage lp;
+	FileWeeklyCertification fwc;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static EB_claim ClassObject;
+	static  CreateDirectory CD;
+	static Wc_locators wcl=new Wc_locators();
+	static Payments_Locators pml= new Payments_Locators();
+
+	public static void EB_claim_submittion (WebDriver driver ,String snapshotPath, String SimpleClassname ,String SSN) throws InterruptedException
+	{
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl = new Wc_locators();
+		pml=new Payments_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		Thread.sleep(2000);
+	
+		
+		pml.Unemployment_claim().click(); Thread.sleep(2000);
+		pml.Unemployment_claim().click(); Thread.sleep(2000);
+		
+		pml.File_EB_Claim().click();Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.ssn1().sendKeys(prop.getProperty("ssn_58893"));Thread.sleep(1000);
+		wcl.confirmssn1().sendKeys(prop.getProperty("ssn_58893"));Thread.sleep(5000);
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	
+		wcl.clickNext().click();Thread.sleep(5000);
+		pml.isEmployedOutsideState().click();Thread.sleep(1000);
+		pml.isFiledOutsideState().click();Thread.sleep(1000);
+		pml.isEmployedAfterBenefits().click();Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();Thread.sleep(5000);
+		
+		String heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("Extended Benefits Rights Information"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("waiting to load page....");
+			Thread.sleep(10000);
+		}
+		System.out.println("page-Extended Benefits Rights Information found.");
+		
+		pml.ssnlasr_4digit().sendKeys(prop.getProperty("ssn_58893_last4"));Thread.sleep(1000);
+
+		
+		wcl.submit().click();Thread.sleep(5000);
+		pml.Home().click();Thread.sleep(5000);
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+}

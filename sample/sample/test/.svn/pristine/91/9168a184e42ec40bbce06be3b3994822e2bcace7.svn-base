@@ -1,0 +1,98 @@
+package com.ui.pages;
+
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.WebDriver;
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+
+public class Add_Child_support extends TestBase {
+	
+	 static LoginLogoutPage lp;
+	
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static Add_dependent_spouse ClassObject;
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+	static Payments_Locators pml;
+	static FutureDatePastDate fdpd;
+
+	public static void Add_child_support_courtOrder (WebDriver driver ,String snapshotPath, String SimpleClassname ,String SSN) throws InterruptedException
+	{
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl = new Wc_locators();
+		pml=new Payments_Locators();
+		fdpd=new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		
+		pml.benefit_maintance().click();
+		Thread.sleep(1000);
+		pml.benefit_maintance().click();
+		Thread.sleep(2000);
+		pml.AddUpdate_Child_Support().click();Thread.sleep(2000);
+		wcl.ssn1().sendKeys(SSN); Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		wcl.clickNext().click();Thread.sleep(10000);
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		pml.AddNew_CourtOrder().click(); Thread.sleep(5000);
+		pml.orderID().sendKeys("5245");Thread.sleep(1000);
+		pml.courtNo().sendKeys("4521");Thread.sleep(1000);
+		pml.orderEffectiveDate_month().click();
+		pml.orderEffectiveDate_month().sendKeys(fdpd.Sunday(-7));Thread.sleep(1000);
+		
+		pml.amount().sendKeys(prop.getProperty("Amount_56575"));Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		wcl.submit().click(); Thread.sleep(10000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		pml.Home().click();Thread.sleep(5000);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+}

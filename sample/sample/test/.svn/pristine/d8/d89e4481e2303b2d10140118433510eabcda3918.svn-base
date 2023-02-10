@@ -1,0 +1,123 @@
+package com.ui.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.screenShot;
+
+public class UpdateClaimBalance extends TestBase
+{
+	Wc_locators wcl;
+	Payments_Locators pl;
+	screenShot screen=new screenShot();
+	String heading;
+	JavascriptExecutor js;
+	
+	public void updateMBA(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Benefit Maintenance").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Update Claim Balance')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Claims"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.checkRecord().click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Claim Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		String mbaBalance = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, 'mbaBalance')]"))).getAttribute("value");
+		int b = Integer.parseInt(mbaBalance.replaceAll(",", ""));
+		b = b - 100;
+		mbaBalance = String.valueOf(b);
+		pl.mbaBalance().clear(); Thread.sleep(500);
+		pl.mbaBalance().sendKeys(mbaBalance); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+	
+	public void updateMBAToZero(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		pl=new Payments_Locators();
+		wcl = new Wc_locators();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Benefit Maintenance").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Update Claim Balance')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Claims"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.checkRecord().click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Claim Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		String mbaBalance = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, 'mbaBalance')]"))).getAttribute("value");
+	//int b = Integer.parseInt(mbaBalance.replaceAll(",", ""));
+		//b = 0;
+		//mbaBalance = String.valueOf(b);
+		pl.mbaBalance().clear(); Thread.sleep(500);
+		pl.mbaBalance().sendKeys("0"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

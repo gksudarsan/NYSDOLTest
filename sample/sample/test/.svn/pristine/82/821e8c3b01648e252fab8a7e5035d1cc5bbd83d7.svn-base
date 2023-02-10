@@ -1,0 +1,259 @@
+package com.ui.pages;
+
+/**@author mjape*/
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebDriver;
+
+import com.ui.locators.SharedWork_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.RandomGenerator;
+import com.ui.utilities.screenShot;
+
+public class ClaimsIntake
+{
+	Wc_locators wcl;
+	screenShot screen = new screenShot();
+	SharedWork_Locators swl;
+	QuerySearch q;
+	String query;
+
+	public void creatingSharedWorkPlan(WebDriver driver, String snapshotPath, String SimpleClassname, String EAN) throws ClassNotFoundException, SQLException, InterruptedException, ParseException
+	{		
+		//Searching EAN...
+		wcl = new Wc_locators();
+		swl = new SharedWork_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Shared Work").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Shared Work Plan").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.enterEAN("eanBean", EAN); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Search"); Thread.sleep(2500);
+		swl.clickRadioButton("//span[contains(@class, 'radiobutton')]"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Next>"); Thread.sleep(2500);
+
+		//Adding New Shared Work Plan...
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Add New Shared Work Plan"); Thread.sleep(2500);
+
+		//Add Plan Details...
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.Date("planStartDate").sendKeys(new FutureDatePastDate().Sunday(-14)); Thread.sleep(500);
+		new FutureDatePastDate();
+		swl.Date("planEndDate").sendKeys(FutureDatePastDate.addDaysToDate(new FutureDatePastDate().Sunday(-14), 181)); Thread.sleep(500);
+		swl.typeOfBusiness("Testing"); Thread.sleep(500);
+		swl.clickRadioButton("//label[contains(text(), 'No')]//preceding::span[1]"); Thread.sleep(500);
+		swl.Date("applicationReceivedDate").sendKeys(new FutureDatePastDate().d(-1)); Thread.sleep(500);
+		swl.clickSelect("//label[contains(@id, 'planStatus_label')]", "Pending"); Thread.sleep(500);
+		swl.Text("//textarea[contains(@name, 'csrRemarks')]", "Testing Purpose"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Submit"); Thread.sleep(5000);	
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	public void creatingSharedWorkUnit(WebDriver driver, String snapshotPath, String SimpleClassname, String EAN) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Searching EAN...
+		wcl = new Wc_locators();
+		swl = new SharedWork_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Shared Work").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Shared Work Plan").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.enterEAN("eanBean", EAN); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Search"); Thread.sleep(2500);
+		swl.clickRadioButton("//span[contains(@class, 'radiobutton')]"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Next>"); Thread.sleep(2500);
+
+		//Searching Plan Number...
+		q = new QuerySearch();
+		query = "SELECT EMPLOYER_ID FROM T_EMPLOYER WHERE EAN = '"+EAN+"'";
+		String empID = q.Data(query, "EMPLOYER_ID");
+		query = "SELECT SHAREDWORK_PLAN_ID FROM T_CT_SHAREDWORK_PLAN WHERE EMPLOYER_ID = '"+empID+"' ORDER BY CREATED_TS DESC";
+		String planNo = q.Data(query, "SHAREDWORK_PLAN_ID");
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickHyperlink("//input[contains(@value, '"+planNo+"')]//following::a[1]"); Thread.sleep(2500);
+		swl.clickButton("Add Unit"); Thread.sleep(2500);
+
+		//Adding Unit...
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.unitName(new RandomGenerator().randomNumberGenerator(8)); Thread.sleep(500);
+		swl.percentageReduction("Min", "10"); Thread.sleep(500);
+		swl.percentageReduction("Max", "40"); Thread.sleep(500);
+		swl.fringeBenAffected("No"); Thread.sleep(500);
+		swl.isServiceCreditOnSeniority("Yes"); Thread.sleep(500);
+		swl.isVacationShutdown("No"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.noEmpLayOffAverted("20"); Thread.sleep(500);
+		swl.perStaffEffected("10"); Thread.sleep(500);
+		swl.Date("notifyDateEmployee").sendKeys(new FutureDatePastDate().Sunday(-14)); Thread.sleep(500);
+		swl.workhourRedReason("Reduction in orders"); Thread.sleep(500);
+		swl.isPlanToPermanentEmployees("Yes"); Thread.sleep(500);
+		swl.accessGranted("Yes"); Thread.sleep(500);
+		swl.partOfUnion("No"); Thread.sleep(500);
+		swl.oblgFollowed("Yes"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.contactName(new RandomGenerator().randomStringGenerator(5) + " "+ new RandomGenerator().randomStringGenerator(5)); Thread.sleep(500);
+		swl.contactPhone("9450"+new RandomGenerator().randomNumberGenerator(6)); Thread.sleep(500);
+		swl.isPartOfCollectiveBargaining("Yes"); Thread.sleep(500);
+		swl.certify(); Thread.sleep(500);
+		swl.representativeTitle("Mrs"); Thread.sleep(500);
+		swl.representativeName(new RandomGenerator().randomStringGenerator(5)); Thread.sleep(500);
+		swl.Date("applicationReceivedDate").sendKeys(new FutureDatePastDate().d(-1)); Thread.sleep(500);
+		swl.status("Pending"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Submit"); Thread.sleep(5000);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	public void addingEmployees(WebDriver driver, String snapshotPath, String SimpleClassname, String EAN) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Searching EAN...
+		wcl = new Wc_locators();
+		swl = new SharedWork_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Shared Work").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Shared Work Plan").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.enterEAN("eanBean", EAN); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Search"); Thread.sleep(2500);
+		swl.clickRadioButton("//span[contains(@class, 'radiobutton')]"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Next>"); Thread.sleep(2500);
+
+		//Searching Plan Number...
+		q = new QuerySearch();
+		query = "SELECT EMPLOYER_ID FROM T_EMPLOYER WHERE EAN = '"+EAN+"'";
+		String empID = q.Data(query, "EMPLOYER_ID");
+		query = "SELECT SHAREDWORK_PLAN_ID FROM T_CT_SHAREDWORK_PLAN WHERE EMPLOYER_ID = '"+empID+"' ORDER BY CREATED_TS DESC";
+		String planNo = q.Data(query, "SHAREDWORK_PLAN_ID");
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickHyperlink("//input[contains(@value, '"+planNo+"')]//following::a[1]"); Thread.sleep(2500);
+
+		//Searching Unit Name...
+		query = "SELECT UNIT_NAME FROM T_CT_SHAREDWORK_UNIT WHERE SHAREDWORK_PLAN_ID = '"+planNo+"' ORDER BY CREATED_TS DESC";
+		String unitName = q.Data(query, "UNIT_NAME");
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickHyperlink("//b[contains(text(), 'List of all units of the plan')]//following::input[contains(@value, '"+unitName+"')]//preceding::a[1]"); Thread.sleep(2500);
+
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("View Employees"); Thread.sleep(2500);
+
+		//Adding Employees...
+		for(int p = 1 ; p <= 10 ; p++)
+		{
+			driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			swl.clickButton("Add Employee"); Thread.sleep(2500);
+
+			driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			swl.employeeFirstName(new RandomGenerator().randomStringGenerator(6)); Thread.sleep(500);
+			swl.employeeLastName(new RandomGenerator().randomStringGenerator(6)); Thread.sleep(500);
+			swl.employeeSSN("employeeSSN", new RandomGenerator().randomNumberGenerator(9)); Thread.sleep(500);
+			swl.workingHoursPerWeek("40"); Thread.sleep(500);
+			swl.Date("empEffectiveStartDate").sendKeys(new FutureDatePastDate().Sunday(-14)); Thread.sleep(500);
+			driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			swl.clickButton("Save and Close"); Thread.sleep(5000);
+		}
+
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Submit"); Thread.sleep(5000);
+		swl.clickButton("Return to Unit Details"); Thread.sleep(5000);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	public void changingUnitStatus(WebDriver driver, String snapshotPath, String SimpleClassname, String EAN, String status) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Searching EAN...
+		wcl = new Wc_locators();
+		swl = new SharedWork_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Shared Work").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Shared Work Plan").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.enterEAN("eanBean", EAN); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Search"); Thread.sleep(2500);
+		swl.clickRadioButton("//span[contains(@class, 'radiobutton')]"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Next>"); Thread.sleep(2500);
+
+		//Searching Plan Number...
+		q = new QuerySearch();
+		query = "SELECT EMPLOYER_ID FROM T_EMPLOYER WHERE EAN = '"+EAN+"'";
+		String empID = q.Data(query, "EMPLOYER_ID");
+		query = "SELECT SHAREDWORK_PLAN_ID FROM T_CT_SHAREDWORK_PLAN WHERE EMPLOYER_ID = '"+empID+"' ORDER BY CREATED_TS DESC";
+		String planNo = q.Data(query, "SHAREDWORK_PLAN_ID");
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickHyperlink("//input[contains(@value, '"+planNo+"')]//following::a[1]"); Thread.sleep(2500);
+
+		//Searching Unit Name...
+		query = "SELECT UNIT_NAME FROM T_CT_SHAREDWORK_UNIT WHERE SHAREDWORK_PLAN_ID = '"+planNo+"' ORDER BY CREATED_TS DESC";
+		String unitName = q.Data(query, "UNIT_NAME");
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickHyperlink("//b[contains(text(), 'List of all units of the plan')]//following::input[contains(@value, '"+unitName+"')]//preceding::a[1]"); Thread.sleep(2500);
+
+		//Changing Status of Unit...
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.status(status); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Submit"); Thread.sleep(5000);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	public void changingPlanStatus(WebDriver driver, String snapshotPath, String SimpleClassname, String EAN, String status) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Searching EAN...
+		wcl = new Wc_locators();
+		swl = new SharedWork_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Shared Work").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Shared Work Plan").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.enterEAN("eanBean", EAN); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Search"); Thread.sleep(2500);
+		swl.clickRadioButton("//span[contains(@class, 'radiobutton')]"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Next>"); Thread.sleep(2500);
+
+		//Searching Plan Number...
+		q = new QuerySearch();
+		query = "SELECT EMPLOYER_ID FROM T_EMPLOYER WHERE EAN = '"+EAN+"'";
+		String empID = q.Data(query, "EMPLOYER_ID");
+		query = "SELECT SHAREDWORK_PLAN_ID FROM T_CT_SHAREDWORK_PLAN WHERE EMPLOYER_ID = '"+empID+"' ORDER BY CREATED_TS DESC";
+		String planNo = q.Data(query, "SHAREDWORK_PLAN_ID");
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickHyperlink("//input[contains(@value, '"+planNo+"')]//following::a[1]"); Thread.sleep(2500);
+		
+		//Changing Status of Plan...
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickSelect("//label[contains(@id, 'planStatus_label')]", status); Thread.sleep(500);
+		if(status.equals("Denied"))
+		{
+			swl.clickSelect("//label[contains(@id, 'reasonForDenial_label')]", "Union Not in Agreement - Plan"); Thread.sleep(500);
+		}
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Submit"); Thread.sleep(5000);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

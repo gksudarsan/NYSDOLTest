@@ -1,0 +1,77 @@
+package com.ui.pages;
+
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class AdjustFinalEarning extends TestBase
+{
+	Wc_locators wcl;
+	screenShot screen = new screenShot();
+	OverPayment_Locators opl;
+	FutureDatePastDate f;
+	String heading;
+
+	public void adjustFinalEarnings(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, int CWE) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		wcl = new Wc_locators();
+		opl = new OverPayment_Locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Overpayments").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Adjust Final Earning").click();
+		Thread.sleep(2500);
+		opl.enterSSN("ssnBean").sendKeys(SSN); Thread.sleep(500);
+		opl.Date("startDate", f.Sunday(CWE)); Thread.sleep(500);
+		opl.Date("endDate", f.Saturday(CWE)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+
+		//Submission of Enter Final Earnings page
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Enter Final Earnings"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		String WBA = new QuerySearch().Data("SELECT WBA FROM T_CLAIM WHERE STATUS = 'ACTV' AND BYE_DATE > CURRENT_DATE AND "
+				+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE  SSN = '"+SSN+"')", "WBA");
+		Double earning = Double.parseDouble(WBA) * 0.50 ;
+
+		driver.findElement(By.xpath("//td[contains(text(), 'Weekly Details')]//following::input[4]")).sendKeys(String.valueOf(earning)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//Submission of Earnings Verification page
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Earnings Verification"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

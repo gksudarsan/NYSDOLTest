@@ -1,0 +1,223 @@
+/**
+ * 
+ */
+package com.Payments;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.ManualPaymentRequest;
+import com.ui.pages.SearchWorkItem;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+/**
+ * @author nnegi
+ *
+ */
+public class TC_58927 extends TestBase{
+	static ClaimSummary cs;
+	static Highlighter h;
+	LoginLogoutPage lp;
+	static FutureDatePastDate f;
+	static ManualPaymentRequest mp;
+	static SearchWorkItem sw;
+	static String heading;
+	static int counter = 0;
+	static Wc_locators wcl;
+	static QuerySearch q;
+	static PageHeading ph;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath,SSN, ed;;
+	static TC_58927 ClassObject;
+	static  CreateDirectory CD;
+
+	String query = "select a.ssn from t_claimant a, t_claim c, T_CLAIMANT_ADDRESS d where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'REG' and a.claimant_id = c.claimant_id and  d.CLAIMANT_ID=c.CLAIMANT_ID and  d.STATE  not in ('CT','RI','MA','NY')and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException, ClassNotFoundException, SQLException
+
+	{
+		f = new FutureDatePastDate();
+		ed = f.Sunday(-7);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') and c.effective_date = '" + ed + "'";
+
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_58927();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		//wait=new WebDriverWait(driver, Duration.ofSeconds(50));
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+
+
+	}
+
+	@Test(description ="TC_58927 PAY_SUC_002-Manual Payment Request - Manual - Regular entitlement")
+	public void TC_58927_CWE() throws InterruptedException, ParseException, ClassNotFoundException, SQLException
+	{
+		ph=new PageHeading();
+
+
+
+		cs=new ClaimSummary();
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+
+		wcl=new Wc_locators();
+
+
+
+		Thread.sleep(1000);
+
+		wcl.clickHome();
+		Thread.sleep(5000);
+
+
+
+		f = new FutureDatePastDate();
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Weekly Certification").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Weekly Cert by SSN/CWE')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);
+		wcl.confirmssn1().sendKeys(SSN);
+		wcl.CWEDate().sendKeys(f.Saturday(-7));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//Submission of Weekly Certification Details page
+		ph.WeeklyCertificationDetails();
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.checkMainQuestion("physically able to work full time", "Yes").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("available for full time work", "Yes").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("start school, college or training", "No").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("any self-employment not previously reported", "No").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("perform any work", "No").click(); Thread.sleep(500);
+		wcl.check5aNo().click();	Thread.sleep(500);
+		wcl.checkMainQuestion("definite date to return to full time employment", "No").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("refuse any offer or work or rehire", "No").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("receive your first payment from a pension", "No").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("receive dismissal pay", "No").click(); Thread.sleep(500);
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(1000);
+
+		//Submission of Employment Details page...
+
+
+
+		//Submission of Verify Weekly Certification Responses page...
+		ph.WeeklyCertificationResponses_Screen();
+
+		Thread.sleep(5000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//Submission of Weekly Certification and Work Search Record Acknowledgement page...
+		ph.WKCAcknowledgementScreen();
+
+		wcl.ssnnum().sendKeys(SSN.substring(5));	Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+
+		//Final Confirmation page...
+		PageHeading.ConfirmationPage(SimpleClassname);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+
+		Thread.sleep(5000);
+		wcl.clickLogout();
+		Thread.sleep(2000);
+		//Add Manual Payment Request entry
+		lp.login("claimsupervisor", "Msui@#12345");
+		Thread.sleep(2000);
+		mp=new ManualPaymentRequest();
+		mp.manualPaymentRequest(driver, snapshotPath, SimpleClassname, SSN, -7);
+
+		Thread.sleep(1500);
+
+		/*batch Automation Batch Name // ./qclient.sh runJob Pay010DetermineWeeklyCertType benefits_daily_515pm
+
+
+
+		 */System.out.println("Waiting for batch run");
+		 SSHConnection ssh=new SSHConnection();
+		 ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), BatchProp.getProperty("PaymentBatches"));
+		 Thread.sleep(5000);
+		 wcl.clickHome();
+		 Thread.sleep(5000);
+		 cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		 //Thread.sleep(1000);
+
+
+		 Thread.sleep(2500);
+
+		 wcl.proceesWC_link().click();
+		 Thread.sleep(1000);
+		 driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		 wcl.PaidAmount().click();
+		 Thread.sleep(1000);
+		 h=new Highlighter();
+		 h.highlight(driver, "//*[@id='j_id_6k_1']/tbody/tr[3]/td[5]");
+		 Thread.sleep(1000);
+		 Highlighter h = new Highlighter();
+		 h.highlight(driver, "//td[text() = 'Paid Amount']");
+		 driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		 Thread.sleep(1000);
+
+
+
+
+	}
+	@AfterTest
+	public void tearDown()
+	{
+		driver.close();
+		driver.quit();
+	}
+}

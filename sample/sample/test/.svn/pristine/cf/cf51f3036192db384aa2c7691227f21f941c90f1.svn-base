@@ -1,0 +1,161 @@
+/**
+ * 
+ */
+package com.ui.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.testng.Assert;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverpaymentMaintenance_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+/**
+ * @author nnegi
+ *
+ */
+public class ProcessRepayment extends TestBase{
+	
+	
+	static Wc_locators wcl=new Wc_locators();
+	static OverpaymentMaintenance_Locators oml=new OverpaymentMaintenance_Locators();
+	static screenShot screen=new screenShot();
+	
+	public static void ProcessRepaymentScreen(WebDriver driver,String snapshotPath, String SimpleClassname,String SSN,String PaymentMode,String Amount) throws InterruptedException
+	{
+		Thread.sleep(3000);
+		wcl.clickHome();
+		Thread.sleep(2000);
+		wcl.homeTabs("Overpayment Maintenance").click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Enter Repayment Details").click();
+		Thread.sleep(5000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[text()='-Select-']/following-sibling::div/span"))).click();
+		Thread.sleep(1000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='"+PaymentMode+"']"))).click();
+		Thread.sleep(1000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@name='paymentAmount']"))).sendKeys(Amount);
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name,'claimantSsn_-ssn1')]"))).sendKeys(SSN);
+		Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), 'search')]"))).click();
+		Thread.sleep(3000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name,'-repaymentAmount')]"))).sendKeys(Amount);
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(3500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		
+	}
+			
+	public static void ProcessRepaymentScreen_cash(WebDriver driver,String snapshotPath, String SimpleClassname,String SSN) throws InterruptedException
+	{
+		Thread.sleep(3000);
+		wcl.clickHome();
+		Thread.sleep(2000);
+		wcl.homeTabs("Overpayment Maintenance").click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Enter Repayment Details").click();
+		Thread.sleep(5000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[text()='-Select-']/following-sibling::div/span"))).click();
+		Thread.sleep(1000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='Cash']"))).click();
+		Thread.sleep(1000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@name='paymentAmount']"))).sendKeys("50");
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name,'claimantSsn_-ssn1')]"))).sendKeys(SSN);
+		Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), 'search')]"))).click();
+		Thread.sleep(3000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name,'-repaymentAmount')]"))).sendKeys("50");
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(3500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(3500);
+		
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchApplyRepayment benefits_daily_515pm");
+		Thread.sleep(3000);
+		QuerySearch q;
+		String diff = "";
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for repayment batch to run...");
+			Thread.sleep(1000*60);
+			try
+			{
+				diff = q.getDiff("SELECT (CURRENT_DATE - DATE(UPDATED_TS)) DIFF FROM T_OVERPAYMENT WHERE "
+						+ "DATE(UPDATED_TS) = CURRENT_DATE AND CLAIM_ID IN (SELECT CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER BY ESTABLISHMENT_DATE DESC");
+				System.out.println("Last updated date : "+diff);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(!diff.equalsIgnoreCase("0"));
+		System.out.println("Repayment Successful...");
+		
+		
+		
+		
+		
+	}
+	public static void cancel_repayment(WebDriver driver,String snapshotPath, String SimpleClassname,String SSN) throws InterruptedException
+	{
+		Thread.sleep(3000);
+		wcl.clickHome();
+		Thread.sleep(2000);
+		wcl.homeTabs("Overpayment Maintenance").click();
+		Thread.sleep(2000);
+		wcl.homeTabs("Cancel Repayment").click();
+		Thread.sleep(5000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name,'ssnBean_-ssn1')]"))).sendKeys(SSN);
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();Thread.sleep(3000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[text()='Repayment Amount ']//following::span[1]"))).click();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();Thread.sleep(3000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[text()='Is Bank Cancelled']//following::span[1]"))).click();
+		Thread.sleep(1000);
+		FutureDatePastDate f = new FutureDatePastDate();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name,'bankCancellationDate_-month')]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name,'bankCancellationDate_-month')]"))).sendKeys(f.d(0));
+		Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[contains(@name,'reasonForCancellation')]"))).sendKeys("Testing purpose only");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();Thread.sleep(4000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		String a = driver.findElement(By.xpath("//div[text()='Cancel Repayment Confirmation']")).getText();
+		Assert.assertEquals("Cancel Repayment Confirmation", a);
+		wcl.clickHome();
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchCancelRepayment benefits_daily_515pm");
+		Thread.sleep(30000);
+		
+				
+		
+	}
+	
+	
+
+}

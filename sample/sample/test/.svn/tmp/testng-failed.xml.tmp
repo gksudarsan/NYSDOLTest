@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [UI_Project]" parallel="none">
+  <parameter name="browser" value="chrome"/>
+  <listeners>
+    <listener class-name="com.ui.utilities.extentReport"/>
+  </listeners>
+  <test name="Regression">
+    <parameter name="browser" value="chrome"/>
+    <classes>
+<<<<<<< .mine
+      <class name="com.Payments.TC_56798"/>
+||||||| .r666
+=======
+      <class name="com.Payments.TC_56807"/>
+>>>>>>> .r778
+    </classes>
+  </test> <!-- Regression -->
+</suite> <!-- Failed suite [UI_Project] -->

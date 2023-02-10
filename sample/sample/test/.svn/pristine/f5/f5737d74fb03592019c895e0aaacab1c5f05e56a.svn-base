@@ -1,0 +1,79 @@
+/**
+ * 
+ */
+package com.ui.pages;
+
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+/**
+ * @author nnegi
+ *
+ */
+public class Corrospondence_Forms extends TestBase{
+	
+	static OverPayment_Locators opl=new OverPayment_Locators();
+	static Wc_locators wcl=new Wc_locators();
+	static PageHeading ph= new PageHeading();
+	static screenShot screen=new screenShot();
+	
+	public static void CorrospondenceResponse(WebDriver driver,String snapshotPath, String SimpleClassname,String SSN, String CorrospDate) throws InterruptedException
+	{
+		Thread.sleep(2000);
+		wcl.homeTabs("Forms / Correspondence").click();Thread.sleep(2000);
+		wcl.homeTabs("Incoming Responses").click();Thread.sleep(1000);
+		
+		wcl.homeTabs("Enter Overpayment Predetermination Notice Response").click();Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		ph.OvrPymntCorrospondenceFirst_Screen();
+		Thread.sleep(1500);
+		wcl.ssn1().sendKeys(SSN);
+		Thread.sleep(500);
+		opl.CorrospnDate().sendKeys(CorrospDate);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		ph.ListOfOverpayment();
+		Thread.sleep(1500);
+		opl.SelectIssue();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickNext().click();
+		ph.NoticeCorResponse();
+		Thread.sleep(1500);
+		opl.SelectMainQueAns("Do you disagree with the weeks overpaid?", "No");
+		opl.SelectMainQueAns("Do you disagree with the total amount of the overpayment?", "No");Thread.sleep(1000);
+		opl.SelectMainQueAns("Do you disagree with the reasons for the overpayment?", "No");Thread.sleep(1000);
+		opl.SelectMainQueAns("State regulation provides for waiver of overpayment", "Yes");Thread.sleep(1000);
+		opl.SelectMainQueAns("If yes, was the waiver provided by the claimant?", "Yes");Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	
+		wcl.clickNext().click();
+		ph.ClaimantWaiverResponse_Screen();
+		Thread.sleep(1000);
+		opl.SelectMainQueAns("Do you have a mental or physical condition, poor health", "No");
+		opl.SelectMainQueAns("Were you overpaid as a result of gross administrative error", "No");Thread.sleep(1000);
+		opl.SelectMainQueAns("Did you not apply for public welfare benefits", "No");Thread.sleep(1000);
+		opl.SelectMainQueAns("An overpayment may be waived in the event of death.", "No");Thread.sleep(1000);
+		opl.SelectMainQueAns("An overpayment may be canceled in a case of bankruptcy.", "No");Thread.sleep(1000);
+		opl.SelectMainQueAns("Were you overpaid because the employer failed to provide the Department", "No");Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2500);
+		wcl.clickNext().click();
+		ph.ClaimantResponseConfirmation_Screen();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2500);
+		
+		
+		
+		
+	}
+}

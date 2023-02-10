@@ -1,0 +1,33 @@
+/**
+ * 
+ */
+package com.ui.pages;
+
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.screenShot;
+
+/**
+ * @author nnegi
+ *
+ */
+public class QuickAccess extends TestBase {
+	
+	static OverPayment_Locators opl=new OverPayment_Locators();
+	static Wc_locators wcl =new Wc_locators();
+	static screenShot screen=new screenShot();
+	
+	public static void QuickAccess55818(WebDriver driver,String snapshotPath,String SimpleClassname,String SSN,String Authcode) throws InterruptedException
+	{
+		Thread.sleep(5000);
+		driver.get(prop.getProperty("quickAccessLink"));
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		opl.AuthCode().sendKeys(Authcode);
+		
+	}
+
+}

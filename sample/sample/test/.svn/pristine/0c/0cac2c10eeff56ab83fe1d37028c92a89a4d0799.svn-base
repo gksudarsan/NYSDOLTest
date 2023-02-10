@@ -1,0 +1,176 @@
+package com.Payments;
+
+/** @author mjape */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.ManualPaymentRequest;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_58960 extends TestBase
+{
+	int CWE = -7;
+
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	UpdateIssueDates uid;
+	Wc_locators wcl = new Wc_locators();
+	WeeklyCert w;
+	ClaimSummary c;
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "", ed;
+	TC_58960 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B WHERE A.CLAIMANT_ID = B.CLAIMANT_ID  AND B.ENTITLEMENT_TYPE = 'TRA'  "
+			+ "AND B.STATUS = 'ACTV' AND B.BYE_DATE > CURRENT_DATE AND (B.CLAIM_ID NOT IN (SELECT D.CLAIM_ID FROM T_ISSUE D "
+			+ "WHERE B.CLAIM_ID = D.CLAIM_ID) OR B.CLAIM_ID IN (SELECT D.CLAIM_ID FROM T_ISSUE D WHERE B.CLAIM_ID = D.CLAIM_ID "
+			+ "AND D.ISSUE_STATUS = 'DECD')) AND A.CLAIMANT_ID NOT IN (SELECT C.CLAIMANT_ID FROM T_WEEKLY_CERTIFICATION C "
+			+ "WHERE A.CLAIMANT_ID = C.CLAIMANT_ID AND C.CERTIFICATION_DATE > '";
+
+	//Properties prop;
+	public TC_58960()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') AND B.EFFECTIVE_DATE = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_58960();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "The CSR is requesting to process a manual payment for a CWE filed by the claimant for "
+			+ "Completion TRA entitlement. The CSR indicated that a timesheet is required but no waiver.")
+	public void Testing58960() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+
+		//Weekly Cert By SSN/CWE Process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		w = new WeeklyCert();
+		w.fileWeeklyCertification58960(driver, snapshotPath, SimpleClassname, SSN, (CWE));
+
+		wcl.clickHome();
+		Thread.sleep(5000);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login("claimsupervisor", "Msui@#12345");
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Manual Payment Request process...
+		ManualPaymentRequest mpr = new ManualPaymentRequest();
+		mpr.manualPaymentRequest(driver, snapshotPath, SimpleClassname, SSN, (CWE));
+		wcl.clickHome();
+		Thread.sleep(5000);
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Pending Weekly Certification(s)");
+
+		//Run Payments Batch...		
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob Pay010DetermineWeeklyCertType benefits_daily_515pm;"
+				+ "./qclient.sh runJob Pay040ProcessedWeeklyCert benefits_daily_515pm;./qclient.sh runJob Pay050ProvidePayment benefits_daily_515pm");
+		Thread.sleep(3000);
+
+		String ID = "";
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for Pay010DetermineWeeklyCertType, Pay040ProcessedWeeklyCert, Pay050ProvidePayment to run...");
+			Thread.sleep(1000*60);
+			try
+			{
+				ID = q.getClaimantPaymentID("SELECT CLAIMANT_PAYMENT_ID FROM T_CLAIMANT_PAYMENT WHERE "
+						+ "CREATED_BY = 'Pay050ProvidePayment' AND DATE(CREATED_TS) = CURRENT_DATE AND CLAIMANT_ID IN (SELECT "
+						+ "CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+				System.out.println("CLAIMANT_PAYMENT_ID : "+ID);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(ID.isEmpty());
+		System.out.println("Pay010DetermineWeeklyCertType, Pay040ProcessedWeeklyCert, Pay050ProvidePayment Successful...");
+		Thread.sleep(1000);
+		System.out.println("	");
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

@@ -1,0 +1,115 @@
+package com.ClaimsIntake;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.RegularclaimIntake;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.RandomGenerator;
+import com.ui.utilities.screenShot;
+
+public class TC_50355 extends TestBase
+{
+	RandomGenerator rg;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	RegularclaimIntake rci;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath;
+	TC_50355 ClassObject;
+	CreateDirectory CD;
+	String SSN = "", query;
+
+	//Properties prop;
+	public TC_50355()
+	{
+		super();
+	}
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Fetching SSN...
+		do
+		{
+			System.out.println("Generating random SSN...");
+			rg = new RandomGenerator();
+		    String ssn = rg.randomNumberGenerator(9);
+		    query = "SELECT SSN FROM T_CLAIMANT WHERE SSN = '"+ssn+"'";
+			System.out.println("Query being hit to fetch SSN from database :");
+			System.out.println(query);
+			q = new QuerySearch();
+			try
+			{
+				ssn = q.randomData(query, "SSN");
+			}
+			catch(Exception e)
+			{
+				SSN = ssn;
+			}
+		}
+		while(SSN.isEmpty());
+		System.out.println("SSN to be used : "+SSN);
+
+		ClassObject =new TC_50355();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		//Opening browser... Hitting URL...
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "CIN_28239-CT_File Regular Entitlement Claim - Out of State Regular Employer Professional "
+			+ "Athlete - Between Season and IB4-Request sent out")
+	public void Testing50355() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Filing Claim Process...
+		rci = new RegularclaimIntake();
+		rci.regularClaim50355(driver, SimpleClassname, snapshotPath, SSN);
+		
+		/*String classAttributeValue = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[contains(@id, 'addAnotherChild')]//following-sibling::label[contains(text(), 'Yes')]"))).getAttribute("class"); Thread.sleep(500);
+		Assert.assertEquals("ui-state-disabled", classAttributeValue);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();*/
+	}
+}

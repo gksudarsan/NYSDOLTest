@@ -1,0 +1,48 @@
+package com.ui.utilities;
+
+ /** @author mjape */
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class Highlighter 
+{
+	public  void highlight(WebDriver driver, String xpath) throws InterruptedException
+	{
+		//Exact Match of the word
+		WebElement matchedElement=driver.findElement(By.xpath(xpath));
+
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", matchedElement);
+		Thread.sleep(500); 
+		js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');", matchedElement);
+	}
+	
+	public  void hide(WebDriver driver, String xpath) throws InterruptedException
+	{
+		//Exact Match of the word
+		WebElement matchedElement=driver.findElement(By.xpath(xpath));
+
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", matchedElement);
+		Thread.sleep(500); 
+		js.executeScript("arguments[0].setAttribute('style', 'background: black; border: 2px solid black;');", matchedElement);
+	}
+
+	/**
+	 * @param driver
+	 * @param ele
+	 * @throws InterruptedException 
+	 */
+	public void highlightEle(WebDriver driver, WebElement ele) throws InterruptedException {
+		WebElement matchedElement=ele;
+
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", matchedElement);
+		Thread.sleep(500); 
+		js.executeScript("arguments[0].setAttribute('style', 'background: yellow;');", matchedElement);
+		
+	}
+}

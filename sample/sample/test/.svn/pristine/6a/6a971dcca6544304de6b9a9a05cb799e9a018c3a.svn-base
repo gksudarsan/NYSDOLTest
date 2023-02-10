@@ -1,0 +1,105 @@
+package com.ui.pages;
+
+/** @author mjape */
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+public class UpdateIssueDates extends TestBase
+{
+	Wc_locators wcl;
+	Payments_Locators pl;
+	screenShot screen=new screenShot();
+	FutureDatePastDate f;
+	String heading;
+	int counter;
+	
+	public void updateFutureIssueStartDate(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, int CWE) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		f = new FutureDatePastDate();
+		pl = new Payments_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Nonmonetary").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Update Issue Dates").click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Issues"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		List<WebElement> elements = driver.findElements(By.xpath("//td[contains(text(), 'Future Issues:')]//following::span[contains(@class, 'radiobutton')]"));
+		System.out.println("Number of Future Issues : "+elements.size());		
+		for(int i = 1 ; i <= elements.size() ; i++)
+		{
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Future Issues:')]//following::span[contains(@class, 'radiobutton')]["+i+"]"))).click(); Thread.sleep(500);		
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(2500);
+			
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("Modify Issue"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			pl.Date("modifiedStartDate").click(); Thread.sleep(500);
+			pl.Date("modifiedStartDate").sendKeys(f.Friday(CWE)); Thread.sleep(500);
+			pl.Date("modifiedEndDate__1").click(); Thread.sleep(500);
+			pl.Date("modifiedEndDate__1").sendKeys(f.Friday(CWE)); Thread.sleep(500);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), '-Select-')]"))).click(); Thread.sleep(500);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), 'Third Party')]"))).click(); Thread.sleep(500);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='dateInterviewed__1_-month']"))).click(); Thread.sleep(500);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='dateInterviewed__1_-month']"))).sendKeys(f.d(-1));; Thread.sleep(500);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@name='statement__1']"))).sendKeys("Testing Purpose"); Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.submit().click();
+			Thread.sleep(5000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickHome(); Thread.sleep(5000);
+			
+			wcl.homeTabs("Nonmonetary").click(); Thread.sleep(2500);
+			driver.findElement(By.xpath("//td/a/span[contains(text(), 'Update Issue Dates')]")).click(); Thread.sleep(2500);
+			wcl.ssn1().sendKeys(SSN);
+			wcl.clickNext().click(); Thread.sleep(2500);
+			
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("List of Issues"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

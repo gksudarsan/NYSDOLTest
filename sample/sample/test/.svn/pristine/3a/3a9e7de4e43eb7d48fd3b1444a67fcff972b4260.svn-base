@@ -1,0 +1,199 @@
+package com.Repayments;
+
+import static org.testng.Assert.assertEquals;
+
+/** @author vsingh  */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.checkerframework.checker.index.qual.SubstringIndexFor;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.sun.media.sound.InvalidFormatException;
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.OverpaymentMaintenance;
+import com.ui.pages.ProcessRepayment;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_58060 extends TestBase
+{
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	OverpaymentMaintenance om;
+	ClaimSummary c = new ClaimSummary();
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath,createdDate="", SSN = "111121212";
+	TC_58060 ClassObject;
+	CreateDirectory CD;
+	//String SSN= prop.getProperty("58060_SSN");
+
+	//Properties prop;
+	public TC_58060()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+
+
+		ClassObject =new TC_58060();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+
+
+	}
+
+	@Test( description = "CT 28858 REPAY Cancel Repayment - Cancel CC repay applied to interest")
+	public void Testing_TC_58060() throws InterruptedException, ClassNotFoundException, SQLException, InvalidFormatException
+	{
+
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Highlighter h = new Highlighter();
+
+		q = new QuerySearch();
+		String penaltyBalance = q.getPenaltyBalance("SELECT TF_PENALTY_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT "
+				+ "CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER "
+				+ "BY UPDATED_TS DESC");
+		String overpaymentBalance = q.getOverpaymentBalance("SELECT OVERPAYMENT_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT "
+				+ "CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER "
+				+ "BY UPDATED_TS DESC");
+		String interestBalance = q.getInterestBalance("SELECT INTEREST_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT "
+				+ "CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER "
+				+ "BY UPDATED_TS DESC");
+
+		String amt_int1= String.valueOf(Double.parseDouble(interestBalance) + 30) ;
+		String amt_int = amt_int1.substring(0, 4);
+
+		System.out.println("penaltyBalance = "+penaltyBalance);
+		System.out.println("interestBalance = "+interestBalance);
+		System.out.println("amt_int = "+amt_int);
+		String amount = String.valueOf(Double.parseDouble(penaltyBalance) + Double.parseDouble(overpaymentBalance) + Double.parseDouble(interestBalance));
+		System.out.println(" Total OP amount "+amount);
+
+		//Moving to Overpayment screen------------------
+
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//a[text()='Overpayments']")).click();
+		Thread.sleep(2000);
+		h.highlight(driver, "//div[text()='Interest']//following::span[3]");Thread.sleep(1000);
+		String totalinterest= driver.findElement(By.xpath("//div[text()='Interest']//following::span[3]")).getText();
+		System.out.println("total interest = "+totalinterest);
+		h.highlight(driver, "//div[text()='Penalty']//following::span[3]");Thread.sleep(1000);
+		String totalpenalty= driver.findElement(By.xpath("//div[text()='Penalty']//following::span[3]")).getText();
+		System.out.println("total penalty = "+totalpenalty);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		String amt_interest= String.valueOf(Double.parseDouble(totalinterest) + 30) ;
+		String amt_interest1 = amt_interest.substring(0, 4);
+
+		//Enter Repayment Details process...
+
+		for(int i=0;i<=1;i++)
+		{
+			String arr[] = new String[3];
+			arr[0] = totalpenalty;
+			arr[1] = amt_interest1;
+
+			wcl.clickHome();
+			om = new OverpaymentMaintenance();
+			om.enterRepaymentDetails_Creditcard(driver, snapshotPath, SimpleClassname, "Credit Card", "", arr[i], "", SSN);
+			wcl.clickHome();
+			Thread.sleep(2000);
+
+			c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+			Thread.sleep(1000);
+			driver.findElement(By.xpath("//a[text()='Overpayments']")).click();
+			Thread.sleep(2000);
+
+			if( i== 0)
+			{
+				h.highlight(driver, "//div[text()='Penalty']//following::span[2]");Thread.sleep(1000);
+				h.highlight(driver, "//div[text()='Penalty']//following::span[3]");Thread.sleep(1000);
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+				String penalty =	driver.findElement(By.xpath("//div[text()='Penalty']//following::span[2]")).getText();
+				System.out.println("Penalty amount paid = "+penalty);
+				driver.findElement(By.xpath("//td[text()='Repayment ID']//following::a[1]")).click();
+				Thread.sleep(3000);
+				h.highlight(driver, "//td[text()='Penalty']"); Thread.sleep(3000); 
+				Assert.assertEquals(penalty, totalpenalty);
+			}
+			else if( i== 1)
+			{
+				String OPAMT= driver.findElement(By.xpath("//div[text()='Overpayment Amount']//following::span[2]")).getText();
+				double OPAMT1= Double.parseDouble(OPAMT) ;
+				System.out.println("OP amount paid = "+OPAMT1);
+				h.highlight(driver, "//div[text()='Interest']//following::span[2]");Thread.sleep(1000);
+				h.highlight(driver, "//div[text()='Interest']//following::span[3]");Thread.sleep(1000);
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+				String Interest =	driver.findElement(By.xpath("//div[text()='Interest']//following::span[2]")).getText();
+				System.out.println("Interest amount paid = "+Interest);
+				String Interestafterpaied =	driver.findElement(By.xpath("//div[text()='Interest']//following::span[3]")).getText();
+				System.out.println("Interest amount left = "+Interestafterpaied);
+				driver.findElement(By.xpath("//td[text()='Repayment ID']//following::a[1]")).click();
+				Thread.sleep(2000);
+				h.highlight(driver, "//td[text()='Interest']"); 
+				h.highlight(driver, "//td[text()='Principal']");
+				if (Interestafterpaied.equals("0.00")){
+					System.out.println("full interest paid ");
+
+				}
+
+				if (OPAMT1 > 0.00)
+				{
+					System.out.println("total OP AMOUNT PAID = "+OPAMT);	
+				}
+				else {
+					System.out.println("mismatch in interestpaid and OP PAID AMOUNT");
+					h.highlight(driver, "//div[text()='Interest']//following::span[3]");
+				}
+
+			}
+
+		}
+
+
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+
+		//driver.close();
+		//driver.quit();
+	}
+}

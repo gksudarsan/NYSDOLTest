@@ -1,0 +1,51 @@
+package com.ui.pages;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+import com.ui.base.TestBase;
+
+
+public class LoginLogoutPage extends TestBase{
+
+
+	//PageFactory
+	@FindBy(name="userId")
+	public WebElement username;
+
+
+
+	@FindBy(name="password")
+	public WebElement password;
+
+	@FindBy(xpath="//*[text()='Submit']")
+	public WebElement loginbtn;
+
+	@FindBy(xpath="//div[@role='dialog']/div/a[@aria-label='Close']")
+	public WebElement closePopup;
+
+	@FindBy(xpath="//a[contains(text(), 'Log out')]")
+	public WebElement logoutbtn;
+
+
+	public LoginLogoutPage()
+	{
+		PageFactory.initElements(driver, this);
+
+	}
+	public void login(String un, String pwd) throws InterruptedException
+	{
+		username.sendKeys(un);
+		password.sendKeys(pwd);
+		Thread.sleep(2000);
+		loginbtn.click();
+		Thread.sleep(5000);
+		closePopup.click();	
+	}
+	public void logout()
+	{
+		logoutbtn.click();
+	}
+
+}

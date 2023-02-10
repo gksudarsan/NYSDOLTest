@@ -1,0 +1,123 @@
+package com.Overpayments;
+
+/** @author mjape 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_55803 extends TestBase
+{
+	QuerySearch q;
+	LoginLogoutPage lp;
+	ClaimSummary c;
+	Overpayment o;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "";
+	TC_55803 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_OVERPAYMENT_ISSUE WHERE "
+			+ "ISSUE_STATUS = 'DECD')";
+
+	//Properties prop;
+	public TC_55803()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_55803();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "To verify that Pay Period section is removed from Overpayment Investigation Employer Response "
+			+ "(BPC-050) screen.")
+	public void Testing55803() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+		
+		driver.findElement(By.xpath("//a[contains(text(), 'Overpayments')]")).click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver.findElement(By.xpath("//a[contains(text(), 'Overpayment Investigation')]")).click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td[contains(text(), 'Overpayment Issue Information')]//following::td[contains(text(), 'Investigation Completed')]//preceding::span[1]")).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click(); Thread.sleep(5000);
+		driver.findElement(By.xpath("//td[contains(text(), 'Action')]//following::a[contains(text(), 'Enter Employer Response')][1]")).click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		List<WebElement> element = driver.findElements(By.xpath("//*[contains(text(), 'Calculate Weekly Details Pay Period')]"));
+		if(element.size()==0)
+			System.out.println("Calculate Weekly Details Pay Period section not found...");			
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

@@ -1,0 +1,174 @@
+package com.ui.locators;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+
+public class SharedWork_Locators extends TestBase
+{
+	public void enterEAN(String xpath, String ean)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-ean1')]"))).sendKeys(ean);
+	}
+	
+	public void clickRadioButton(String xpath)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath))).click();
+	}
+	
+	public void clickButton(String text)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), '"+text+"')]"))).click();
+	}
+	
+	public WebElement Date(String xpath)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, '"+xpath+"_-month')]"))).click();
+		return driver.findElement(By.xpath("//input[contains(@id, '"+xpath+"_-month')]"));
+	}
+	
+	public void typeOfBusiness(String type)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, 'typeOfBusiness')]"))).sendKeys(type);
+	}
+	
+	public void clickSelect(String xpath, String selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath))).click(); Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text() = '"+selection+"']"))).click();
+	}
+	
+	public void Text(String xpath, String text)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath))).sendKeys(text);
+	}
+	
+	public void clickHyperlink(String xpath)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath))).click();
+	}
+	
+	public void unitName(String unitName)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'unitName')]"))).sendKeys(unitName);
+	}
+	
+	public void percentageReduction(String selection, String percentage)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'percentageReduction"+selection+"')]"))).sendKeys(percentage);
+	}
+	
+	public void fringeBenAffected(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'fringe benefit')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void isServiceCreditOnSeniority(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'service credits')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void isVacationShutdown(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'vacation shutdown')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void noEmpLayOffAverted(String numbers)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'noEmpLayOffAverted')]"))).sendKeys(numbers);
+	}
+	
+	public void perStaffEffected(String percentage)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'perStaffEffected')]"))).sendKeys(percentage);
+	}
+	
+	public void workhourRedReason(String selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'expected Work Reduction')]//following::label[1]"))).click(); Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text() = '"+selection+"']"))).click();
+	}
+	
+	public void isPlanToPermanentEmployees(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'permanent employees')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void accessGranted(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Job Creation Act of 2012')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void accessRefused(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'refuse to allow the Department')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void partOfUnion(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'collective bargaining agreement')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void oblgFollowed(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'obligations')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void contactName(String name)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'contactName')]"))).sendKeys(name);
+	}
+	
+	public void contactPhone(String name)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'contactPhone_-areacode')]"))).sendKeys(name);
+	}
+	
+	public void isPartOfCollectiveBargaining(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'attach copies of the proposed plan')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void certify()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@id, 'certify')]//following::span[contains(@class, 'chkbox')]"))).click();
+	}
+	
+	public void representativeTitle(String title)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'representativeTitle')]"))).sendKeys(title);
+	}
+	
+	public void representativeName(String name)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'representativeName')]"))).sendKeys(name);
+	}
+	
+	public void status(String selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Unit Status')]//following::label[1]"))).click(); Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text() = '"+selection+"']"))).click();
+	}
+	
+	public void employeeFirstName(String name)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'employeeFirstName')]"))).sendKeys(name);
+	}
+	
+	public void employeeLastName(String name)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'employeeLastName')]"))).sendKeys(name);
+	}
+	
+	public void employeeSSN(String xpath, String ssn)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, '"+xpath+"_-ssn1')]"))).sendKeys(ssn);
+	}
+	
+	public void workingHoursPerWeek(String hours)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'workingHoursPerWeek')]"))).sendKeys(hours);
+	}
+}

@@ -1,0 +1,116 @@
+package com.Payments;
+
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+
+import com.ui.pages.Add_dependent;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.SearchWorkItem;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+
+
+public class TC_59019 extends TestBase
+{
+	
+	static LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static PageHeading ph;
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_59019 ClassObject;
+
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+	static Payments_Locators pml;
+	static FileWeeklyCertification fwc;
+	static String date1;
+	static ClaimSummary cs;
+	
+   
+	
+	
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException
+
+	{
+		ClassObject =new TC_59019();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+		
+	
+	
+
+	}
+	@Test(description ="TC_59019" )
+	public void TC_59018() throws InterruptedException, ParseException
+	{
+		System.out.println("@test initiated");
+		wcl=new Wc_locators();
+		fwc=new FileWeeklyCertification();
+		
+	pml=new Payments_Locators();
+	Thread.sleep(3000);
+	
+	Add_dependent.dependent_add (driver,snapshotPath,SimpleClassname,prop.getProperty("ssn1"));
+	
+    FileWeeklyCertification.SubmitWeeklyCertification(driver, snapshotPath, SimpleClassname);
+
+	FileWeeklyCertification.WCF_DeatilsForNonPartialEmpolyment(driver, snapshotPath, SimpleClassname);
+	System.out.println("wc filed successfully");
+  
+	
+	cs = new ClaimSummary();
+ 
+	cs.claimsummary(prop.getProperty("ssn1"),snapshotPath, SimpleClassname, "Dependency");
+	
+	
+	
+	}
+	@AfterTest
+	public void close_browser()
+	{
+		driver.close();
+		driver.quit();
+		System.out.println("Testcase executed and browser closed");
+	}
+	
+}

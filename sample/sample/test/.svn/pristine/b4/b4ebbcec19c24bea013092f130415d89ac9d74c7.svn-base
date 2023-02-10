@@ -1,0 +1,140 @@
+/**
+ * 
+ */
+package com.WeeklyCertification;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.BackDateClaimRequestPage;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.SearchWorkItem;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+/**
+ * @author nnegi
+ *
+ */
+public class TC_59272 extends TestBase{
+	LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static PageHeading ph;
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_59272 ClassObject;
+
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+
+
+	static FutureDatePastDate Pdate;
+	static String date1;
+
+
+	public TC_59272()
+	{
+		super();
+	}
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException
+
+	{
+		ClassObject =new TC_59272();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+
+
+	}
+	
+	@Test(description ="TC_59272 Back Date Weekly Certification (Re-op or AC) - Weekly Certs. - Shared Work Claim")
+	public void TC_59272_BackDate_ShareWorkEmp() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		wcl=new Wc_locators();
+		ph =new PageHeading();
+		Thread.sleep(5000);
+		
+		wcl.homeTabs("Weekly Certification").click();
+		Thread.sleep(3000);
+		wcl.homeTabs("Backdate Wkly Certification").click();
+		
+		Thread.sleep(5000);
+		wcl.ssn1().sendKeys(prop.getProperty("ssn1"));
+		wcl.confirmssn1().sendKeys(prop.getProperty("ssn1"));
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		wcl.clickNext().click();
+		
+		ph.FWC_SharedWork();
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.sharedWorkEmply("Yes").click();
+		Thread.sleep(500);
+		wcl.stillSharedWorkEmplyr("Yes").click();
+		Thread.sleep(500);
+		wcl.sharedWorkHours("Yes").click();
+		Thread.sleep(500);
+		wcl.hasRefusedWorkSW("No").click();
+		Thread.sleep(500);
+		wcl.isPensionReceivedSW("No").click();
+		Thread.sleep(500);
+		wcl.performedWorkSW("No").click();
+		Thread.sleep(500);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+		ph.WeeklyCertificationResponses_Screen();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		try {
+			wcl.clickNext().click();
+		} catch (Exception e) {
+			JavascriptExecutor executor = (JavascriptExecutor) driver;
+			executor.executeScript("arguments[0].click();",wcl.clickNext());
+		}
+		ph.WKCAcknowledgementScreen();
+		Thread.sleep(1000);
+		wcl.ssnnum().sendKeys(prop.getProperty("ssn3"));
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		wcl.submit().click();  
+		PageHeading.ConfirmationPage(SimpleClassname);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		
+		
+		
+	}
+	@AfterTest
+	public void tearDown()
+	{
+		driver.close();
+	}
+}

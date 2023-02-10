@@ -1,0 +1,45 @@
+package com.ui.utilities;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+public class Test {
+	
+	   
+	
+		// TODO
+		
+		static String ot;
+		
+	 public static String dat(String inputText) throws ParseException
+	 {
+
+		//String inputText = "Saturday, May 16, 2020";
+		DateFormat outputFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+		DateFormat inputFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.US);
+		Date date1 = inputFormat.parse(inputText);
+		Calendar calender= Calendar.getInstance();
+		calender.add(Calendar.DATE, -6);
+		Date date=calender.getTime();
+		DateFormat df=new SimpleDateFormat("MMddyyyy");
+		//need to check
+		ot= outputFormat.format(date1);
+		return ot;
+		
+	}
+	 public static void main(String args[]) throws ParseException
+	 {
+		 Test.dat("Saturday, May 16, 2020");
+		 System.out.println(ot);
+	 }
+	}
+
+	
+
+

@@ -1,0 +1,124 @@
+package com.WeeklyCertification;
+
+/** @author mjape */
+
+import java.sql.SQLException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.AddUpdateTRATraining;
+import com.ui.pages.EnterTRABreakPeriods;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_55681 extends TestBase
+{
+	LoginLogoutPage lp;
+	FutureDatePastDate f;
+	QuerySearch q;
+	Wc_locators wcl;
+	AddUpdateTRATraining au;
+	EnterTRABreakPeriods eb;
+	WeeklyCert w;
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "144600482", ed;
+	TC_55681 ClassObject;
+	CreateDirectory CD;
+	String query = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'TRA' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+
+	//Properties prop;
+	public TC_55681()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		ed = f.Sunday(-7);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') and c.effective_date = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_55681();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	
+	@Test(priority=1, description = "Validate that TRA claimant is able to file weekly certification when the TRA claimant is "
+			+ "in an approved training break period.")
+	public void Testing55681() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Add Update TRA Training Details process...
+		au = new AddUpdateTRATraining();
+		au.addTRATraining(driver, snapshotPath, SimpleClassname, SSN, "Approved", -14, 7);
+		
+		//Enter TRA Break Periods process...
+		wcl = new Wc_locators();
+		wcl.clickHome();
+		Thread.sleep(5000);
+		eb = new EnterTRABreakPeriods();
+		eb.enterTRABreak(driver, snapshotPath, SimpleClassname, SSN);
+		
+		/*//File Weekly Certification process...
+		wcl = new Wc_locators();
+		wcl.clickHome();
+		Thread.sleep(5000);
+		w = new WeeklyCert();
+		w.fileWeeklyCertification55681(driver, snapshotPath, SimpleClassname, SSN);*/
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		/*wcl = new Wc_locators();
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();*/
+	}
+}

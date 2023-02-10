@@ -1,0 +1,93 @@
+package com.ui.pages;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.screenShot;
+
+public class ISAInquiry extends TestBase
+{
+	Wc_locators wcl;
+	OverPayment_Locators opl;
+	screenShot screen = new screenShot();
+
+	public void fradulentClaimant(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		opl = new OverPayment_Locators();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("ISA").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Inquiry").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Fraudulent Claimant").click();
+		Thread.sleep(2500);
+		
+		//Getting the previous month...
+		LocalDate now = LocalDate.now();
+		LocalDate previous = now.minusMonths(1);
+		Month previousMonth = previous.getMonth();
+		String month = String.valueOf(previousMonth);
+		month = month.substring(0, 1) + month.substring(1).toLowerCase();
+		LocalDate currentdate = LocalDate.now();
+		int year = currentdate.getYear();
+		if(month.equalsIgnoreCase("January"))
+			--year;
+		month = month.substring(0, 3);
+		System.out.println("Previous month: "+month+" "+year);
+			
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//label[contains(text(), 'Month')]//following::label[contains(text(), '-Select-')][1]")).click(); Thread.sleep(1000);
+		driver.findElement(By.xpath("//li[contains(text(), '"+month+"')]")).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//label[contains(text(), 'Year')]//following::label[contains(text(), '-Select-')][1]")).click(); Thread.sleep(1000);
+		driver.findElement(By.xpath("//li[contains(text(), '"+year+"')]")).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(10000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		opl.NoOfRecords();
+		List<WebElement> element = driver.findElements(By.xpath("//span[contains(text(), 'No of Records')]"));
+		String text = element.get(0).getText();		text = text.substring(text.indexOf("-")+1);		text = text.substring(7, text.indexOf(","));
+		int noOfRecords = Integer.parseInt(text);
+		int noOfpages = (int)(Math.ceil((Double.parseDouble(text))/25.0));
+		System.out.println("No of records found : "+noOfRecords);
+		System.out.println("No of pages : "+noOfpages);
+		SSN = SSN.substring(0, 3) + "-" + SSN.substring(3, 5) + "-" + SSN.substring(5);
+		System.out.println("SSN to be searched : "+SSN);
+		
+		for(int m = 1 ; m <= noOfpages ; m++)
+		{
+			try
+			{
+				opl.NoOfRecords();
+				Highlighter h = new Highlighter();
+				h.highlight(driver, "//td[contains(text(), '"+SSN+"')]");
+				Thread.sleep(1000);
+				System.out.println("Record found on page "+m);
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+				Thread.sleep(1000);
+				break;
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found on page "+m);
+				System.out.println("Navigating to page "+(m+1));
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+				driver.findElement(By.xpath("//span[contains(text(), 'Search')]//following::span[text() = 'N'][1]")).click();
+			}			
+		}
+	}
+}

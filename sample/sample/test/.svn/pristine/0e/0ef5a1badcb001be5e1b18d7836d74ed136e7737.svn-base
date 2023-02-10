@@ -1,0 +1,37 @@
+package com.ui.pages;
+
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.screenShot;
+
+public class Reassign_WorkItem extends TestBase {
+	static screenShot screen=new screenShot();
+	static Wc_locators wcl;
+
+	public static void SearchCreatedPensionIssue(WebDriver driver, String snapshotPath, String SimpleClassname) throws InterruptedException
+	{
+		wcl=new Wc_locators();
+		Thread.sleep(5000);
+		wcl.clickHomePagebtn().click();
+		wcl.clickOnSystemAdmin_Link().click();
+		Thread.sleep(1000);
+		wcl.WorkFlow_AdminLink().click();
+		Thread.sleep(1000);
+		wcl.reAssignLink().click();
+	
+		Thread.sleep(5000);
+		
+	    Thread.sleep(2000);
+	    wcl.selectAllbtn().click();
+	   // Thread.sleep(3500);
+	   // wcl.clickNext().click();
+	    Thread.sleep(2000);
+	    wcl.ssn1().sendKeys(prop.getProperty("ssn1"));
+		 driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		    wcl.clickSearch().click();
+	    
+	}
+
+}

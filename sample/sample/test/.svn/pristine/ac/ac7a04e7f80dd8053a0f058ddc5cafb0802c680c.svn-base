@@ -1,0 +1,47 @@
+package com.ui.pages;
+
+/** @author mjape */
+
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class EnterTRABreakPeriods extends TestBase
+{
+	Wc_locators wcl;
+	FutureDatePastDate f;
+	QuerySearch q = new QuerySearch();
+	screenShot screen=new screenShot();
+
+	public void enterTRABreak(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		wcl = new Wc_locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("TRA Entitlement").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Enter TRA Break Periods')]")).click();
+		Thread.sleep(2500);
+		wcl.enterSSNInBreakPeriod().sendKeys(SSN); Thread.sleep(500);
+
+		String pn = q.getPetitionNumber("SELECT PETITION_NUMBER FROM T_PETITION A, T_TRA_POTENTIAL_CLAIMANT B "
+				+ "WHERE A.PETITION_ID = B.PETITION_ID AND B.SSN = '"+SSN+"'");
+
+		wcl.enterPetitionNumberInBreakPeriod().sendKeys(pn); Thread.sleep(500);
+		wcl.enterStartDateInBreakPeriod().sendKeys(f.Sunday(-7)); Thread.sleep(500);
+		wcl.enterEndDateInBreakPeriod().sendKeys(f.Saturday(-7)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(2500);
+	}
+}

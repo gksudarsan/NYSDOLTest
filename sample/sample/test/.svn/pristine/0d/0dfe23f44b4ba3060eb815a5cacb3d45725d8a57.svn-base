@@ -1,0 +1,1537 @@
+package com.ui.locators;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+
+public class claimsIntake extends TestBase {
+	
+	
+	
+	
+	
+	public WebElement file_unemployement_claim (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/a/span[contains(text(),'File Unemployment Claim')]")));
+		return driver.findElement(By.xpath("//td/a/span[contains(text(),'File Unemployment Claim')]"));
+	
+	}
+	
+	
+	
+	
+	
+	public WebElement unemployement_claim (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/a/span[contains(text(),'Unemployment Claim')]")));
+		return driver.findElement(By.xpath("//td/a/span[contains(text(),'Unemployment Claim')]"));
+	
+	}
+	
+	public WebElement first_name (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='firstName']")));
+		return driver.findElement(By.xpath("//input[@id='firstName']"));
+	
+	}
+
+	public WebElement last_name (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='lastName']")));
+		return driver.findElement(By.xpath("//input[@id='lastName']"));
+	
+	}
+	
+	public WebElement dob1 (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='dateOfBirth_-month']")));
+		return driver.findElement(By.xpath("//input[@id='dateOfBirth_-month']"));
+	
+	}
+	
+	public WebElement dob2 (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='dateOfBirth_-day']")));
+		return driver.findElement(By.xpath("//input[@id='dateOfBirth_-day']"));
+	
+	}
+	
+	public WebElement dob3 (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='dateOfBirth_-year']")));
+		return driver.findElement(By.xpath("//input[@id='dateOfBirth_-year']"));
+	
+	}
+	
+	public WebElement gender (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='gender:0']")));
+		return driver.findElement(By.xpath("//label[@for='gender:0']"));
+	
+	}
+	
+	public WebElement us_citizen_yes (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='citizen:0']")));
+		return driver.findElement(By.xpath("//label[@for='citizen:0']"));
+	
+	}
+	
+	
+	public WebElement ethinicity (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='ethnicity:0']")));
+		return driver.findElement(By.xpath("//label[@for='ethnicity:0']"));
+	
+	}
+	
+	public WebElement military_vetern (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='veteranFlag:1']")));
+		return driver.findElement(By.xpath("//label[@for='veteranFlag:1']"));
+	
+	}
+	
+	
+	
+	
+	public WebElement highest_grade (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='educationLevel_label']")));
+		return driver.findElement(By.xpath("//label[@id='educationLevel_label']"));
+	
+	}
+	
+	public WebElement highest_grade_selection (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div/ul[@id='educationLevel_items']/li[10]")));
+		return driver.findElement(By.xpath("//div/ul[@id='educationLevel_items']/li[10]"));
+	
+	}
+	
+	
+	
+	public WebElement  language_interpreter (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='languageinterpreterFlag:1']")));
+		return driver.findElement(By.xpath("//label[@for='languageinterpreterFlag:1']"));
+	
+	}
+	
+	public WebElement  dependent (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='hasCTDependent:1']")));
+		return driver.findElement(By.xpath("//label[@for='hasCTDependent:1']"));
+	
+	}
+	
+	public WebElement  dependent_yes (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='hasCTDependent:0']")));
+		return driver.findElement(By.xpath("//label[@for='hasCTDependent:0']"));
+	
+	}
+	
+	public WebElement  dependent_child(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='j_id_a0:1:j_id_a2']/div[2]")));
+		return driver.findElement(By.xpath("//div[@id='j_id_a0:1:j_id_a2']/div[2]"));
+	
+	}
+	
+	public WebElement  dependent_spouse(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='j_id_a0:0:j_id_a2']/div[2]")));
+		return driver.findElement(By.xpath("//div[@id='j_id_a0:0:j_id_a2']/div[2]"));
+	
+	}
+	
+	
+	public WebElement  Address_1 (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'mailingAddress_-address1']")));
+		return driver.findElement(By.xpath("//input[@id = 'mailingAddress_-address1']"));
+	
+	}
+	
+	public WebElement  Address_2 (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'mailingAddress_-address2']")));
+		return driver.findElement(By.xpath("//input[@id = 'mailingAddress_-address2']"));
+	
+	}
+	
+	public WebElement  city (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'mailingAddress_-city']")));
+		return driver.findElement(By.xpath("//input[@id = 'mailingAddress_-city']"));
+	
+	}
+	
+	public WebElement  state (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id = 'mailingAddress_-state_label']")));
+		return driver.findElement(By.xpath("//label[@id = 'mailingAddress_-state_label']"));
+	
+	}
+	
+	public WebElement  state_selection (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id = 'mailingAddress_-state_items']/li[8]")));
+		return driver.findElement(By.xpath("//ul[@id = 'mailingAddress_-state_items']/li[8]"));
+	
+	}
+	
+	
+	public WebElement  Zipcode (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'mailingAddress_-zip']")));
+		return driver.findElement(By.xpath("//input[@id = 'mailingAddress_-zip']"));
+	
+	}
+	
+	public WebElement  residential_address (){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id= 'j_id_40']")));
+		return driver.findElement(By.xpath("//div[@id= 'j_id_40']"));
+	
+	}
+	
+	public WebElement  primary_number(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id= 'phone_-areacode']")));
+		return driver.findElement(By.xpath("//input[@id= 'phone_-areacode']"));
+	
+	}
+	
+	public WebElement  notification_text_message(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for= 'cellPhoneNotification:1']")));
+		return driver.findElement(By.xpath("//label[@for= 'cellPhoneNotification:1']"));
+	}
+	
+	public WebElement  email(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id= 'email']")));
+		return driver.findElement(By.xpath("//input[@id= 'email']"));
+	}
+	
+	public WebElement  confirm_email(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id= 'confEmail']")));
+		return driver.findElement(By.xpath("//input[@id= 'confEmail']"));
+	}
+	
+	public WebElement  correspondence_language(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id= 'langPreference_label']")));
+		return driver.findElement(By.xpath("//label[@id= 'langPreference_label']"));
+	}
+	
+	public WebElement  correspondence_language_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id= 'langPreference_items']/li[2]")));
+		return driver.findElement(By.xpath("//ul[@id= 'langPreference_items']/li[2]"));
+	}
+	
+	public WebElement  authorize_ct(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for= 'shareInformation:0']")));
+		return driver.findElement(By.xpath("//label[@for= 'shareInformation:0']"));
+	}
+	
+	
+	public WebElement fname_on_ssn(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'firstName']")));
+		return driver.findElement(By.xpath("//input[@id = 'firstName']"));
+	}
+	
+	
+	public WebElement where_claim_filed(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id = 'location__1_label']")));
+		return driver.findElement(By.xpath("//label[@id = 'location__1_label']"));
+	}
+	
+	
+	public WebElement where_claim_filed_option(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id = 'location__1_items']/li[2]")));
+		return driver.findElement(By.xpath("//ul[@id = 'location__1_items']/li[2]"));
+	}
+	
+	public WebElement federal_govt(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for= 'claimTypeFederal:1']")));
+		return driver.findElement(By.xpath("//label[@for= 'claimTypeFederal:1']"));
+	}
+	
+	public WebElement military(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for= 'claimTypeMilitary:1']")));
+		return driver.findElement(By.xpath("//label[@for= 'claimTypeMilitary:1']"));
+	}
+	
+	public WebElement worked_for_any_employer(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for= 'workedInBasePeriod:0']")));
+		return driver.findElement(By.xpath("//label[@for= 'workedInBasePeriod:0']"));
+	}
+	
+	public WebElement lname_on_ssn(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'lastName']")));
+		return driver.findElement(By.xpath("//input[@id = 'lastName']"));
+	}
+	
+	public WebElement ct_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id= 'j_id_5e:6:j_id_5f']")));
+		return driver.findElement(By.xpath("//div[@id= 'j_id_5e:6:j_id_5f']"));
+	}
+	
+	public WebElement date_of_return(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='claimTypeReturnToWork:1']")));
+		return driver.findElement(By.xpath("//label[@for='claimTypeReturnToWork:1']"));
+	}
+	public WebElement last_12_months(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='appliedUiFlag:1']")));
+		return driver.findElement(By.xpath("//label[@for='appliedUiFlag:1']"));
+	}
+	
+	public WebElement head_emp(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='claimTypeHeadstart:1']")));
+		return driver.findElement(By.xpath("//label[@for='claimTypeHeadstart:1']"));
+	}
+	
+	
+	public WebElement construction_worker(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for = 'isContructionWorker:1']")));
+		return driver.findElement(By.xpath("//label[@for = 'isContructionWorker:1']"));
+	}
+	
+	public WebElement union_hall(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for = 'isUnionHallMember:1']")));
+		return driver.findElement(By.xpath("//label[@for = 'isUnionHallMember:1']"));
+	}
+	
+	public WebElement worker_compensation(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for = 'isCollectWorkersCompensation:1']")));
+		return driver.findElement(By.xpath("//label[@for = 'isCollectWorkersCompensation:1']"));
+	}
+	
+	public WebElement worker_compensation_yes(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for = 'isCollectWorkersCompensation:0']")));
+		return driver.findElement(By.xpath("//label[@for = 'isCollectWorkersCompensation:0']"));
+	}
+	
+	
+	//Worker's Compensation Questionnaire
+	
+	
+	public WebElement injured_on_job_date(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='injuredDate_-month']")));
+		return driver.findElement(By.xpath("//input[@id='injuredDate_-month']"));
+	}
+	
+	public WebElement worker_compensation_employer_name(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='employerName']")));
+		return driver.findElement(By.xpath("//input[@id='employerName']"));
+	}
+	
+	public WebElement worker_compensation_address1(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'employerAddress__1_-address1']")));
+		return driver.findElement(By.xpath("//input[@id = 'employerAddress__1_-address1']"));
+	}
+	
+	public WebElement worker_compensation_address2(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'employerAddress__1_-address2']")));
+		return driver.findElement(By.xpath("//input[@id = 'employerAddress__1_-address2']"));
+	}
+	
+	public WebElement worker_compensation_city(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'employerAddress__1_-city']")));
+		return driver.findElement(By.xpath("//input[@id = 'employerAddress__1_-city']"));
+	}
+	
+	public WebElement worker_compensation_zipcode(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'employerAddress__1_-zip']")));
+		return driver.findElement(By.xpath("//input[@id = 'employerAddress__1_-zip']"));
+	}
+	
+	public WebElement worker_compensation_state(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id = 'employerAddress__1_-state_label']")));
+		return driver.findElement(By.xpath("//label[@id = 'employerAddress__1_-state_label']"));
+	}
+	
+	public WebElement worker_compensation_state_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id = 'employerAddress__1_-state_items']/li[text()='Connecticut']")));
+		return driver.findElement(By.xpath("//ul[@id = 'employerAddress__1_-state_items']/li[text()='Connecticut']"));
+	}
+	
+	public WebElement worker_compensation_country(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id = 'employerAddress__1_-country_label']")));
+		return driver.findElement(By.xpath("//label[@id = 'employerAddress__1_-state_label']"));
+	}
+	
+	public WebElement worker_compensation_phone(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'employerPhone_-areacode']")));
+		return driver.findElement(By.xpath("//input[@id = 'employerPhone_-areacode']"));
+	}
+	
+	public WebElement worker_compensation_country_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id = 'employerAddress__1_-country_items']/li[text()='United States']")));
+		return driver.findElement(By.xpath("//ul[@id = 'employerAddress__1_-country_items']/li[text()='United States']"));
+	}
+	
+	public WebElement worker_compensation_country_type(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'compensationType']")));
+		return driver.findElement(By.xpath("//input[@id = 'compensationType']"));
+	}
+	
+	public WebElement worker_compensation_name_issuaence_company(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'insuranceProviderName']")));
+		return driver.findElement(By.xpath("//input[@id = 'insuranceProviderName']"));
+	}
+	
+	public WebElement worker_compensation_claim_number(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'compensationClaimNumber']")));
+		return driver.findElement(By.xpath("//input[@id = 'compensationClaimNumber']"));
+	}
+	
+	public WebElement worker_compensation_date_started_receiving_payment(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'compensationStartDate_-month']")));
+		return driver.findElement(By.xpath("//input[@id = 'compensationStartDate_-month']"));
+	}
+	
+	
+	public WebElement worker_compensation_name_agent(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'agentName']")));
+		return driver.findElement(By.xpath("//input[@id = 'agentName']"));
+	}
+	
+	
+	public WebElement worker_agent_number(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'agentPhoneNumber_-areacode']")));
+		return driver.findElement(By.xpath("//input[@id = 'agentPhoneNumber_-areacode']"));
+	}
+	
+	public WebElement worker_compensation_payment_select(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id = 'j_id_7a:0:j_id_7d']/div[2]/span")));
+		return driver.findElement(By.xpath("//div[@id = 'j_id_7a:0:j_id_7d']/div[2]/span"));
+	}
+	
+	public WebElement worker_compensation_type_of_payment(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'j_id_7a:0:paymentType']")));
+		return driver.findElement(By.xpath("//input[@id = 'j_id_7a:0:paymentType']"));
+	}
+	
+	public WebElement worker_compensation_weekly_amount(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'j_id_7a:0:paymentAmount_input']")));
+		return driver.findElement(By.xpath("//input[@id = 'j_id_7a:0:paymentAmount_input']"));
+	}
+	
+	public WebElement worker_compensation_date_from(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'j_id_7a:0:paymentFromDate_-month']")));
+		return driver.findElement(By.xpath("//input[@id = 'j_id_7a:0:paymentFromDate_-month']"));
+	}
+	
+	public WebElement worker_compensation_date_to(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'j_id_7a:0:paymentToDate_-month']")));
+		return driver.findElement(By.xpath("//input[@id = 'j_id_7a:0:paymentToDate_-month']"));
+	}//input[@id = 'compensationEndDate_-month']
+	
+	public WebElement worker_compensation_employer_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id = 'j_id_8r:0:j_id_8u']/div[2]")));
+		return driver.findElement(By.xpath("//div[@id = 'j_id_8r:0:j_id_8u']/div[2]"));
+	}
+	
+	public WebElement worker_compensation_date_stop(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'compensationEndDate_-month']")));
+		return driver.findElement(By.xpath("//input[@id = 'compensationEndDate_-month']"));
+	}
+	
+	public WebElement worker_compensation_date_employer_from(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'j_id_7a:0:paymentFromDate_-month']")));
+		return driver.findElement(By.xpath("//input[@id = 'j_id_7a:0:paymentFromDate_-month']"));
+	}
+	
+	public WebElement worker_compensation_date_employer_To(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id = 'j_id_7a:0:paymentToDate_-month']")));
+		return driver.findElement(By.xpath("//input[@id = 'j_id_7a:0:paymentToDate_-month']"));
+	}
+	
+	
+	///////
+	
+	
+	public WebElement sick_disability(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for = 'isOnSickLeave:1']")));
+		return driver.findElement(By.xpath("//label[@for = 'isOnSickLeave:1']"));
+	}
+	
+	
+	public WebElement Job_title(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='jobTitle']")));
+		return driver.findElement(By.xpath("//input[@id='jobTitle']"));
+	}
+	
+	
+	public WebElement Job_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/div[@id='j_id_43:0:j_id_46']/div[2]/span")));
+		return driver.findElement(By.xpath("//td/div[@id='j_id_43:0:j_id_46']/div[2]/span"));
+	}
+	
+	public WebElement work_exp_year(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_3t:0:allJobTitle_-workExperienceYear']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_3t:0:allJobTitle_-workExperienceYear']"));
+	}
+	
+	public WebElement work_exp_month(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_3t:0:allJobTitle_-workExperienceMonth']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_3t:0:allJobTitle_-workExperienceMonth']"));
+	}
+	
+	public WebElement another_exp_jobh(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='addAnother:1']")));
+		return driver.findElement(By.xpath("//label[@for='addAnother:1']"));
+	}
+	
+	public WebElement distance(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='geographicalRange_label']")));
+		return driver.findElement(By.xpath("//label[@id='geographicalRange_label']"));
+	}
+	
+	public WebElement distance_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='geographicalRange_items']/li[3]")));
+		return driver.findElement(By.xpath("//ul[@id='geographicalRange_items']/li[3]"));
+	}
+	
+	public WebElement work_city(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='cityOrZip']")));
+		return driver.findElement(By.xpath("//input[@id='cityOrZip']"));
+	
+	}
+	
+	public WebElement another_emp_yes(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='addEmpFlag:0']")));
+		return driver.findElement(By.xpath("//label[@for='addEmpFlag:0']"));
+	}
+	
+	public WebElement type_of_emp(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='typeEmp_label']")));
+		return driver.findElement(By.xpath("//label[@id='typeEmp_label']"));
+	}
+	
+	
+	public WebElement type_emp_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='typeEmp_items']/li[2]")));
+		return driver.findElement(By.xpath("//ul[@id='typeEmp_items']/li[2]"));
+	}
+	
+	public WebElement emp_name(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='empName']")));
+		return driver.findElement(By.xpath("//input[@id='empName']"));
+	}
+	
+	public WebElement emp_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody[@id='j_id_58_data']/tr[1]/td/div/div[2]/span")));
+		return driver.findElement(By.xpath("//tbody[@id='j_id_58_data']/tr[1]/td/div/div[2]/span"));
+	}
+	
+	
+	//Add Employment Details
+	
+	public WebElement work_location_city(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='city']")));
+		return driver.findElement(By.xpath("//input[@id='city']"));
+	}
+	
+	public WebElement work_location_state(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='stateWorked__1_label']")));
+		return driver.findElement(By.xpath("//label[@id='stateWorked__1_label']"));
+	}
+	
+	public WebElement work_location_state_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='stateWorked__1_items']/li[2]")));
+		return driver.findElement(By.xpath("//ul[@id='stateWorked__1_items']/li[2]"));
+	}
+	
+	public WebElement job_title_description(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='jobTitle']")));
+		return driver.findElement(By.xpath("//input[@id='jobTitle']"));
+	}
+	
+	public WebElement rate_of_pay(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='payRate']")));
+		return driver.findElement(By.xpath("//input[@id='payRate']"));
+	}
+	
+	public WebElement rate_of_pay_hour(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='payRateFrequency_label']")));
+		return driver.findElement(By.xpath("//label[@id='payRateFrequency_label']"));
+	}
+	
+	public WebElement rate_of_pay_hour_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='payRateFrequency_items']/li[2]")));
+		return driver.findElement(By.xpath("//ul[@id='payRateFrequency_items']/li[2]"));
+	}
+	
+	public WebElement hours_per_week(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='hrsWeek']")));
+		return driver.findElement(By.xpath("//input[@id='hrsWeek']"));
+	}
+	
+	public WebElement shift1st(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='shift:0']")));
+		return driver.findElement(By.xpath("//label[@for='shift:0']"));
+	}
+	
+	public WebElement did_you_work(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='didWork_label']")));
+		return driver.findElement(By.xpath("//label[@id='didWork_label']"));
+	}
+
+public WebElement did_you_work_selection(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='didWork_items']/li[3]")));
+	return driver.findElement(By.xpath("//ul[@id='didWork_items']/li[3]"));
+}
+
+public WebElement worl_week_mon(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='workWeek:1']")));
+	return driver.findElement(By.xpath("//label[@for='workWeek:1']"));
+}
+public WebElement worl_week_tues(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='workWeek:2']")));
+	return driver.findElement(By.xpath("//label[@for='workWeek:2']"));
+}
+public WebElement worl_week_wed(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='workWeek:3']")));
+	return driver.findElement(By.xpath("//label[@for='workWeek:3']"));
+}
+public WebElement worl_week_thur(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='workWeek:4']")));
+	return driver.findElement(By.xpath("//label[@for='workWeek:4']"));
+}
+public WebElement worl_week_fri(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='workWeek:5']")));
+	return driver.findElement(By.xpath("//label[@for='workWeek:5']"));
+}
+
+public WebElement reason_not_working(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='reasonSeparation_label']")));
+	return driver.findElement(By.xpath("//label[@id='reasonSeparation_label']"));
+}
+
+public WebElement reason_not_working_selection(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='reasonSeparation_items']/li[text()='Lack of work / Laid off']")));
+	return driver.findElement(By.xpath("//ul[@id='reasonSeparation_items']/li[text()='Lack of work / Laid off']"));
+}
+
+
+
+public WebElement reason_not_working_selection_educational_employee(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='reasonSeparation_items']/li[text()='Educational Employee - Between Academic Terms']")));
+	return driver.findElement(By.xpath("//ul[@id='reasonSeparation_items']/li[text()='Educational Employee - Between Academic Terms']"));
+}
+
+
+public WebElement reason_not_working_selection_voluntary_quit(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='reasonSeparation_items']/li[text()='Voluntary Quit']")));
+	return driver.findElement(By.xpath("//ul[@id='reasonSeparation_items']/li[text()='Voluntary Quit']"));
+}
+
+public WebElement voluntary_quit_reason(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='volQuitDetails_label']")));
+	return driver.findElement(By.xpath("//label[@id='volQuitDetails_label']"));
+}
+
+public WebElement voluntary_quit_select_reason(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='To Retire']")));
+	return driver.findElement(By.xpath("//li[text()='To Retire']"));
+}
+
+
+//General Voluntary Quit Questionnaire
+
+public WebElement reason_quit_your_job(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='j_id_34:0:j_id_98:0:j_id_c0']")));
+	return driver.findElement(By.xpath("//textarea[@id='j_id_34:0:j_id_98:0:j_id_c0']"));
+}
+
+public WebElement retire_from_labour_market_yes(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:1:j_id_98:0:j_id_d1:0']")));
+	return driver.findElement(By.xpath("//label[@for='j_id_34:1:j_id_98:0:j_id_d1:0']"));
+}
+
+
+public WebElement reason_not_working_selection_Discharged(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='reasonSeparation_items']/li[text()='Discharged / Fired']")));
+	return driver.findElement(By.xpath("//ul[@id='reasonSeparation_items']/li[text()='Discharged / Fired']"));
+}
+
+public WebElement if_Discharged_fired_reason(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='dischargedetails_label']")));
+	return driver.findElement(By.xpath("//label[@id='dischargedetails_label']"));
+}
+
+public WebElement if_Discharged_fired_reason_selection(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='dischargedetails_items']/li[text()='Damaging Company Property']")));
+	return driver.findElement(By.xpath("//ul[@id='dischargedetails_items']/li[text()='Damaging Company Property']"));
+}
+
+public WebElement total_wages(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='grossWage']")));
+	return driver.findElement(By.xpath("//input[@id='grossWage']"));
+}
+
+public WebElement pension_no(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='pensionFlag:1']")));
+	return driver.findElement(By.xpath("//label[@for='pensionFlag:1']"));
+}
+
+public WebElement pension_yes(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='pensionFlag:0']")));
+	return driver.findElement(By.xpath("//label[@for='pensionFlag:0']"));
+}
+
+public WebElement pension_date(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='pensionReceivedDate_-month']")));
+	return driver.findElement(By.xpath("//input[@id='pensionReceivedDate_-month']"));
+}
+
+
+
+//Pension - Other
+
+
+public WebElement pension_sponsered_by_union_no(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:0:j_id_98:0:j_id_d1:1']")));
+	return driver.findElement(By.xpath("//label[@for='j_id_34:0:j_id_98:0:j_id_d1:1']"));
+}
+
+
+public WebElement pension_date_payment_made(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:2:j_id_98:0:j_id_a4_-month']")));
+	return driver.findElement(By.xpath("//input[@id='j_id_34:2:j_id_98:0:j_id_a4_-month']"));
+}
+
+
+public WebElement pension_amount(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:3:j_id_98:0:j_id_9z']")));
+	return driver.findElement(By.xpath("//input[@id='j_id_34:3:j_id_98:0:j_id_9z']"));
+}
+
+
+public WebElement pension_did_employer_contribute_no(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:4:j_id_98:0:j_id_d1:1']")));
+	return driver.findElement(By.xpath("//label[@for='j_id_34:4:j_id_98:0:j_id_d1:1']"));
+}
+
+
+public WebElement pension_did_you_contribute_pension_plan_no(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:6:j_id_98:0:j_id_d1:1']")));
+	return driver.findElement(By.xpath("//label[@for='j_id_34:6:j_id_98:0:j_id_d1:1']"));
+}
+
+
+public WebElement pension_is_this_disability(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:8:j_id_98:0:j_id_d1:1']")));
+	return driver.findElement(By.xpath("//label[@for='j_id_34:8:j_id_98:0:j_id_d1:1']"));
+}
+
+
+public WebElement pension_lump_sum_date(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:11:j_id_98:0:j_id_a4_-month']")));
+	return driver.findElement(By.xpath("//input[@id='j_id_34:11:j_id_98:0:j_id_a4_-month']"));
+}
+
+public WebElement pension_lump_sum_gross_amount(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:12:j_id_98:0:j_id_9z']")));
+	return driver.findElement(By.xpath("//input[@id='j_id_34:12:j_id_98:0:j_id_9z']"));
+}
+
+public WebElement pension_lump_sum_employement_contribution(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:13:j_id_98:0:j_id_9z']")));
+	return driver.findElement(By.xpath("//input[@id='j_id_34:13:j_id_98:0:j_id_9z']"));
+}
+
+/////
+
+public WebElement emp_telephone_num(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='employerTelephoneNumber_-areacode']")));
+	return driver.findElement(By.xpath("//input[@id='employerTelephoneNumber_-areacode']"));
+}
+
+public WebElement severance_pay(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='isClaimanthasdismissalpayFlag:1']")));
+	return driver.findElement(By.xpath("//label[@for='isClaimanthasdismissalpayFlag:1']"));
+}
+
+public WebElement severance_pay_check_box(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='dismissalPaytypeSeverance']/div[2]")));
+	return driver.findElement(By.xpath("//div[@id='dismissalPaytypeSeverance']/div[2]"));
+}
+
+public WebElement SUB_check_box(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='dismissalPaytypeSub']/div[2]")));
+	return driver.findElement(By.xpath("//div[@id='dismissalPaytypeSub']/div[2]"));
+}
+
+public WebElement Paid_Time_Off_check_box(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='dismissalPaytypePto']/div/span")));
+	return driver.findElement(By.xpath("//div[@id='dismissalPaytypePto']/div/span"));
+}
+
+public WebElement vacation_pay_check_box(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='dismissalPaytypeVacation']/div/span")));
+	return driver.findElement(By.xpath("//div[@id='dismissalPaytypeVacation']/div/span"));
+}
+
+public WebElement Supplemental_Unemployment_Benefit_check_box(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='dismissalPaytypeSub']/div/span")));
+	return driver.findElement(By.xpath("//div[@id='dismissalPaytypeSub']/div/span"));
+}
+
+public WebElement Dismissal_pay_check_box(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='dismissalPaytypeOther']/div/span")));
+	return driver.findElement(By.xpath("//div[@id='dismissalPaytypeOther']/div/span"));
+}
+
+public WebElement large_layoff_20people(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='isLargeLayoffInvolvedFlag:0']")));
+	return driver.findElement(By.xpath("//label[@for='isLargeLayoffInvolvedFlag:0']"));
+}
+
+public WebElement large_layoff_20people_no(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='isLargeLayoffInvolvedFlag:1']")));
+	return driver.findElement(By.xpath("//label[@for='isLargeLayoffInvolvedFlag:1']"));
+}
+
+
+public WebElement severance_pay_yes(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='isClaimanthasdismissalpayFlag:0']")));
+	return driver.findElement(By.xpath("//label[@for='isClaimanthasdismissalpayFlag:0']"));
+	
+}
+
+//Severance Pay Questionnaire
+
+public WebElement severance_hours_worked_per_week(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:1:j_id_98:0:j_id_b0']")));
+	return driver.findElement(By.xpath("//input[@id='j_id_34:1:j_id_98:0:j_id_b0']"));
+	
+}
+
+public WebElement severance_days_worked_monday(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d6:1']")));
+	return driver.findElement(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d6:1']"));
+	
+}
+
+public WebElement severance_days_worked_Tuesday(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d6:2']")));
+	return driver.findElement(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d6:2']"));
+	
+}
+
+public WebElement SUB_payments(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='j_id_34:4:j_id_98:0:j_id_c0']")));
+	return driver.findElement(By.xpath("//textarea[@id='j_id_34:4:j_id_98:0:j_id_c0']"));
+	
+}
+
+public WebElement severance_pay_total_gross_dollar(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:4:j_id_98:0:j_id_9z']")));
+	return driver.findElement(By.xpath("//input[@id='j_id_34:4:j_id_98:0:j_id_9z']"));
+	
+}
+
+
+public WebElement severance_pay_total_gross_hours(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:4:j_id_98:1:j_id_b0']")));
+	return driver.findElement(By.xpath("//input[@id='j_id_34:4:j_id_98:1:j_id_b0']"));
+	
+}
+
+
+public WebElement severance_pay_total_gross_week(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:4:j_id_98:2:j_id_b0']")));
+	return driver.findElement(By.xpath("//input[@id='j_id_34:4:j_id_98:2:j_id_b0']"));
+	
+}
+
+public WebElement severance_sign_general_fee(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:5:j_id_98:0:j_id_d1:1']")));
+	return driver.findElement(By.xpath("//label[@for='j_id_34:5:j_id_98:0:j_id_d1:1']"));
+	
+}
+
+public WebElement severance_receive_any(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:8:j_id_98:0:j_id_d1:0']")));
+	return driver.findElement(By.xpath("//label[@for='j_id_34:8:j_id_98:0:j_id_d1:0']"));
+	
+}
+
+
+public WebElement first_date_work(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='startDateReg_-month']")));
+	return driver.findElement(By.xpath("//input[@id='startDateReg_-month']"));
+}
+
+
+public WebElement  last_date_work(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='empLastDateWork_-month']")));
+	return driver.findElement(By.xpath("//input[@id='empLastDateWork_-month']"));
+}
+
+
+//Application for Reconsideration of Wages
+
+public WebElement  person_who_hired_you(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='hiredBy']")));
+	return driver.findElement(By.xpath("//input[@id='hiredBy']"));
+}
+
+public WebElement nature_of_employer_business(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='businessNature']")));
+	return driver.findElement(By.xpath("//textarea[@id='businessNature']"));
+}
+
+public WebElement  people_worked(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='numberEmployed']")));
+	return driver.findElement(By.xpath("//input[@id='numberEmployed']"));
+}
+
+public WebElement  type_of_work(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='workType']")));
+	return driver.findElement(By.xpath("//input[@id='workType']"));
+}
+
+public WebElement  how_were_you_paid(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='paymentType:0']")));
+	return driver.findElement(By.xpath("//label[@for='paymentType:0']"));
+}
+
+public WebElement  paid_directly(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='paidDirectly:0']")));
+	return driver.findElement(By.xpath("//label[@for='paidDirectly:0']"));
+}
+
+public WebElement  have_other_ssn(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='haveOtherSsn:1']")));
+	return driver.findElement(By.xpath("//label[@for='haveOtherSsn:1']"));
+}
+
+public WebElement  document_received(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='j_id_8z:0:j_id_90']")));
+	return driver.findElement(By.xpath("//div[@id='j_id_8z:0:j_id_90']"));
+}
+
+public WebElement  wage_1(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@id='j_id_a3']/tbody/tr[1]/td[3]/input")));
+	return driver.findElement(By.xpath("//table[@id='j_id_a3']/tbody/tr[1]/td[3]/input"));
+}
+
+public WebElement  wage_2(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@id='j_id_a3']/tbody/tr[2]/td[3]/input")));
+	return driver.findElement(By.xpath("//table[@id='j_id_a3']/tbody/tr[2]/td[3]/input"));
+}
+
+public WebElement  wage_3(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@id='j_id_a3']/tbody/tr[3]/td[3]/input")));
+	return driver.findElement(By.xpath("//table[@id='j_id_a3']/tbody/tr[3]/td[3]/input"));
+}
+
+public WebElement  wage_4(){
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@id='j_id_a3']/tbody/tr[4]/td[3]/input")));
+	return driver.findElement(By.xpath("//table[@id='j_id_a3']/tbody/tr[4]/td[3]/input"));
+}
+	
+	public WebElement  wage_5(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@id='j_id_a3']/tbody/tr[5]/td[3]/input")));
+		return driver.findElement(By.xpath("//table[@id='j_id_a3']/tbody/tr[5]/td[3]/input"));
+
+	}
+	
+	public WebElement another_emp_no(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='addEmpFlag:1']")));
+		return driver.findElement(By.xpath("//label[@for='addEmpFlag:1']"));
+	}
+	
+	//Able and Available Details
+	
+	public WebElement currently_self_employed(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:0:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:0:j_id_98:0:j_id_d1:1']"));
+	}
+	public WebElement refused_work(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:1:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:1:j_id_98:0:j_id_d1:1']"));
+	}
+	public WebElement attending_school_training(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d1:1']"));
+	}
+	
+	public WebElement accepted_work(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:3:j_id_98:0:j_id_d1:0']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:3:j_id_98:0:j_id_d1:0']"));
+	}
+	
+	public WebElement accepted_work_no(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:3:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:3:j_id_98:0:j_id_d1:1']"));
+	}
+	
+	public WebElement accepted_work_no_medical_condition(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[text()='Medical Condition / Disability']")));
+		return driver.findElement(By.xpath("//label[text()='Medical Condition / Disability']"));
+	}
+	
+	//Medical Questioniaare
+	
+	public WebElement unable_to_perform_work_medical_question1(){
+		  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[@id='j_id_34:0:j_id_98:0:j_id_co_label']")));
+		  return driver.findElement(By.xpath("//label[@id='j_id_34:0:j_id_98:0:j_id_co_label']"));
+	   }  
+	
+	 public WebElement unable_to_perform_work_selection(){
+		  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//li[text()='Illness']")));
+		  return driver.findElement(By.xpath("//li[text()='Illness']"));
+	   } 
+	
+	 public WebElement able_to_perform_any_other_type_of_work_no(){
+		  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d1:1']")));
+		  return driver.findElement(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d1:1']"));
+	   }
+	
+	 public WebElement under_doctor_care(){
+		  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[@for='j_id_34:7:j_id_98:0:j_id_d1:1']")));
+		  return driver.findElement(By.xpath("//label[@for='j_id_34:7:j_id_98:0:j_id_d1:1']"));
+	   }
+	 
+
+	   public WebElement date_unable_to_perform_work(){
+			  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='j_id_34:8:j_id_98:0:j_id_a4_-month']")));
+			  return driver.findElement(By.xpath("//input[@id='j_id_34:8:j_id_98:0:j_id_a4_-month']"));
+		   }
+	   
+	   ////////
+	
+	public WebElement corporate_officer(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:5:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:5:j_id_98:0:j_id_d1:1']"));
+	}
+	public WebElement corporate_officer_yes(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:5:j_id_98:0:j_id_d1:0']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:5:j_id_98:0:j_id_d1:0']"));
+	}
+	
+	
+	//Self-Employment Questionnaire
+	public WebElement 	Describe_your_self_employments(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='j_id_34:1:j_id_98:0:j_id_c0']")));
+		return driver.findElement(By.xpath("//textarea[@id='j_id_34:1:j_id_98:0:j_id_c0']"));
+	}
+	
+	public WebElement how_many_hours_self_employement(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:2:j_id_98:0:j_id_b0']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_34:2:j_id_98:0:j_id_b0']"));
+	}
+	
+	public WebElement are_you_seeking_self_employement(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:3:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:3:j_id_98:0:j_id_d1:1']"));
+	}
+	
+	public WebElement  are_you_corporation_officer(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:6:j_id_98:0:j_id_d1:0']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:6:j_id_98:0:j_id_d1:0']"));
+	}
+	
+	public WebElement corporate_officer_title(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:8:j_id_98:0:j_id_b0']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_34:8:j_id_98:0:j_id_b0']"));
+	}
+	
+	public WebElement corporate_officer_percentage_of_business(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:9:j_id_98:0:j_id_b0']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_34:9:j_id_98:0:j_id_b0']"));
+	}
+	
+	public WebElement corporate_officer_has_business_closed(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:10:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:10:j_id_98:0:j_id_d1:1']"));
+	}
+	
+	
+	
+	public WebElement corporate_officerperforming_any_service_business(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:14:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:14:j_id_98:0:j_id_d1:1']"));
+	}
+	
+	
+	
+	
+	
+	
+	//Tax Withholding and Payment Option
+	
+	public WebElement ui_benefit_que1(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='taxWithholdingStatus:1']")));
+		return driver.findElement(By.xpath("//label[@for='taxWithholdingStatus:1']"));
+	}
+	
+	//American Job Center
+	public WebElement american_call_centre(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='localOffice_label']")));
+		return driver.findElement(By.xpath("//label[@id='localOffice_label']"));
+	}
+	
+	public WebElement american_call_centre_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='localOffice_items']/li[2]")));
+		return driver.findElement(By.xpath("//ul[@id='localOffice_items']/li[2]"));
+	}
+	
+	
+	//Benefit Rights Information
+	public WebElement bri_condition_checkbox(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/div[@id='iAuthorize']/div[2]/span")));
+		return driver.findElement(By.xpath("//td/div[@id='iAuthorize']/div[2]/span"));
+	}
+	
+	public WebElement bri_ssn_last4(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='accept']")));
+		return driver.findElement(By.xpath("//input[@id='accept']"));
+	}
+	
+	
+	public WebElement requalify_lift_remarks(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='addressIssueComment']")));
+		return driver.findElement(By.xpath("//textarea[@id='addressIssueComment']"));
+	}
+	
+	public WebElement requalify_lift_discharge_action(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='j_id_56:0:employerBean_-actionTaken_label']")));
+		return driver.findElement(By.xpath("//label[@id='j_id_56:0:employerBean_-actionTaken_label']"));
+	}
+	
+	public WebElement  requalify_lift_discharge_action_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='j_id_56:0:employerBean_-actionTaken_items']/li[text()='Previously Adjudicated']")));
+		return driver.findElement(By.xpath("//ul[@id='j_id_56:0:employerBean_-actionTaken_items']/li[text()='Previously Adjudicated']"));
+	}
+	
+	
+	
+	//Discharge - Damaging Company Property
+	
+	public WebElement fired_discharged_date(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:0:j_id_98:0:j_id_a4_-month']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_34:0:j_id_98:0:j_id_a4_-month']"));
+	}
+	
+	public WebElement incident_occur_date(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:1:j_id_98:0:j_id_a4_-month']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_34:1:j_id_98:0:j_id_a4_-month']"));
+	}
+	
+	public WebElement how_determined_damaged_property(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d6:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:2:j_id_98:0:j_id_d6:1']"));
+	}
+	
+	public WebElement what_property_you_damaged(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='j_id_34:5:j_id_98:0:j_id_c0']")));
+		return driver.findElement(By.xpath("//textarea[@id='j_id_34:5:j_id_98:0:j_id_c0']"));
+	}
+	
+	public WebElement how_you_damaged_company_property(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='j_id_34:6:j_id_98:0:j_id_c0']")));
+		return driver.findElement(By.xpath("//textarea[@id='j_id_34:6:j_id_98:0:j_id_c0']"));
+	}
+	
+	
+	public WebElement did_intentionaly_damaged_company_property(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:7:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:7:j_id_98:0:j_id_d1:1']"));
+	}
+	
+	public WebElement were_you_issued_warning(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:8:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:8:j_id_98:0:j_id_d1:1']"));
+	}
+	
+	public WebElement detail_of_any_other_warning(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='j_id_34:13:j_id_98:0:j_id_c0']")));
+		return driver.findElement(By.xpath("//textarea[@id='j_id_34:13:j_id_98:0:j_id_c0']"));
+	}
+	
+	public WebElement were_you_aware_of_company_policy(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:14:j_id_98:0:j_id_d1:1']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:14:j_id_98:0:j_id_d1:1']"));
+	}
+	
+	//Between Terms Questionnaire
+	
+	
+	public WebElement Were_you_employed_during_the_recently_completed_school_semester_yes(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:1:j_id_98:0:j_id_d1:0']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:1:j_id_98:0:j_id_d1:0']"));
+	}
+	
+	public WebElement date_school_started(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:3:j_id_98:0:j_id_a4_-month']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_34:3:j_id_98:0:j_id_a4_-month']"));
+	}
+	
+	public WebElement school_last_day_worked(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:4:j_id_98:0:j_id_a4_-month']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_34:4:j_id_98:0:j_id_a4_-month']"));
+	}
+	
+	public WebElement date_school_ended(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:5:j_id_98:0:j_id_a4_-month']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_34:5:j_id_98:0:j_id_a4_-month']"));
+	}
+	
+	public WebElement school_title_position(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='j_id_34:6:j_id_98:0:j_id_c0']")));
+		return driver.findElement(By.xpath("//textarea[@id='j_id_34:6:j_id_98:0:j_id_c0']"));
+	}
+	
+	public WebElement school_rate__of_pay(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='j_id_34:7:j_id_98:0:j_id_c0']")));
+		return driver.findElement(By.xpath("//textarea[@id='j_id_34:7:j_id_98:0:j_id_c0']"));
+	}
+	
+	
+	public WebElement school_hours__of_pay(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='j_id_34:8:j_id_98:0:j_id_c0']")));
+		return driver.findElement(By.xpath("//textarea[@id='j_id_34:8:j_id_98:0:j_id_c0']"));
+	}
+	public WebElement school_position(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='j_id_34:9:j_id_98:0:j_id_cl_label']")));
+		return driver.findElement(By.xpath("//label[@id='j_id_34:9:j_id_98:0:j_id_cl_label']"));
+	}
+	
+	public WebElement school_position_selection(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='j_id_34:9:j_id_98:0:j_id_cl_items']/li[text()='Part-Time(PT)']")));
+		return driver.findElement(By.xpath("//ul[@id='j_id_34:9:j_id_98:0:j_id_cl_items']/li[text()='Part-Time(PT)']"));
+	}
+	
+	public WebElement school_assurance_of_returing_to_work_yes(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='j_id_34:10:j_id_98:0:j_id_d1:0']")));
+		return driver.findElement(By.xpath("//label[@for='j_id_34:10:j_id_98:0:j_id_d1:0']"));
+	}
+	
+	public WebElement  school_assurance_of_returing_to_work_date(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_34:11:j_id_98:0:j_id_a4_-month']")));
+		return driver.findElement(By.xpath("//input[@id='j_id_34:11:j_id_98:0:j_id_a4_-month']"));
+	}
+
+	  public WebElement 	Petition_Employee_ssn_again_select(){
+   	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='j_id_3y:0:j_id_41']/div[2]")));
+   	   return driver.findElement(By.xpath("//div[@id='j_id_3y:0:j_id_41']/div[2]"));
+   	 
+   	   
+      }
+
+
+
+
+///////////////////////////////////////////////////  TRA Claim //////////////////////////////////////////////////
+
+       public WebElement TRA_Entitlement (){
+    	   
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/a/span[text()='TRA Entitlement']")));
+    	   return driver.findElement(By.xpath("//td/a/span[text()='TRA Entitlement']"));
+    	   
+    	   
+       }
+       
+       public WebElement ADD_Potential_TRA_Claimant(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/a/span[text()='Add Potential TRA Claimant']")));
+    	   return driver.findElement(By.xpath("//td/a/span[text()='Add Potential TRA Claimant']"));
+    	   
+       }
+       
+       public WebElement 	Petition_Number(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='petitionNumber']")));
+    	   return driver.findElement(By.xpath("//input[@id='petitionNumber']"));
+    	 
+    	 
+       }
+       
+       public WebElement 	Petition_Add_Employee(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Add Employee']")));
+    	   return driver.findElement(By.xpath("//span[text()='Add Employee']"));
+    	 
+    	   
+       }
+       
+       
+       public WebElement 	Petition_Employer_selec(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody[@id='j_id_3i_data']/tr/td/div")));
+    	   return driver.findElement(By.xpath("//tbody[@id='j_id_3i_data']/tr/td/div"));
+    	 
+    	   
+       }
+       
+       
+       public WebElement 	Petition_Employee_ssn(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_3f:0:nonReportedPotentialTRAClaimantBean_-ssn_-ssn1']")));
+    	   return driver.findElement(By.xpath("//input[@id='j_id_3f:0:nonReportedPotentialTRAClaimantBean_-ssn_-ssn1']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	Petition_Employee_Fname(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_3f:0:nonReportedPotentialTRAClaimantBean_-claimantFirstName']")));
+    	   return driver.findElement(By.xpath("//input[@id='j_id_3f:0:nonReportedPotentialTRAClaimantBean_-claimantFirstName']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	Petition_Employee_Lname(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='j_id_3f:0:nonReportedPotentialTRAClaimantBean_-claimantLastName']")));
+    	   return driver.findElement(By.xpath("//input[@id='j_id_3f:0:nonReportedPotentialTRAClaimantBean_-claimantLastName']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	Petition_Employee_ssn_select(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='j_id_3l:0:potentialTRAClaimantBean_-select']/div[2]")));
+    	   return driver.findElement(By.xpath("//div[@id='j_id_3l:0:potentialTRAClaimantBean_-select']/div[2]"));
+    	 
+    	   
+       }
+       
+       
+       //File TRA Claim
+       public WebElement 	TRA_claim_reason_of_seperation(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='reasonOfSeperation_label']")));
+    	   return driver.findElement(By.xpath("//label[@id='reasonOfSeperation_label']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TRA_claim_reason_of_seperation_select(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='Lack of work / Laid off']")));
+    	   return driver.findElement(By.xpath("//li[text()='Lack of work / Laid off']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TAR_claim_emp_start_date(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='dateofJoining_-month']")));
+    	   return driver.findElement(By.xpath("//input[@id='dateofJoining_-month']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TAR_claim_emp_end_date(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='dateOfSeperation_-month']")));
+    	   return driver.findElement(By.xpath("//input[@id='dateOfSeperation_-month']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TRA_claim_no_of_weeks(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='noOfWeeksNew']")));
+    	   return driver.findElement(By.xpath("//input[@id='noOfWeeksNew']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TRA_Claim_Job_Title(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='jobTitle']")));
+    	   return driver.findElement(By.xpath("//input[@id='jobTitle']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TAR_claim_good_prospect_of_returning(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='returnToWorkFlag:0']")));
+    	   return driver.findElement(By.xpath("//label[@for='returnToWorkFlag:0']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TAR_claim_job_location(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='jobLocation']")));
+    	   return driver.findElement(By.xpath("//input[@id='jobLocation']"));
+    	 
+    	   
+       }
+     
+       public WebElement 	TRA_claim_petition_num(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='petitionNumberForTraClaim']")));
+    	   return driver.findElement(By.xpath("//input[@id='petitionNumberForTraClaim']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TRA_claim_1st_qualifying_seperation_date(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='firstQualifyingSepDate_-month']")));
+    	   return driver.findElement(By.xpath("//input[@id='firstQualifyingSepDate_-month']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TRA_claim_generate_eta855(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='eta855Flag:0']")));
+    	   return driver.findElement(By.xpath("//label[@for='eta855Flag:0']"));
+    	 
+    	   
+       }
+       
+       
+       public WebElement 	TRA_claim_update_eta855(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='etaResponseFlag:0']")));
+    	   return driver.findElement(By.xpath("//label[@for='etaResponseFlag:0']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TRA_claim_employer_name(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='employerName']")));
+    	   return driver.findElement(By.xpath("//input[@id='employerName']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TRA_claim_employer_name_select(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody[@id='j_id_46_data']/tr[1]/td/div/div[2]")));
+    	   return driver.findElement(By.xpath("//tbody[@id='j_id_46_data']/tr[1]/td/div/div[2]"));
+    	 
+    	   
+       
+       }
+       
+       public WebElement 	TRA_claim_petition_number(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='petitionNumber']")));
+    	   return driver.findElement(By.xpath("//input[@id='petitionNumber']"));
+    	 
+    	   
+       }
+       
+       public WebElement 	TRA_claim_petition_file_date(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='petitionfileDate_-month']")));
+    	   return driver.findElement(By.xpath("//input[@id='petitionfileDate_-month']"));
+    	 
+    	   }
+       
+       public WebElement 	TRA_claim_Impact_date(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='impactDate_-month']")));
+    	   return driver.findElement(By.xpath("//input[@id='impactDate_-month']"));
+    	 
+    	   }
+       
+       public WebElement 	TRA_claim_certification_date(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='certificationDate_-month']")));
+    	   return driver.findElement(By.xpath("//input[@id='certificationDate_-month']"));
+    	 
+    	   }
+       
+       
+       public WebElement 	TRA_claim_expiration_date(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='petitionNumber']")));
+    	   return driver.findElement(By.xpath("//input[@id='petitionNumber']"));
+    	 
+    	   }
+       
+       public WebElement 	TRA_claim_emailid(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='emailId']")));
+    	   return driver.findElement(By.xpath("//input[@id='emailId']"));
+    	 
+    	   }
+       
+       public WebElement 	TRA_claim_type_of_work(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='typeOfWork']")));
+    	   return driver.findElement(By.xpath("//textarea[@id='typeOfWork']"));
+    	 
+    	   }
+       
+       
+       ////////////////////////////// File Wage for Employee ////////////////////////////////////////////////
+       
+       public WebElement 	EAN(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='ean__1_-ean1']")));
+    	   return driver.findElement(By.xpath("//input[@id='ean__1_-ean1']"));
+    	 
+    	   }
+       
+       public WebElement 	quater_filing_for(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='quarterYearBean_-quarter_label']")));
+    	   return driver.findElement(By.xpath("//label[@id='quarterYearBean_-quarter_label']"));
+    	 
+    	   }
+       
+       public WebElement 	quater_filing_for_selection(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@id='quarterYearBean_-quarter_label']")));
+    	   return driver.findElement(By.xpath("//label[@id='quarterYearBean_-quarter_label']"));
+    	 
+    	   }
+       
+       public WebElement 	quater_filing_for_year(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='quarterYearBean_-quarter_items']/li[2]")));
+    	   return driver.findElement(By.xpath("//ul[@id='quarterYearBean_-quarter_items']/li[2]"));
+    	 
+    	   }
+       public WebElement ClaimList(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(),'Select')]/following::td/div[contains(@class, 'ui-radiobutton ui-widget')]")));
+    	   return driver.findElement(By.xpath("//td[contains(text(),'Select')]/following::td/div[contains(@class, 'ui-radiobutton ui-widget')]"));
+    	 
+    	   }
+       
+       public WebElement NonSportsBal(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(),'Non-Sports Balance')]/following::td/input")));
+    	   return driver.findElement(By.xpath("//label[contains(text(),'Non-Sports Balance')]/following::td/input"));
+    	 
+    	   }
+       public WebElement SearchSSN(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='searchSsn_-ssn1']")));
+    	   return driver.findElement(By.xpath("//input[@name='searchSsn_-ssn1']"));
+    	 
+    	   }
+       public WebElement ClickRecord(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//th/span[contains(text(),'Select')]/following::td/div/div[contains(@class,'ui-radiobutton-box ui-widget ui-corner-all ui-state-default')]/span")));
+    	   return driver.findElement(By.xpath("//th/span[contains(text(),'Select')]/following::td/div/div[contains(@class,'ui-radiobutton-box ui-widget ui-corner-all ui-state-default')]/span"));
+    	 
+    	   }
+       public WebElement checkMainQuestion(String question, String selection)
+   	{
+   		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//child::label[contains(text(), '"+selection+"')]/../div/div/span")));
+   		return driver.findElement(By.xpath("//label[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//child::label[contains(text(), '"+selection+"')]/../div/div/span"));  	
+   	}
+    
+       public WebElement InputSSN(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //td/input[@name='accept']")));
+    	   return driver.findElement(By.xpath(" //td/input[@name='accept']"));
+    	 
+    	   }
+       public WebElement NameonAccount(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //td/input[@name='nameOnAccount']")));
+    	   return driver.findElement(By.xpath(" //td/input[@name='nameOnAccount']"));
+    	 
+    	   }
+       public WebElement SelectOption()
+   	{
+   		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(),'-Select-')]/following::div[1]/span")));
+   		return driver.findElement(By.xpath("//label[contains(text(),'-Select-')]/following::div[1]/span"));
+   	} 
+       public WebElement SelectValue()
+      	{
+      		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='Savings Account']")));
+      		return driver.findElement(By.xpath("//li[text()='Savings Account']"));
+      	} 
+       public WebElement BankAccNo(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //td/input[@name='bankAccountNumber']")));
+    	   return driver.findElement(By.xpath(" //td/input[@name='bankAccountNumber']"));
+    	 
+    	   }
+       public WebElement ConBankAccNo(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //td/input[@name='bankAccountNumberConfirm']")));
+    	   return driver.findElement(By.xpath(" //td/input[@name='bankAccountNumberConfirm']"));
+    	 
+    	   }
+       public WebElement BankRoutingNo(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //td/input[@name='bankRoutingNumber']")));
+    	   return driver.findElement(By.xpath(" //td/input[@name='bankRoutingNumber']"));
+    	 
+    	   }
+       
+       public WebElement bankRoutingNumberConfirm(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //td/input[@name='bankRoutingNumberConfirm']")));
+    	   return driver.findElement(By.xpath(" //td/input[@name='bankRoutingNumberConfirm']"));
+    	 
+    	   }
+       public WebElement financialInstitution(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //td/input[@name='financialInstitution']")));
+    	   return driver.findElement(By.xpath(" //td/input[@name='financialInstitution']"));
+    	 
+    	   }
+       public WebElement ClaimantDetailsLink(){
+    	   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //a[text()='Claimant Details']")));
+    	   return driver.findElement(By.xpath(" //a[text()='Claimant Details']"));
+    	 
+    	   }
+       
+}
+
+
+
+
+
+
+
+	
+	
+	
+
+

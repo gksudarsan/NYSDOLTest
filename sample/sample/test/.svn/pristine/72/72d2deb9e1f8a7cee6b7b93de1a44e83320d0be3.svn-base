@@ -1,0 +1,75 @@
+package com.ui.utilities;
+
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+
+public class PuttyBatchRun {
+
+	/**
+	 * @throws IOException
+	 * @throws AWTException
+	 * @throws InterruptedException
+	 *
+	 *
+	 */
+
+	public void method1() throws InterruptedException, AWTException
+	{
+		Runtime r = Runtime.getRuntime();
+		Process p;
+
+		String username = "avihan";
+		String password = "Guava@1987";
+		String serverString = "10.80.26.122";
+		String s = "C:\\Program Files\\PuTTY\\putty.exe -ssh -l "+username+" -pw "+password+" "+serverString+"";
+		System.out.println(s);
+		
+		try
+		{
+			//open the putty session with the above given username, password and server
+			p = r.exec(s);
+			System.out.println(p.getErrorStream());
+			Thread.sleep(3000);
+
+		} catch (Exception e)
+		{
+			System.out.println(e);
+			e.printStackTrace();
+
+		}
+		Thread.sleep(2000);
+/*
+		Robot robot = new Robot();
+		robot.keyPress(KeyEvent.VK_S);
+		Thread.sleep(150);
+		robot.keyPress(KeyEvent.VK_U);
+		Thread.sleep(150);
+		robot.keyPress(KeyEvent.VK_D);
+		Thread.sleep(150);
+		robot.keyPress(KeyEvent.VK_O);
+		Thread.sleep(150);
+		robot.keyPress(KeyEvent.VK_SPACE);
+		Thread.sleep(150);
+		robot.keyPress(KeyEvent.VK_S);
+		Thread.sleep(150);
+		robot.keyPress(KeyEvent.VK_U);
+		Thread.sleep(150);
+		robot.keyPress(KeyEvent.VK_SPACE);
+		Thread.sleep(150);
+		robot.keyPress(109);
+		Thread.sleep(150);
+		robot.keyPress(KeyEvent.VK_ENTER);
+		Thread.sleep(150);*/
+
+	}
+	public static void main(String args[]) throws InterruptedException, AWTException
+
+{
+
+		PuttyBatchRun pb=new PuttyBatchRun();
+		pb.method1();
+}
+}
+	

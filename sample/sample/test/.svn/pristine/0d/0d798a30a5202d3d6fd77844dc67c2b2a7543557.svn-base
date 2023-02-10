@@ -1,0 +1,139 @@
+package com.Repayments;
+
+/** @author mjape*/
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.sun.media.sound.InvalidFormatException;
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.OverpaymentMaintenance;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.CreateTextFile;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.WINSCP;
+import com.ui.utilities.screenShot;
+
+public class TC_59336 extends TestBase
+{
+	String fileName = "optaxot.txt";
+	String localPath = "..//UI_Project//Uploads//"+fileName;
+	String winscpDirectory = "/home/tcsgroup/Production/Responses/"+fileName;
+
+	QuerySearch q;
+	LoginLogoutPage lp;
+	CreateTextFile ctf;
+	WINSCP w;
+	OverpaymentMaintenance om;
+	ClaimSummary c;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "";
+	TC_59336 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B, T_OVERPAYMENT C WHERE A.CLAIMANT_ID = B.CLAIMANT_ID AND "
+			+ "B.CLAIM_ID = C.CLAIM_ID AND C.STATUS = 'ACTV' AND C.IS_FINALIZED = '1' AND "
+			+ "C.ESTABLISHMENT_DATE < CURRENT_DATE AND C.OVERPAYMENT_BALANCE > '1' ORDER BY C.ESTABLISHMENT_DATE DESC";
+
+	//Properties prop;
+	public TC_59336()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_59336();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "")
+	public void Testing59336() throws InterruptedException, ClassNotFoundException, SQLException, InvalidFormatException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Check Claim Summary process...
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+
+		driver.findElement(By.xpath("//a[contains(text(), 'Overpayments')]")).click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//SIT Repayment Details process...
+		om = new OverpaymentMaintenance();
+		om.SITRepayment(driver, snapshotPath, SimpleClassname, SSN, localPath, winscpDirectory);
+
+		w = new WINSCP();
+		w.uploadFile("10.80.25.32", 22, "tcsgroup", "2*fortcs", "oldoptaxot.txt", winscpDirectory, localPath);
+
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchImportInterceptDetailsFromTaxCommission benefits_daily_7am;"
+				+ "./qclient.sh runJob BatchApplyIncomeTaxIntercept benefits_daily_515pm;./qclient.sh runJob BatchApplyRepayment benefits_daily_515pm");
+		Thread.sleep(3000);
+		
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+
+		driver.findElement(By.xpath("//a[contains(text(), 'Overpayments')]")).click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		new Highlighter().highlight(driver, "//span[contains(text(), 'History Log')]//following::td[contains(text(), 'State Income Tax Intercept')][1]"); Thread.sleep(1000);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		/*wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();*/
+	}
+}

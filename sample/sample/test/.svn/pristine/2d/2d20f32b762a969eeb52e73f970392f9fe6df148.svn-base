@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="UI_Project" duration-ms="92901" started-at="2020-06-05T13:42:23Z" finished-at="2020-06-05T13:43:56Z">
+    <groups>
+    </groups>
+    <test name="Regression" duration-ms="92901" started-at="2020-06-05T13:42:23Z" finished-at="2020-06-05T13:43:56Z">
+      <class name="com.Payments.TC_56597">
+        <test-method status="PASS" signature="setup(java.lang.String)[pri:0, instance:com.Payments.TC_56597@b62fe6d]" name="setup" is-config="true" duration-ms="12437" started-at="2020-06-05T08:42:23Z" finished-at="2020-06-05T08:42:36Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="PASS" signature="Testing56597()[pri:1, instance:com.Payments.TC_56597@b62fe6d]" name="Testing56597" duration-ms="80455" started-at="2020-06-05T08:42:36Z" description="Payment: Update Claim Balance: Claim MBA Balance" finished-at="2020-06-05T08:43:56Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- Testing56597 -->
+        <test-method status="PASS" signature="tearDownCT_ST()[pri:0, instance:com.Payments.TC_56597@b62fe6d]" name="tearDownCT_ST" is-config="true" duration-ms="0" started-at="2020-06-05T08:43:56Z" finished-at="2020-06-05T08:43:56Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDownCT_ST -->
+      </class> <!-- com.Payments.TC_56597 -->
+    </test> <!-- Regression -->
+  </suite> <!-- UI_Project -->
+</testng-results>

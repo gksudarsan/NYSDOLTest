@@ -1,0 +1,89 @@
+package com.ui.utilities;
+
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.ui.pages.TotalPaidAmountCalculation;
+
+import freemarker.template.SimpleDate;
+import sun.util.resources.cldr.aa.CalendarData_aa_ER;
+
+public class Test {
+	
+	   
+	
+		// TODO
+		
+		static String ot;
+		
+	 public static String dat(String inputText) throws ParseException
+	 {
+
+		//String inputText = "Saturday, May 16, 2020";
+		DateFormat outputFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+		DateFormat inputFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.US);
+		Date date1 = inputFormat.parse(inputText);
+		Calendar calender= Calendar.getInstance();
+		calender.add(Calendar.DATE, -6);
+		Date date=calender.getTime();
+		DateFormat df=new SimpleDateFormat("MMddyyyy");
+		//need to check
+		ot= outputFormat.format(date1);
+		return ot;
+		
+		
+	}
+	 public static void main(String args[]) throws ParseException, ClassNotFoundException, SQLException
+	 {
+		 /*Test.dat("Saturday, May 16, 2020");
+		 
+		 System.out.println(ot);
+		 
+		 String WBA="$ 200.00";
+		
+		 String St=WBA.replaceAll("[\\s{$}]", "");
+		 System.out.println(St);
+		 
+		double WBAmount= Double.parseDouble(St)+100;
+		System.out.println(WBAmount);*/
+		 
+		
+		/* String amt="Dismissal Pay: $40";
+		
+		 String st="Dismissal Pay: $";
+		 String s=amt.replace(st,"");
+		 System.out.println(s);
+		 double PaidAmount= Double.parseDouble(s);
+		 System.out.println(PaidAmount);*/
+		 
+		 
+		String inputText = "05/16/2020";
+		String rep=inputText.replace("/", "");
+		System.out.println(rep);
+			SimpleDateFormat sdf=new SimpleDateFormat("MMddyyyy");
+			Calendar c=Calendar.getInstance();
+			c.setTime(sdf.parse(rep));
+			c.add(Calendar.DAY_OF_MONTH, -3);
+			String newDate =sdf.format(c.getTime());
+			System.out.println(newDate);
+			//String outputText= outputFormat.format(date1);
+		 
+	//System.out.print(date1);
+			
+			
+				 
+	 }
+	}
+
+	
+
+

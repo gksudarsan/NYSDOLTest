@@ -1,0 +1,34 @@
+package com.ui.utilities;
+
+/**@author mjape*/
+
+import java.security.SecureRandom;
+
+import com.ui.base.TestBase;
+
+public class RandomGenerator extends TestBase
+{
+	String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	String numbers = "0123456789";
+	SecureRandom rnd = new SecureRandom();
+
+	public String randomStringGenerator(int len)
+	{
+		StringBuilder sb = new StringBuilder(len);
+		for(int i = 0; i < len; i++)
+		{
+			sb.append(characters.charAt(rnd.nextInt(characters.length())));
+		}
+		return sb.toString();
+	}
+
+	public String randomNumberGenerator(int len)
+	{
+		StringBuilder sb = new StringBuilder(len);
+		for(int i = 0; i < len; i++)
+		{
+			sb.append(numbers.charAt(rnd.nextInt(numbers.length())));
+		}
+		return sb.toString();
+	}
+}

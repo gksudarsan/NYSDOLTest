@@ -1,0 +1,119 @@
+package com.ui.utilities;
+
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
+
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+
+import java.util.*;
+
+//123456805
+
+public class SSHConnection {
+	static Properties prop;
+	//123457019
+	 public SSHConnection()
+	 {
+		 try 
+			{
+				prop=new Properties();
+				FileInputStream ip=new FileInputStream(System.getProperty("user.dir")+"\\src\\main\\java"
+						+ "\\com\\ui\\configuration\\BatchConfig.properties");
+				prop.load(ip);
+				System.out.println(ip);
+			}
+			catch(FileNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+	 }
+	 
+	public void runSudoCommand(String path,String BatchName) {
+	 //public static void runSudoCommand(String command){
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter the username: ");
+		String username=sc.nextLine();
+		System.out.println("Enter the password: ");
+		String password=sc.nextLine();
+		
+		String runJob="./qclient.sh runJobOnly ";
+		
+		
+		
+		
+        prop.put("StrictHostKeyChecking", "no");
+        prop.put("PreferredAuthentications", "publickey,keyboard-interactive,password");
+
+        JSch jsch = new JSch();
+        Session session;
+        try {
+            session = jsch.getSession(username,  prop.getProperty("hostname"), 22);
+            session.setPassword(password);
+            session.setConfig(prop);
+            session.connect();
+            System.out.println("Connected to " + prop.getProperty("hostname"));
+            Channel channel = session.openChannel("exec");
+            
+            InputStream in = channel.getInputStream();
+            
+            ((ChannelExec) channel).setCommand("sudo su - ctsrvadm");
+            channel.setInputStream(null);
+            OutputStream out = channel.getOutputStream();
+            ((ChannelExec) channel).setErrStream(System.err);
+             ((ChannelExec) channel).setPty(true);
+            channel.connect();
+           
+            out.write((password + "\n").getBytes());
+            
+            
+            out.flush();
+            
+            
+            byte[] tmp = new byte[1024];
+            while (true) {
+                while (in.available() > 0) {
+                	
+                    int i = in.read(tmp, 0, 1024);
+                    
+                    if (i < 0) break;
+                    System.out.print(new String(tmp, 0, i));
+                    if("[ctsrvadm@ctstbnb001 ~]$".equalsIgnoreCase(new String(tmp, 0, i).trim()))
+                    {
+                    	//out.write((command+"\n").getBytes());
+                    	out.write((path+runJob+BatchName+"\n").getBytes());
+                    	
+                    	out.write(("exit \n").getBytes());
+                    	out.flush();
+                    }
+                }
+                if (channel.isClosed()) {
+                    System.out.println("Exit status: " + channel.getExitStatus());
+                    break;
+                }
+            }
+       
+        
+            channel.disconnect();
+            session.disconnect();
+            System.out.println("DONE");
+        } catch (JSchException | IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
+	
+
+}

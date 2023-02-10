@@ -1,0 +1,118 @@
+package com.ClaimsIntakeSharedWork;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimsIntake;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_49315 extends TestBase
+{
+	String unitStatus = "Approved";
+	String planStatus = "Approved";
+	int noOfEmployess = 1;
+	
+	LoginLogoutPage lp;
+	ClaimsIntake ci;
+	QuerySearch q;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath;
+	TC_49315 ClassObject;
+	CreateDirectory CD;
+	String EAN, query;
+
+	//Properties prop;
+	public TC_49315()
+	{
+		super();
+	}
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Fetching EAN...
+		q = new QuerySearch();
+		query = "SELECT EAN FROM T_EMPLOYER WHERE EAN IS NOT NULL ORDER BY UPDATED_TS ASC";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		EAN = q.randomData(query, "EAN");
+		System.out.println("Plan will be created on :"+EAN);
+
+		ClassObject =new TC_49315();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		//Opening browser... Hitting URL...
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "CT 43255 CIN_Shared Work- Validate that Add Unit should not Approved If the number of "
+			+ "active employee's added to the unit are less than 2.")
+	public void Testing49315() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login("sttestingcsr", "Msui@#12345");
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Creating Plan...
+		ci = new ClaimsIntake();
+		ci.creatingSharedWorkPlan(driver, snapshotPath, SimpleClassname, EAN);
+
+		//Creating Unit...
+		wcl.clickHome(); Thread.sleep(5000);
+		ci.creatingSharedWorkUnit(driver, snapshotPath, SimpleClassname, EAN);
+
+		//Adding Employees to Unit...
+		wcl.clickHome(); Thread.sleep(5000);
+		ci.addingEmployees(driver, snapshotPath, SimpleClassname, EAN, noOfEmployess);
+		
+		//Changing the status of Unit...
+		wcl.clickHome(); Thread.sleep(5000);
+		ci.changingUnitStatus(driver, snapshotPath, SimpleClassname, EAN, unitStatus);
+		
+		String errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(@class, 'error-summary')]"))).getText();
+		System.out.println("Error message : "+errorMessage);
+		Assert.assertEquals("This Unit does not have 2 or more active employees. Unit status can not be Active.", errorMessage);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

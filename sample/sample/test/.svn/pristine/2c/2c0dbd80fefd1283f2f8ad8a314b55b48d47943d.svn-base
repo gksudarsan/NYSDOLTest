@@ -1,0 +1,398 @@
+package com.ui.pages;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.text.ParseException;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.screenShot;
+
+public class Resolve_TRA_issue extends TestBase
+{
+	 static Wc_locators wcl;
+	 static Payments_Locators pl;
+	 static FutureDatePastDate f;
+	 static JavascriptExecutor js = ((JavascriptExecutor)driver);
+	 static screenShot screen=new screenShot();
+	 static String heading;
+	 static Highlighter h;
+	 static Random rand = new Random();
+	
+	
+	public static void resolveInvestigationtraPay(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		pl = new Payments_Locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Reassign to current user...
+		wcl.homeTabs("System Administration").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Workflow Administrator')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Reassign/Terminate Workitems')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Units"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//button/span[contains(text(), 'Select All Units')]")).click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Selected User's Work Items"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(), 'Inv - NSep')]//preceding::span[1]"))).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Re-Assign Work Item(s)"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver.findElement(By.xpath("//td/input[1]")).sendKeys(prop.getProperty("username")); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Resolving Work Item...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickMyQ();
+		Thread.sleep(5000);
+		wcl.IAccept(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Individual Work Queue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(), 'Inv - NSep')]"))).click();
+		Thread.sleep(500);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Fact-Finding Report"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		if((driver.findElement(By.xpath("//td[contains(text(), 'CTDOL EAN Identified by System')]//following::td[1]")).getText()).equalsIgnoreCase("No"))
+		{
+			int counter = 0;
+			driver.findElement(By.xpath("//label[contains(text(), 'Verified')]//preceding::span[1]")).click();
+			wcl.clickSearch().click();
+			Thread.sleep(2500);
+			wcl.enterEmployerName().sendKeys("LIBRARY"); Thread.sleep(500);
+			wcl.clickSearch().click();
+			Thread.sleep(10000);
+			int i = rand.nextInt(24);
+			i = i+1;
+			System.out.println("Selecting record no. "+i);
+			do
+			{
+				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr["+i+"]//child::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(500);
+				counter++;
+			}
+			while(counter<=10);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(10000);
+		}
+
+		pl.selectParty("Claimant").click(); Thread.sleep(500);
+		pl.questionnaireCategory("Disqualifying Deductible Income").click(); Thread.sleep(5000);
+		pl.questionnaireSubCategory("Other Pay").click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Fact Finding Questionnaire"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//*[@id='j_id_34:1:j_id_98:0:j_id_d1']/tbody/tr/td[1]/div/div[2]/span")).click(); Thread.sleep(1000);
+		driver.findElement(By.xpath("//*[@id='j_id_34:2:j_id_98:0:j_id_a4_-month']")).clear();Thread.sleep(1000);
+		driver.findElement(By.xpath("//*[@id='j_id_34:2:j_id_98:0:j_id_a4_-month']")).sendKeys(f.d(-7)); Thread.sleep(500);
+		
+		//pl.employerDateInterviewed().sendKeys(f.d(-7)); Thread.sleep(500);
+		//pl.employerContactNameTitle(); Thread.sleep(500);
+		List<WebElement> element1 = driver.findElements(By.xpath("//li[contains(text(), 'Email')]"));
+		pl.methodOfContactclaiment(); Thread.sleep(500);
+		element1.get(0).click(); Thread.sleep(2000);
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.freeTextBox(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSave(); Thread.sleep(5000);
+		wcl.clickBack().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Fact-Finding Report"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		pl.selectParty("Employer").click(); Thread.sleep(500);
+		pl.questionnaireCategory("Disqualifying Deductible Income").click(); Thread.sleep(5000);
+		pl.questionnaireSubCategory("Other Pay").click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Fact Finding Questionnaire"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		pl.employerStatement("Yes"); Thread.sleep(500);
+		
+		pl.employerDateInterviewed().sendKeys(f.d(-7)); Thread.sleep(500);
+		pl.employerContactNameTitle(); Thread.sleep(500);
+		List<WebElement> element = driver.findElements(By.xpath("//li[contains(text(), 'Email')]"));
+		pl.methodOfContact(); Thread.sleep(500);
+		element.get(1).click(); Thread.sleep(2000);
+		pl.hiredDate(f.Saturday(-365)); Thread.sleep(500);
+		pl.dateLastWorked(f.Sunday(-30)); Thread.sleep(500);
+		pl.claimantUnionMember("No"); Thread.sleep(500);
+		pl.rateOfPay("12"); Thread.sleep(500);
+		pl.rateOfPayFrequency("Hourly"); Thread.sleep(500);
+		pl.hoursWorkedPerWeek("40"); Thread.sleep(500);
+		for(int i = 6 ; i < 1 ; i--)
+			pl.daysWorkedPerWeek(i); Thread.sleep(500);
+			pl.checkOtherPayment("Holiday Pay"); Thread.sleep(500);
+			pl.enterGrossAmount("Holiday Pay", "100"); Thread.sleep(500);		
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(5000);
+
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("Issue Adjudication Ownership"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.submit().click();
+			Thread.sleep(5000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	public static void resolveAdjudicationDismissalPay(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		pl = new Payments_Locators(); 
+		
+		
+		
+		wcl.clickMyQ();
+		Thread.sleep(5000);
+		wcl.IAccept(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Individual Work Queue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a/span[contains(text(), 'Adj - NSep')]"))).click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Fact-Finding Report"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Fact Finding Questionnaire"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Write back to the investigator?')]/..//child::label[contains(text(), 'No')]//preceding::span[1]"))).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Search Document For Adjudication"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Make Decision"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		pl.issueDetails("Dismissal Payment"); Thread.sleep(500);
+		pl.adjudicationDecision("Deny"); Thread.sleep(500);
+		pl.isEmpPartimely("Yes"); Thread.sleep(500);
+		pl.isEmpParAdequate("Yes"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Make Decision Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		f = new FutureDatePastDate();
+		pl.Date("denyStartDate").sendKeys(f.Tuesday(-4)); Thread.sleep(500);
+		pl.Date("denyEndDate").sendKeys(f.Saturday(-1)); Thread.sleep(500);
+		pl.isChargeOnly("No"); Thread.sleep(500);
+		pl.typeOfEarning("Non-Statutory"); Thread.sleep(500);
+		pl.overpaymentType("Non-Fraud"); Thread.sleep(500);
+		pl.waiverApproval("Yes"); Thread.sleep(500);
+		pl.remarks(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Allocate Dismissal Pay"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		pl.Date("coverStartDate").sendKeys(f.Tuesday(-4)); Thread.sleep(500);
+		pl.Date("coverEndDate").sendKeys(f.Saturday(-1)); Thread.sleep(500);
+		pl.PayAmt("Total Dismissal Pay Amount", "40"); Thread.sleep(500);
+		pl.PayAmt("Full Week Dismissal Pay Allocation", "40"); Thread.sleep(500);
+		pl.PayAmt("Partial First Week Dismissal Pay Allocation", "40"); Thread.sleep(500);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		pl.allocateDismissalPay(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Decision Verification"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

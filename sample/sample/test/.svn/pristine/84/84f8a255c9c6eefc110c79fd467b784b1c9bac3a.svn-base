@@ -1,0 +1,161 @@
+package com.Overpayments;
+
+/** @author nnegi 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.AddUpdateTRATraining;
+import com.ui.pages.AddUpdateTRAWaiver;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.EnterTAATimesheet;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.Reassign_WorkItem;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_55922 extends TestBase
+{
+	//int CWE = -35;
+	int CWE=-14;
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	Overpayment o;
+	UpdateIssueDates uid;
+	Wc_locators wcl = new Wc_locators();
+	AddUpdateTRATraining autt;
+	EnterTAATimesheet ett;
+	WeeklyCert w;
+	ClaimSummary c;
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN, ed;
+	TC_55922 ClassObject;
+	AddUpdateTRAWaiver tw;
+	CreateDirectory CD;
+	String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B WHERE A.CLAIMANT_ID = B.CLAIMANT_ID AND ENTITLEMENT_TYPE = 'REG' "
+			+ "AND STATUS = 'ACTV' AND WBA <> '0' AND MBA <> '0' AND A.CLAIMANT_ID NOT IN (SELECT C.CLAIMANT_ID FROM "
+			+ "T_WEEKLY_CERTIFICATION C WHERE C.CERTIFICATION_DATE > '";
+
+
+	//Properties prop;
+	public TC_55922()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		f = new FutureDatePastDate();
+		ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') AND B.EFFECTIVE_DATE = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_55922();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "_OVP_Overpayment Issue Investigation-Verify that Weekly Details table is displayed with Final Earnings ,Hours Worked, Other Type of Payment and Amount Paid for all the employers")
+	public void Test_TC_55923() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		Thread.sleep(3000);
+		uid = new UpdateIssueDates();
+		uid.updateFutureIssueStartDate(driver, snapshotPath, SimpleClassname, SSN, CWE);
+
+		//Weekly Cert By SSN/CWE Process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		w = new WeeklyCert();
+		w.WeeklyCertBySSN_CWE_Em(driver, snapshotPath, SimpleClassname, SSN, CWE,"50","20");
+		
+
+		//Run Payment Batch...
+		System.out.println("Waiting for batch to run...");
+		Thread.sleep(60000*5);
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		Thread.sleep(2000);
+		wcl.proceesWC_link().click();
+		Thread.sleep(2500);
+		wcl.CWEDateClick().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.clickHome();
+		Thread.sleep(5000);
+
+		o=new Overpayment();
+		o.createOverpaymentIssue(driver, snapshotPath, SimpleClassname, SSN,"Overpayment Issue - Work While Rec", CWE,1, 1);
+
+		Thread.sleep(5000);
+		wcl.clickHome();
+		Thread.sleep(2000);
+		Overpayment.VerifyInvestigationOverpaymentTablesAndEmployerDetails(driver, snapshotPath, SimpleClassname, classname, Integer.toString(CWE), "Overpayment Issue - Work While Rec","Non-Fraud");
+
+		
+		
+
+
+
+
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		/*wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();*/
+	}
+}

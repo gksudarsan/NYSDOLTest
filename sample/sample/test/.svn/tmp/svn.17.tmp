@@ -1,0 +1,98 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="UI_Project" verbose="1">
+
+	<listeners>
+		<listener class-name="com.ui.utilities.extentReport" />
+	</listeners>
+	<test name="Regression">
+		<parameter name="browser" value="chrome" />
+
+		<classes>
+		
+		<!-- WEEKLY CERTIFICATION -->
+		
+			<!-- Naveen's Scripts -->
+			
+				<!-- <class name="com.ui.testcases.LoginPageTest" />
+				<class name="com.WeeklyCertification.TC_FWC_WithNoPartialEmployment" />
+				<class name= "com.WeeklyCertification.TC_FWC_WithPartialEmployment"/>
+				<class name="com.WeeklyCertification.TC_55827_WKC_ForCTNonStateGov" />
+				<class name = "com.WeeklyCertification.TC_56424"/>
+				<class name = "com.WeeklyCertification.TC_55734"/>
+				<class name = "com.WeeklyCertification.TC_54523"/>
+				<class name = "com.WeeklyCertification.TC_54521"/>
+				<class name = "com.WeeklyCertification.TC_54535"/>
+				<class name = "com.WeeklyCertification.TC_58164"/>
+				<class name = "com.WeeklyCertification.TC_56915"/>
+				<class name = "com.WeeklyCertification.TC_56920"/>
+				<class name = "com.WeeklyCertification.TC_54512"/> -->
+			 
+				
+			<!-- Malay's Scripts -->
+				
+				<!-- <class name="com.WeeklyCertification.TC_55737_FWC_WithNoPartialEmployment" />
+				<class name="com.WeeklyCertification.TC_55734" /> //TRA
+				<class name="com.WeeklyCertification.TC_55832" />
+				<class name="com.WeeklyCertification.TC_54518" />
+				<class name="com.WeeklyCertification.TC_59263" />
+				<class name="com.WeeklyCertification.TC_58566" />
+				<class name="com.WeeklyCertification.TC_55707" /> //TRA
+				<class name="com.WeeklyCertification.TC_56483" />
+				<class name="com.WeeklyCertification.TC_56297" />
+				<class name="com.WeeklyCertification.TC_56491" />
+				<class name="com.WeeklyCertification.TC_56493" />
+				<class name="com.WeeklyCertification.TC_55739" /> //TRA
+				<class name="com.WeeklyCertification.TC_56436" />
+				<class name="com.WeeklyCertification.TC_54513" />
+				<class name="com.WeeklyCertification.TC_55698" />
+				<class name="com.WeeklyCertification.TC_55702" />
+				<class name="com.WeeklyCertification.TC_56379" /> //TRA
+				<class name="com.WeeklyCertification.TC_59260" />
+				<class name="com.WeeklyCertification.TC_59287" />
+				<class name="com.WeeklyCertification.TC_55681" />
+				<class name="com.WeeklyCertification.TC_55696" />
+				<class name="com.WeeklyCertification.TC_58161" />
+				<class name="com.WeeklyCertification.TC_59264" />
+				<class name="com.WeeklyCertification.TC_59286" />
+				<class name="com.WeeklyCertification.TC_56579" />
+				<class name="com.WeeklyCertification.TC_59282" />
+				<class name="com.WeeklyCertification.TC_59300" />
+				<class name="com.WeeklyCertification.TC_56918" />
+				<class name="com.WeeklyCertification.TC_56923" />
+				<class name="com.WeeklyCertification.TC_59280" />
+				<class name="com.WeeklyCertification.TC_59298" />
+				<class name="com.WeeklyCertification.TC_59271" /> -->
+			
+			
+			<!-- PAYMENTS -->
+			
+				<!-- Malay's Scripts -->
+			
+					<!-- <class name="com.Payments.TC_56597" /> -->
+					<!-- <class name="com.Payments.TC_56813" /> -->
+					<!-- <class name="com.Payments.TC_59029" /> -->
+					<!-- <class name="com.Payments.TC_56842" /> -->
+					<!-- <class name="com.Payments.TC_58945" /> -->
+					<!-- <class name="com.Payments.TC_56830" /> -->
+					<!-- <class name="com.Payments.TC_59018" /> -->
+					<!-- <class name="com.Payments.TC_58897" /> -->
+					<!-- <class name="com.Payments.TC_59016" /> -->
+					
+				
+				<!-- Naveen's Scripts -->
+				
+					<!-- <class name="com.Payments.TC_58918" /> -->
+					<!-- <class name="com.Payments.TC_56776" /> -->
+					<!-- <class name="com.Payments.TC_58913" /> -->
+					<!-- <class name="com.Payments.TC_58918" /> -->
+					<!-- <class name="com.Payments.TC_56776" /> -->
+					<!-- <class name="com.Payments.TC_58913" /> -->
+					<!-- <class name="com.Payments.TC_56787" /> -->
+					<!-- <class name="com.Payments.TC_59047" /> -->
+					<!-- <class name="com.Payments.TC_59046" /> -->
+					<class name="com.Payments.TC_56807" />
+				
+				
+		</classes>
+	</test>
+</suite>

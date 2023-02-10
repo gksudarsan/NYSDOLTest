@@ -1,0 +1,196 @@
+/* Author vsingh*/
+
+package com.Payments;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+
+import com.ui.pages.Add_dependent;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.ResolveWorkItem;
+import com.ui.pages.SearchWorkItem;
+import com.ui.pages.TotalPaidAmountCalculation;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+
+
+public class TC_55839 extends TestBase
+{
+
+
+	static LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static PageHeading ph;
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_55839 ClassObject;
+
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+	static Payments_Locators pml;
+	static FileWeeklyCertification fwc;
+	static String date1;
+	static ClaimSummary cs;
+	static UpdateIssueDates uid;
+	static WeeklyCert  w;
+	static ResolveWorkItem rwi;
+	FutureDatePastDate f;
+	QuerySearch q;
+
+	String cwedate = "";
+	String SSN = " ", ed;
+	int CWE = -14;
+
+
+
+	String query = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'REG' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+
+	//Properties prop;
+	public TC_55839()
+	{
+		super();
+	}
+
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException, ClassNotFoundException, SQLException
+
+	{
+		f = new FutureDatePastDate();
+		ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') and c.effective_date = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_55839();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+
+
+
+	}
+	@Test(description ="TC_55839" )
+	public void TC_55839_Payment() throws InterruptedException, ParseException, ClassNotFoundException, SQLException
+	{
+		System.out.println("@test initiated");
+		wcl=new Wc_locators();
+		fwc=new FileWeeklyCertification();
+		pml=new Payments_Locators();
+		Thread.sleep(3000);
+		uid= new UpdateIssueDates();
+		
+
+		cwedate = f.Saturday(CWE);
+		String cwedate1 = cwedate.substring(0, 2) + "/" + cwedate.substring(2, 4) + "/" + cwedate.substring(4, 8);
+		System.out.println("CWE Date on claimsummry screen = "+cwedate1);
+
+		uid.updateFutureIssueStartDate(driver, snapshotPath, SimpleClassname,SSN,CWE);
+
+		//Weekly Cert By SSN/CWE Process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		w = new WeeklyCert();
+		w.fileWeeklyCertification59016(driver, snapshotPath, SimpleClassname, SSN, CWE);
+
+		//Resolving Inestigation...
+
+		wcl.clickHome();
+		Thread.sleep(5000);
+		rwi = new ResolveWorkItem();
+		rwi.resolveInvestigationVacationPayOtherThanPTO(driver, snapshotPath, SimpleClassname, SSN);
+
+		//Resolve Adjudication...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		rwi = new ResolveWorkItem();
+		rwi.resolveAdjudicationVacation_Statutory_Earning(driver, snapshotPath, SimpleClassname,SSN, "Deny", "Vacation Pay -- Other than PTO", CWE);
+
+
+
+		//Waiting for batch to run ..........................
+
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob Pay010DetermineWeeklyCertType benefits_daily_515pm;./qclient.sh runJobOnly Pay040ProcessedWeeklyCert benefits_daily_515pm;./qclient.sh runJobOnly Pay050ProvidePayment benefits_daily_515pm");
+		Thread.sleep(60000);
+
+		cs= new ClaimSummary();
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+
+		Thread.sleep(5000);
+		System.out.println("Waiting to run batch ");
+
+		pml.processed_weekly_certifications().click();
+		Thread.sleep(6000);
+		pml.cwe_date(cwedate1).click();Thread.sleep(3000);
+
+		Thread.sleep(3000);
+		Highlighter h = new Highlighter();
+		h.highlight(driver, "//td[text() =  'Paid Amount']");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+
+
+		TotalPaidAmountCalculation.DissmisalPaidAmount_55839( SSN, "30.0");
+
+
+	}
+	@AfterTest
+	public void close_browser()
+	{
+		//driver.close();
+		//driver.quit();
+		System.out.println("Testcase executed and browser closed");
+	}
+
+}

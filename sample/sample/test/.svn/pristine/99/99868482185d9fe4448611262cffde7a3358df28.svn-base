@@ -1,0 +1,40 @@
+package com.ClaimsIntake;
+
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.RegularclaimIntake;
+
+public class TC_regular_claim extends TestBase {
+	
+	LoginLogoutPage lp ;
+
+	
+
+	@Parameters({"browser"})
+	@BeforeTest
+	
+	public void teststart(String browser) throws InterruptedException
+	{
+		initialization(browser);
+		
+		driver.get(prop.getProperty("applicationUrl"));
+		
+		lp = new LoginLogoutPage();
+		
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+	
+	}
+	
+	@Test(testName="TC_54512 File Weekly Cert - CSR - and the monetary determination d",description ="File Weekly Cert - CSR - and the monetary determination date is in the week in which a weekly certification is being filed")
+	public void TC_regularclaim(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN) throws InterruptedException{
+		
+		RegularclaimIntake.regularClaim(driver, SimpleClassname, snapshotPath, SSN);
+	}
+	
+	
+}

@@ -1,0 +1,62 @@
+package com.ui.pages;
+
+/** @author mjape */
+
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class MonetaryRedetermination extends TestBase
+{
+	Wc_locators wcl;
+	Payments_Locators pl;
+	screenShot screen = new screenShot();
+	String heading;
+	QuerySearch q;
+
+	public void monetaryRedetermine(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String reason) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		wcl = new Wc_locators();
+		pl = new Payments_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Monetary").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Monetary Redetermination')]")).click();
+		Thread.sleep(2500);
+		pl.SSN("claimantSsnBean").sendKeys(SSN); Thread.sleep(500);
+		pl.SSN("confirmSsnBean").sendKeys(SSN); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Redetermination of Claim"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		
+		q = new QuerySearch();
+		String effectiveDate = q.getEffectiveDate("select effective_date from t_claim where claimant_id in (select claimant_id "
+				+ "from T_CLAIMANT where status = 'ACTV' and SSN = '"+SSN+"')");
+		effectiveDate = effectiveDate.substring(5, 7) + effectiveDate.substring(8) + effectiveDate.substring(0, 4);
+		
+		pl.Date("effectiveDate").sendKeys(effectiveDate); Thread.sleep(500);
+		pl.reasonForRede(reason); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+	}
+}

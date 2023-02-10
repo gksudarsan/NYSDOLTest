@@ -1,0 +1,3404 @@
+package com.ui.pages;
+
+import java.util.Properties;
+
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.locators.claimsIntake;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+public class RegularclaimIntake extends TestBase {
+	
+	static claimsIntake cit = new claimsIntake();
+	static Wc_locators wcl = new Wc_locators() ;
+	static screenShot screen = new screenShot();
+	static PageHeading ph = new PageHeading();
+	//String ssn = String.valueOf(prop.getProperty("claimssn"));
+	//static String ssn = prop.getProperty("claimssn");
+	
+	//String ssn2 = ssn.substring(5);
+
+	
+	 
+	
+	
+	
+	public static  void regularClaim (WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+		
+		System.out.println("value of ssn is" +ssn);
+	
+		
+		
+		FutureDatePastDate fdpd = new FutureDatePastDate();
+		String ed = fdpd.previousyeardate(-14);
+		
+		
+		String ed1 = fdpd.previousmonthdate(-1);
+
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		cit.unemployement_claim().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		cit.file_unemployement_claim().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+		wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		
+		//personal information
+		
+		cit.first_name().sendKeys("robert");
+		cit.last_name().sendKeys("clive");
+		cit.dob1().click();
+		Thread.sleep(2000);
+		cit.dob1().sendKeys("01");
+		cit.dob2().sendKeys("01");
+		cit.dob3().sendKeys("1980");
+		cit.gender().click();
+		cit.ethinicity().click();
+		cit.us_citizen_yes().click();
+		cit.military_vetern().click();
+		cit.highest_grade().click();
+		Thread.sleep(2000);
+		cit.highest_grade_selection().click();
+		cit.language_interpreter().click();
+		cit.dependent().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		
+		
+		//Contact Details
+		cit.Address_1().sendKeys("1 London");
+	    cit.Address_2().sendKeys("new street");
+	    cit.city().sendKeys("Paris");
+	    Thread.sleep(2000);
+	    cit.state().click();
+	    Thread.sleep(3000);
+	    cit.state_selection().click();
+	    Thread.sleep(2000);
+	    cit.Zipcode().sendKeys("06001");
+	    cit.residential_address().click();
+	    Thread.sleep(2000);
+	    cit.primary_number().click();
+	    cit.primary_number().sendKeys("9555511111");
+	    cit.notification_text_message().click();
+	    cit.email().clear();
+	    cit.email().sendKeys("abc@test.com");
+	    cit.confirm_email().clear();
+	    cit.confirm_email().sendKeys("abc@test.com");	
+	    cit.correspondence_language().click();
+	    Thread.sleep(2000);
+	    cit.correspondence_language_selection().click();
+	    Thread.sleep(2000);
+	    cit.authorize_ct().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	   
+	    
+	    //verify contact details
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Security Confirmation
+	    cit.fname_on_ssn().sendKeys("Peter");
+	    cit.lname_on_ssn().sendKeys("lambert");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //File Claim
+	    cit.where_claim_filed().click();
+	    Thread.sleep(2000);
+	    cit.where_claim_filed_option().click();
+	    cit.federal_govt().click();
+	    cit.military().click();
+	    cit.worked_for_any_employer().click();
+	    Thread.sleep(2000);
+	    cit.ct_selection().click();
+	    cit.date_of_return().click();
+	    cit.last_12_months().click();
+	    cit.head_emp().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //File Claim Continuation
+	    cit.construction_worker().click();
+	    cit.union_hall().click();
+	    cit.worker_compensation().click();
+	    cit.sick_disability().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //Employment History
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //Primary Job Title/Description Search
+	    cit.Job_title().sendKeys("test");
+	    wcl.clickSearch().click();
+	    Thread.sleep(4000);
+	    cit.Job_selection().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    Thread.sleep(4000);
+	    
+	    
+	    
+	    //Job Title Summary
+	    cit.work_exp_year().sendKeys("2");
+	    cit.work_exp_month().sendKeys("2");
+	    cit.another_exp_jobh().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	   
+	  //Geographical Preference for Work
+	    cit.distance().click();
+	    Thread.sleep(2000);
+	    cit.distance_selection().click();
+	    cit.work_city().sendKeys("Jackson");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    cit.another_emp_yes().click();
+	    Thread.sleep(2000);
+	    cit.type_of_emp().click();
+	    Thread.sleep(2000);
+	    cit.type_emp_selection().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	 
+	    
+	    //Search for employer
+	   cit.emp_name().sendKeys("test");
+	    wcl.clickSearch().click();
+	    Thread.sleep(4000);
+	   cit.emp_selection().click();
+	   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    Thread.sleep(4000);
+	    
+	    
+	    //Add Employment Details
+	    cit.first_date_work().click();
+	    cit.first_date_work().sendKeys(ed);
+	    Thread.sleep(2000);
+	    cit.last_date_work().click();
+	    cit.last_date_work().sendKeys(ed1);
+	    Thread.sleep(2000);
+	    cit.work_location_city().sendKeys("brisbane");
+	    cit.work_location_state().click();
+	    Thread.sleep(2000);
+	    cit.work_location_state_selection().click();
+	    cit.job_title_description().sendKeys("QA");
+	    cit.rate_of_pay().sendKeys("20");
+	    cit.rate_of_pay_hour().click();
+	    Thread.sleep(2000);
+	    cit.rate_of_pay_hour_selection().click();
+	    cit.hours_per_week().sendKeys("40");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    cit.shift1st().click();
+	    cit.did_you_work().click();
+	    Thread.sleep(2000);
+	    cit.did_you_work_selection().click();
+	    cit.worl_week_mon().click();
+	    cit.worl_week_tues().click();
+	    cit.worl_week_wed().click();
+	    cit.worl_week_thur().click();
+	    cit.worl_week_fri().click();
+	    cit.reason_not_working().click();
+	    Thread.sleep(2000);
+	    cit.reason_not_working_selection().click();
+	    cit.total_wages().sendKeys("20000");
+	    cit.pension_no().click();
+	    cit.emp_telephone_num().click();
+	    cit.emp_telephone_num().sendKeys("9566612345");
+	    cit.severance_pay().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    Thread.sleep(2000);
+	     wcl.clickNext().click();
+	    
+	     
+	       
+		    
+		  
+		  
+	    //Application for Reconsideration of Wages
+	    Thread.sleep(2000);
+	    cit.person_who_hired_you().sendKeys("john");
+	    cit.nature_of_employer_business().sendKeys("business");
+	    cit.people_worked().sendKeys("77");
+	    cit.type_of_work().sendKeys("testing");
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    cit.paid_directly().click();
+	    cit.how_were_you_paid().click();
+	    cit.document_received().click();
+	    cit.have_other_ssn().click();
+	    cit.wage_1().sendKeys("4000");
+	    cit.wage_2().sendKeys("4000");
+	    cit.wage_3().sendKeys("4000");
+	    cit.wage_4().sendKeys("4000");
+	    cit.wage_5().sendKeys("4000");
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Employement summary
+	    
+	    cit.another_emp_no().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    		
+	    
+	    
+	    
+	    
+	    //Requalify/Lift Issue
+	    Thread.sleep(2000);
+	    cit.requalify_lift_remarks().sendKeys("Test only");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Able and Available Details
+	    cit.currently_self_employed().click();
+	    cit.refused_work().click();
+	    cit.attending_school_training().click();
+	    cit.accepted_work().click();
+	    cit.corporate_officer().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	   
+	    
+	    //Tax Withholding and Payment Option
+	    cit.ui_benefit_que1().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //American Job Center
+	    cit.american_call_centre().click();
+	    Thread.sleep(2000);
+	    cit.american_call_centre_selection().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Benefit Rights Information
+	    Thread.sleep(2000);
+	    cit.bri_condition_checkbox().click();
+	    Thread.sleep(2000);
+	    cit.bri_ssn_last4().click();
+	    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.submit().click();
+	    
+	    //Important Weekly Certification Filing Instructions
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	}
+	
+	public static void adverseDischargedfired(WebDriver driver , String snapshotPath , String SimpleClassname , String ssn) throws InterruptedException{
+		
+System.out.println("value of ssn is" +ssn);
+	
+		
+		
+		FutureDatePastDate fdpd = new FutureDatePastDate();
+		String ed = fdpd.previousyeardate(-14);
+		
+		
+		String ed1 = fdpd.previousmonthdate(-1);
+		
+		
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		cit.unemployement_claim().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		cit.file_unemployement_claim().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+		wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		
+		//personal information
+		
+		cit.first_name().sendKeys("robert");
+		cit.last_name().sendKeys("clive");
+		cit.dob1().click();
+		Thread.sleep(2000);
+		cit.dob1().sendKeys("01");
+		cit.dob2().sendKeys("01");
+		cit.dob3().sendKeys("1980");
+		cit.gender().click();
+		cit.ethinicity().click();
+		cit.us_citizen_yes().click();
+		cit.military_vetern().click();
+		cit.highest_grade().click();
+		Thread.sleep(2000);
+		cit.highest_grade_selection().click();
+		cit.language_interpreter().click();
+		cit.dependent().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		
+		
+		//Contact Details
+		cit.Address_1().sendKeys("1 London");
+	    cit.Address_2().sendKeys("new street");
+	    cit.city().sendKeys("Paris");
+	    Thread.sleep(2000);
+	    cit.state().click();
+	    Thread.sleep(3000);
+	    cit.state_selection().click();
+	    Thread.sleep(2000);
+	    cit.Zipcode().sendKeys("06001");
+	    cit.residential_address().click();
+	    Thread.sleep(2000);
+	    cit.primary_number().click();
+	    cit.primary_number().sendKeys("9555511111");
+	    cit.notification_text_message().click();
+	    cit.email().clear();
+	    cit.email().sendKeys("abc@test.com");
+	    cit.confirm_email().clear();
+	    cit.confirm_email().sendKeys("abc@test.com");	
+	    cit.correspondence_language().click();
+	    Thread.sleep(2000);
+	    cit.correspondence_language_selection().click();
+	    Thread.sleep(2000);
+	    cit.authorize_ct().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	   
+	    
+	    //verify contact details
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Security Confirmation
+	    cit.fname_on_ssn().sendKeys("Peter");
+	    cit.lname_on_ssn().sendKeys("lambert");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //File Claim
+	    cit.where_claim_filed().click();
+	    Thread.sleep(2000);
+	    cit.where_claim_filed_option().click();
+	    cit.federal_govt().click();
+	    cit.military().click();
+	    cit.worked_for_any_employer().click();
+	    Thread.sleep(2000);
+	    cit.ct_selection().click();
+	    cit.date_of_return().click();
+	    cit.last_12_months().click();
+	    cit.head_emp().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //File Claim Continuation
+	    cit.construction_worker().click();
+	    cit.union_hall().click();
+	    cit.worker_compensation().click();
+	    cit.sick_disability().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //Employment History
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //Primary Job Title/Description Search
+	    cit.Job_title().sendKeys("test");
+	    wcl.clickSearch().click();
+	    Thread.sleep(4000);
+	    cit.Job_selection().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    Thread.sleep(4000);
+	    
+	    
+	    
+	    //Job Title Summary
+	    cit.work_exp_year().sendKeys("2");
+	    cit.work_exp_month().sendKeys("2");
+	    cit.another_exp_jobh().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	   
+	  //Geographical Preference for Work
+	    cit.distance().click();
+	    Thread.sleep(2000);
+	    cit.distance_selection().click();
+	    cit.work_city().sendKeys("Jackson");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    cit.another_emp_yes().click();
+	    Thread.sleep(2000);
+	    cit.type_of_emp().click();
+	    Thread.sleep(2000);
+	    cit.type_emp_selection().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	 
+	    
+	    //Search for employer
+	   cit.emp_name().sendKeys("test");
+	    wcl.clickSearch().click();
+	    Thread.sleep(4000);
+	   cit.emp_selection().click();
+	   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    Thread.sleep(4000);
+	    
+	    
+	    //Add Employment Details
+	    cit.first_date_work().click();
+	    cit.first_date_work().sendKeys(ed);
+	    Thread.sleep(2000);
+	    cit.last_date_work().click();
+	    cit.last_date_work().sendKeys(ed1);
+	    Thread.sleep(2000);
+	    cit.work_location_city().sendKeys("brisbane");
+	    cit.work_location_state().click();
+	    Thread.sleep(2000);
+	    cit.work_location_state_selection().click();
+	    cit.job_title_description().sendKeys("QA");
+	    cit.rate_of_pay().sendKeys("20");
+	    cit.rate_of_pay_hour().click();
+	    Thread.sleep(2000);
+	    cit.rate_of_pay_hour_selection().click();
+	    cit.hours_per_week().sendKeys("40");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    cit.shift1st().click();
+	    cit.did_you_work().click();
+	    Thread.sleep(2000);
+	    cit.did_you_work_selection().click();
+	    cit.worl_week_mon().click();
+	    cit.worl_week_tues().click();
+	    cit.worl_week_wed().click();
+	    cit.worl_week_thur().click();
+	    cit.worl_week_fri().click();
+	    cit.reason_not_working().click();
+	    Thread.sleep(2000);
+	    cit.reason_not_working_selection_Discharged().click();
+	    cit. if_Discharged_fired_reason().click();
+	    Thread.sleep(2000);
+	    cit.if_Discharged_fired_reason_selection().click();
+	    cit.total_wages().sendKeys("20000");
+	    cit.pension_no().click();
+	    cit.emp_telephone_num().click();
+	    cit.emp_telephone_num().sendKeys("9566612345");
+	    cit.severance_pay().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    Thread.sleep(2000);
+	     wcl.clickNext().click();
+	    
+	    //Application for Reconsideration of Wages
+	    Thread.sleep(2000);
+	    cit.person_who_hired_you().sendKeys("john");
+	    cit.nature_of_employer_business().sendKeys("business");
+	    cit.people_worked().sendKeys("77");
+	    cit.type_of_work().sendKeys("testing");
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    cit.paid_directly().click();
+	    cit.how_were_you_paid().click();
+	    cit.document_received().click();
+	    cit.have_other_ssn().click();
+	    cit.wage_1().sendKeys("4000");
+	    cit.wage_2().sendKeys("4000");
+	    cit.wage_3().sendKeys("4000");
+	    cit.wage_4().sendKeys("4000");
+	    cit.wage_5().sendKeys("4000");
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Employement summary
+	    
+	    cit.another_emp_no().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    		
+	    //Requalify/Lift Issue
+	    Thread.sleep(2000);
+	    cit.requalify_lift_discharge_action().click();
+	    Thread.sleep(2000);
+	    cit.requalify_lift_discharge_action_selection().click();
+	    cit.requalify_lift_remarks().sendKeys("Test only");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //Able and Available Details
+	    cit.currently_self_employed().click();
+	    cit.refused_work().click();
+	    cit.attending_school_training().click();
+	    cit.accepted_work().click();
+	    cit.corporate_officer().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //Discharge - Damaging Company Property
+	    
+	    cit.fired_discharged_date().click();
+	    Thread.sleep(2000);
+	    cit.fired_discharged_date().sendKeys(ed1);
+	    cit.incident_occur_date().click();
+	    Thread.sleep(2000);
+	    cit.incident_occur_date().sendKeys(ed1);
+	    cit.how_determined_damaged_property().click();
+	    cit.what_property_you_damaged().sendKeys("chair");
+	    cit.how_you_damaged_company_property().sendKeys("accidently");
+	    cit.did_intentionaly_damaged_company_property().click();
+	    cit.were_you_issued_warning().click();
+	    cit.detail_of_any_other_warning().sendKeys("no further detail");
+	    cit.were_you_aware_of_company_policy().click();
+	    wcl.clickNext().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    
+	    //Tax Withholding and Payment Option
+	    cit.ui_benefit_que1().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //American Job Center
+	    cit.american_call_centre().click();
+	    Thread.sleep(2000);
+	    cit.american_call_centre_selection().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Benefit Rights Information
+	    Thread.sleep(2000);
+	    cit.bri_condition_checkbox().click();
+	    Thread.sleep(2000);
+	    cit.bri_ssn_last4().click();
+	    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.submit().click();
+	    
+	    //Important Weekly Certification Filing Instructions
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+		
+		
+	}
+	
+	
+	
+public static  void regularClaim_corp_oficer (WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+		
+		System.out.println("value of ssn is" +ssn);
+	
+		
+		
+		FutureDatePastDate fdpd = new FutureDatePastDate();
+		String ed = fdpd.previousyeardate(-14);
+		
+		
+		String ed1 = fdpd.previousmonthdate(-1);
+		
+		
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		cit.unemployement_claim().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		cit.file_unemployement_claim().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+		wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		
+		//personal information
+		
+		cit.first_name().sendKeys("robert");
+		cit.last_name().sendKeys("clive");
+		cit.dob1().click();
+		Thread.sleep(2000);
+		cit.dob1().sendKeys("01");
+		cit.dob2().sendKeys("01");
+		cit.dob3().sendKeys("1980");
+		cit.gender().click();
+		cit.ethinicity().click();
+		cit.us_citizen_yes().click();
+		cit.military_vetern().click();
+		cit.highest_grade().click();
+		Thread.sleep(2000);
+		cit.highest_grade_selection().click();
+		cit.language_interpreter().click();
+		cit.dependent().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		
+		
+		//Contact Details
+		cit.Address_1().sendKeys("1 London");
+	    cit.Address_2().sendKeys("new street");
+	    cit.city().sendKeys("Paris");
+	    Thread.sleep(2000);
+	    cit.state().click();
+	    Thread.sleep(3000);
+	    cit.state_selection().click();
+	    Thread.sleep(2000);
+	    cit.Zipcode().sendKeys("06001");
+	    cit.residential_address().click();
+	    Thread.sleep(2000);
+	    cit.primary_number().click();
+	    cit.primary_number().sendKeys("9555511111");
+	    cit.notification_text_message().click();
+	    cit.email().clear();
+	    cit.email().sendKeys("abc@test.com");
+	    cit.confirm_email().clear();
+	    cit.confirm_email().sendKeys("abc@test.com");	
+	    cit.correspondence_language().click();
+	    Thread.sleep(2000);
+	    cit.correspondence_language_selection().click();
+	    Thread.sleep(2000);
+	    cit.authorize_ct().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	   
+	    
+	    //verify contact details
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Security Confirmation
+	    cit.fname_on_ssn().sendKeys("Peter");
+	    cit.lname_on_ssn().sendKeys("lambert");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //File Claim
+	    cit.where_claim_filed().click();
+	    Thread.sleep(2000);
+	    cit.where_claim_filed_option().click();
+	    cit.federal_govt().click();
+	    cit.military().click();
+	    cit.worked_for_any_employer().click();
+	    Thread.sleep(2000);
+	    cit.ct_selection().click();
+	    cit.date_of_return().click();
+	    cit.last_12_months().click();
+	    cit.head_emp().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //File Claim Continuation
+	    cit.construction_worker().click();
+	    cit.union_hall().click();
+	    cit.worker_compensation().click();
+	    cit.sick_disability().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //Employment History
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	    //Primary Job Title/Description Search
+	    cit.Job_title().sendKeys("test");
+	    wcl.clickSearch().click();
+	    Thread.sleep(4000);
+	    cit.Job_selection().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    Thread.sleep(4000);
+	    
+	    
+	    
+	    //Job Title Summary
+	    cit.work_exp_year().sendKeys("2");
+	    cit.work_exp_month().sendKeys("2");
+	    cit.another_exp_jobh().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	   
+	  //Geographical Preference for Work
+	    cit.distance().click();
+	    Thread.sleep(2000);
+	    cit.distance_selection().click();
+	    cit.work_city().sendKeys("Jackson");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    cit.another_emp_yes().click();
+	    Thread.sleep(2000);
+	    cit.type_of_emp().click();
+	    Thread.sleep(2000);
+	    cit.type_emp_selection().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	 
+	    
+	    //Search for employer
+	   cit.emp_name().sendKeys("test");
+	    wcl.clickSearch().click();
+	    Thread.sleep(4000);
+	   cit.emp_selection().click();
+	   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    Thread.sleep(4000);
+	    
+	    
+	    //Add Employment Details
+	    cit.first_date_work().click();
+	    cit.first_date_work().sendKeys(ed);
+	    Thread.sleep(2000);
+	    cit.last_date_work().click();
+	    cit.last_date_work().sendKeys(ed1);
+	    Thread.sleep(2000);
+	    cit.work_location_city().sendKeys("brisbane");
+	    cit.work_location_state().click();
+	    Thread.sleep(2000);
+	    cit.work_location_state_selection().click();
+	    cit.job_title_description().sendKeys("QA");
+	    cit.rate_of_pay().sendKeys("20");
+	    cit.rate_of_pay_hour().click();
+	    Thread.sleep(2000);
+	    cit.rate_of_pay_hour_selection().click();
+	    cit.hours_per_week().sendKeys("40");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    cit.shift1st().click();
+	    cit.did_you_work().click();
+	    Thread.sleep(2000);
+	    cit.did_you_work_selection().click();
+	    cit.worl_week_mon().click();
+	    cit.worl_week_tues().click();
+	    cit.worl_week_wed().click();
+	    cit.worl_week_thur().click();
+	    cit.worl_week_fri().click();
+	    cit.reason_not_working().click();
+	    Thread.sleep(2000);
+	    cit.reason_not_working_selection().click();
+	    cit.total_wages().sendKeys("20000");
+	    cit.pension_no().click();
+	    cit.emp_telephone_num().click();
+	    cit.emp_telephone_num().sendKeys("9566612345");
+	    cit.severance_pay().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    Thread.sleep(2000);
+	     wcl.clickNext().click();
+	    
+	     
+	       
+		    
+		  
+		  
+	    //Application for Reconsideration of Wages
+	    Thread.sleep(2000);
+	    cit.person_who_hired_you().sendKeys("john");
+	    cit.nature_of_employer_business().sendKeys("business");
+	    cit.people_worked().sendKeys("77");
+	    cit.type_of_work().sendKeys("testing");
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    cit.paid_directly().click();
+	    cit.how_were_you_paid().click();
+	    cit.document_received().click();
+	    cit.have_other_ssn().click();
+	    cit.wage_1().sendKeys("4000");
+	    cit.wage_2().sendKeys("4000");
+	    cit.wage_3().sendKeys("4000");
+	    cit.wage_4().sendKeys("4000");
+	    cit.wage_5().sendKeys("4000");
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Employement summary
+	    
+	    cit.another_emp_no().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    		
+	    
+	    
+	    
+	    
+	    //Requalify/Lift Issue
+	    Thread.sleep(2000);
+	    cit.requalify_lift_remarks().sendKeys("Test only");
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Able and Available Details
+	    cit.currently_self_employed().click();
+	    cit.refused_work().click();
+	    cit.attending_school_training().click();
+	    cit.accepted_work().click();
+	    cit.corporate_officer_yes().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Self-Employment Questionnaire
+	    cit.Describe_your_self_employments().sendKeys("President");
+	    cit.how_many_hours_self_employement().sendKeys("8");
+	    cit.are_you_seeking_self_employement().click();
+	    cit.are_you_corporation_officer().click();
+	    cit.corporate_officer_title().sendKeys("President");
+	    cit.corporate_officer_percentage_of_business().sendKeys("5");
+	    cit.corporate_officer_has_business_closed().click();
+	    cit.corporate_officerperforming_any_service_business().click();
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	   
+	    
+	    //Tax Withholding and Payment Option
+	    cit.ui_benefit_que1().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //American Job Center
+	    cit.american_call_centre().click();
+	    Thread.sleep(2000);
+	    cit.american_call_centre_selection().click();
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    //Benefit Rights Information
+	    Thread.sleep(2000);
+	    cit.bri_condition_checkbox().click();
+	    Thread.sleep(2000);
+	    cit.bri_ssn_last4().click();
+	    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.submit().click();
+	    
+	    //Important Weekly Certification Filing Instructions
+	    Thread.sleep(2000);
+	    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	    wcl.clickNext().click();
+	    
+	    
+	}
+//
+
+public static  void regularClaim_Severance_Pay (WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+	
+	System.out.println("value of ssn is" +ssn);
+
+	
+	
+	FutureDatePastDate fdpd = new FutureDatePastDate();
+	String ed = fdpd.previousyeardate(-14);
+	
+	
+	String ed1 = fdpd.previousmonthdate(-1);
+	
+	
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.file_unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	Thread.sleep(2000);
+	wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+	wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	//personal information
+	
+	cit.first_name().sendKeys("robert");
+	cit.last_name().sendKeys("clive");
+	cit.dob1().click();
+	Thread.sleep(2000);
+	cit.dob1().sendKeys("01");
+	cit.dob2().sendKeys("01");
+	cit.dob3().sendKeys("1980");
+	cit.gender().click();
+	cit.ethinicity().click();
+	cit.us_citizen_yes().click();
+	cit.military_vetern().click();
+	cit.highest_grade().click();
+	Thread.sleep(2000);
+	cit.highest_grade_selection().click();
+	cit.language_interpreter().click();
+	cit.dependent().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	
+	//Contact Details
+	cit.Address_1().sendKeys("1 London");
+    cit.Address_2().sendKeys("new street");
+    cit.city().sendKeys("Paris");
+    Thread.sleep(2000);
+    cit.state().click();
+    Thread.sleep(3000);
+    cit.state_selection().click();
+    Thread.sleep(2000);
+    cit.Zipcode().sendKeys("06001");
+    cit.residential_address().click();
+    Thread.sleep(2000);
+    cit.primary_number().click();
+    cit.primary_number().sendKeys("9555511111");
+    cit.notification_text_message().click();
+    cit.email().clear();
+    cit.email().sendKeys("abc@test.com");
+    cit.confirm_email().clear();
+    cit.confirm_email().sendKeys("abc@test.com");	
+    cit.correspondence_language().click();
+    Thread.sleep(2000);
+    cit.correspondence_language_selection().click();
+    Thread.sleep(2000);
+    cit.authorize_ct().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+    
+    //verify contact details
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Security Confirmation
+    cit.fname_on_ssn().sendKeys("Peter");
+    cit.lname_on_ssn().sendKeys("lambert");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //File Claim
+    cit.where_claim_filed().click();
+    Thread.sleep(2000);
+    cit.where_claim_filed_option().click();
+    cit.federal_govt().click();
+    cit.military().click();
+    cit.worked_for_any_employer().click();
+    Thread.sleep(2000);
+    cit.ct_selection().click();
+    cit.date_of_return().click();
+    cit.last_12_months().click();
+    cit.head_emp().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //File Claim Continuation
+    cit.construction_worker().click();
+    cit.union_hall().click();
+    cit.worker_compensation().click();
+    cit.sick_disability().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Employment History
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Primary Job Title/Description Search
+    cit.Job_title().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+    cit.Job_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    
+    //Job Title Summary
+    cit.work_exp_year().sendKeys("2");
+    cit.work_exp_month().sendKeys("2");
+    cit.another_exp_jobh().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+  //Geographical Preference for Work
+    cit.distance().click();
+    Thread.sleep(2000);
+    cit.distance_selection().click();
+    cit.work_city().sendKeys("Jackson");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    cit.another_emp_yes().click();
+    Thread.sleep(2000);
+    cit.type_of_emp().click();
+    Thread.sleep(2000);
+    cit.type_emp_selection().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+ 
+    
+    //Search for employer
+   cit.emp_name().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+   cit.emp_selection().click();
+   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    //Add Employment Details
+    cit.first_date_work().click();
+    cit.first_date_work().sendKeys(ed);
+    Thread.sleep(2000);
+    cit.last_date_work().click();
+    cit.last_date_work().sendKeys(ed1);
+    Thread.sleep(2000);
+    cit.work_location_city().sendKeys("brisbane");
+    cit.work_location_state().click();
+    Thread.sleep(2000);
+    cit.work_location_state_selection().click();
+    cit.job_title_description().sendKeys("QA");
+    cit.rate_of_pay().sendKeys("20");
+    cit.rate_of_pay_hour().click();
+    Thread.sleep(2000);
+    cit.rate_of_pay_hour_selection().click();
+    cit.hours_per_week().sendKeys("40");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.shift1st().click();
+    cit.did_you_work().click();
+    Thread.sleep(2000);
+    cit.did_you_work_selection().click();
+    cit.worl_week_mon().click();
+    cit.worl_week_tues().click();
+    cit.worl_week_wed().click();
+    cit.worl_week_thur().click();
+    cit.worl_week_fri().click();
+    cit.reason_not_working().click();
+    Thread.sleep(2000);
+    cit.reason_not_working_selection().click();
+    cit.total_wages().sendKeys("20000");
+    cit.pension_no().click();
+    cit.emp_telephone_num().click();
+    cit.emp_telephone_num().sendKeys("9566612345");
+    cit.severance_pay_yes().click();
+    Thread.sleep(2000);
+    cit.severance_pay_check_box().click();
+    Thread.sleep(2000);
+    cit.large_layoff_20people().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    Thread.sleep(2000);
+     wcl.clickNext().click();
+    
+     
+       
+	    
+	  
+	  
+    //Application for Reconsideration of Wages
+    Thread.sleep(2000);
+    cit.person_who_hired_you().sendKeys("john");
+    cit.nature_of_employer_business().sendKeys("business");
+    cit.people_worked().sendKeys("77");
+    cit.type_of_work().sendKeys("testing");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.paid_directly().click();
+    cit.how_were_you_paid().click();
+    cit.document_received().click();
+    cit.have_other_ssn().click();
+    cit.wage_1().sendKeys("4000");
+    cit.wage_2().sendKeys("4000");
+    cit.wage_3().sendKeys("4000");
+    cit.wage_4().sendKeys("4000");
+    cit.wage_5().sendKeys("4000");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Employement summary
+    
+    cit.another_emp_no().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    		
+    
+    
+    
+    
+    //Requalify/Lift Issue
+    Thread.sleep(2000);
+    cit.requalify_lift_remarks().sendKeys("Test only");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Able and Available Details
+    cit.currently_self_employed().click();
+    cit.refused_work().click();
+    cit.attending_school_training().click();
+    Thread.sleep(20000);
+    cit.accepted_work().click();
+    cit.corporate_officer().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+  //Severance Pay Questionnaire
+    cit.severance_hours_worked_per_week().sendKeys("10");
+    cit.severance_days_worked_monday().click();
+    cit.severance_days_worked_Tuesday().click();
+    cit.severance_pay_total_gross_dollar().sendKeys("20");
+    cit.severance_pay_total_gross_hours().sendKeys("5");
+    cit.severance_pay_total_gross_week().sendKeys("2");
+    Thread.sleep(2000);
+    cit.severance_sign_general_fee().click();
+    cit.severance_receive_any().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+
+    //Tax Withholding and Payment Option
+    cit.ui_benefit_que1().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //American Job Center
+    cit.american_call_centre().click();
+    Thread.sleep(2000);
+    cit.american_call_centre_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Benefit Rights Information
+    Thread.sleep(2000);
+    cit.bri_condition_checkbox().click();
+    Thread.sleep(2000);
+    cit.bri_ssn_last4().click();
+    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.submit().click();
+    
+    //Important Weekly Certification Filing Instructions
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+}
+
+
+public static  void regularClaim_Medical_condition (WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+	
+	System.out.println("value of ssn is" +ssn);
+
+	
+	
+	FutureDatePastDate fdpd = new FutureDatePastDate();
+	String ed = fdpd.previousyeardate(-14);
+	
+	
+	String ed1 = fdpd.previousmonthdate(-1);
+	
+	
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.file_unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	Thread.sleep(2000);
+	wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+	wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	//personal information
+	
+	cit.first_name().sendKeys("robert");
+	cit.last_name().sendKeys("clive");
+	cit.dob1().click();
+	Thread.sleep(2000);
+	cit.dob1().sendKeys("01");
+	cit.dob2().sendKeys("01");
+	cit.dob3().sendKeys("1980");
+	cit.gender().click();
+	cit.ethinicity().click();
+	cit.us_citizen_yes().click();
+	cit.military_vetern().click();
+	cit.highest_grade().click();
+	Thread.sleep(2000);
+	cit.highest_grade_selection().click();
+	cit.language_interpreter().click();
+	cit.dependent().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	
+	//Contact Details
+	cit.Address_1().sendKeys("1 London");
+    cit.Address_2().sendKeys("new street");
+    cit.city().sendKeys("Paris");
+    Thread.sleep(2000);
+    cit.state().click();
+    Thread.sleep(3000);
+    cit.state_selection().click();
+    Thread.sleep(2000);
+    cit.Zipcode().sendKeys("06001");
+    cit.residential_address().click();
+    Thread.sleep(2000);
+    cit.primary_number().click();
+    cit.primary_number().sendKeys("9555511111");
+    cit.notification_text_message().click();
+    cit.email().clear();
+    cit.email().sendKeys("abc@test.com");
+    cit.confirm_email().clear();
+    cit.confirm_email().sendKeys("abc@test.com");	
+    cit.correspondence_language().click();
+    Thread.sleep(2000);
+    cit.correspondence_language_selection().click();
+    Thread.sleep(2000);
+    cit.authorize_ct().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+    
+    //verify contact details
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Security Confirmation
+    cit.fname_on_ssn().sendKeys("Peter");
+    cit.lname_on_ssn().sendKeys("lambert");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //File Claim
+    cit.where_claim_filed().click();
+    Thread.sleep(2000);
+    cit.where_claim_filed_option().click();
+    cit.federal_govt().click();
+    cit.military().click();
+    cit.worked_for_any_employer().click();
+    Thread.sleep(2000);
+    cit.ct_selection().click();
+    cit.date_of_return().click();
+    cit.last_12_months().click();
+    cit.head_emp().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //File Claim Continuation
+    cit.construction_worker().click();
+    cit.union_hall().click();
+    cit.worker_compensation().click();
+    cit.sick_disability().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Employment History
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Primary Job Title/Description Search
+    cit.Job_title().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+    cit.Job_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    
+    //Job Title Summary
+    cit.work_exp_year().sendKeys("2");
+    cit.work_exp_month().sendKeys("2");
+    cit.another_exp_jobh().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+  //Geographical Preference for Work
+    cit.distance().click();
+    Thread.sleep(2000);
+    cit.distance_selection().click();
+    cit.work_city().sendKeys("Jackson");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    cit.another_emp_yes().click();
+    Thread.sleep(2000);
+    cit.type_of_emp().click();
+    Thread.sleep(2000);
+    cit.type_emp_selection().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+ 
+    
+    //Search for employer
+   cit.emp_name().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+   cit.emp_selection().click();
+   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    //Add Employment Details
+    cit.first_date_work().click();
+    cit.first_date_work().sendKeys(ed);
+    Thread.sleep(2000);
+    cit.last_date_work().click();
+    cit.last_date_work().sendKeys(ed1);
+    Thread.sleep(2000);
+    cit.work_location_city().sendKeys("brisbane");
+    cit.work_location_state().click();
+    Thread.sleep(2000);
+    cit.work_location_state_selection().click();
+    cit.job_title_description().sendKeys("QA");
+    cit.rate_of_pay().sendKeys("20");
+    cit.rate_of_pay_hour().click();
+    Thread.sleep(2000);
+    cit.rate_of_pay_hour_selection().click();
+    cit.hours_per_week().sendKeys("40");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.shift1st().click();
+    cit.did_you_work().click();
+    Thread.sleep(2000);
+    cit.did_you_work_selection().click();
+    cit.worl_week_mon().click();
+    cit.worl_week_tues().click();
+    cit.worl_week_wed().click();
+    cit.worl_week_thur().click();
+    cit.worl_week_fri().click();
+    cit.reason_not_working().click();
+    Thread.sleep(2000);
+    cit.reason_not_working_selection().click();
+    cit.total_wages().sendKeys("20000");
+    cit.pension_no().click();
+    cit.emp_telephone_num().click();
+    cit.emp_telephone_num().sendKeys("9566612345");
+    cit.severance_pay().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    Thread.sleep(2000);
+     wcl.clickNext().click();
+    
+     
+       
+	    
+	  
+	  
+    //Application for Reconsideration of Wages
+    Thread.sleep(2000);
+    cit.person_who_hired_you().sendKeys("john");
+    cit.nature_of_employer_business().sendKeys("business");
+    cit.people_worked().sendKeys("77");
+    cit.type_of_work().sendKeys("testing");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.paid_directly().click();
+    cit.how_were_you_paid().click();
+    cit.document_received().click();
+    cit.have_other_ssn().click();
+    cit.wage_1().sendKeys("4000");
+    cit.wage_2().sendKeys("4000");
+    cit.wage_3().sendKeys("4000");
+    cit.wage_4().sendKeys("4000");
+    cit.wage_5().sendKeys("4000");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Employement summary
+    
+    cit.another_emp_no().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    		
+    
+    //Requalify/Lift Issue
+    Thread.sleep(2000);
+    cit.requalify_lift_remarks().sendKeys("Test only");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Able and Available Details
+    cit.currently_self_employed().click();
+    cit.refused_work().click();
+    cit.attending_school_training().click();
+    cit.accepted_work_no().click();
+    cit.accepted_work_no_medical_condition().click();
+    cit.corporate_officer().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+   //Medical Questionnaire
+    cit.unable_to_perform_work_medical_question1().click();
+    cit.unable_to_perform_work_selection().click();
+    cit.able_to_perform_any_other_type_of_work_no().click();
+    cit.under_doctor_care().click();
+    Thread.sleep(2000);
+    cit.date_unable_to_perform_work().click();
+    cit.date_unable_to_perform_work().sendKeys(ed1);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Tax Withholding and Payment Option
+    cit.ui_benefit_que1().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //American Job Center
+    cit.american_call_centre().click();
+    Thread.sleep(2000);
+    cit.american_call_centre_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Benefit Rights Information
+    Thread.sleep(2000);
+    cit.bri_condition_checkbox().click();
+    Thread.sleep(2000);
+    cit.bri_ssn_last4().click();
+    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.submit().click();
+    
+    //Important Weekly Certification Filing Instructions
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+}
+
+
+public static  void regularClaim_Employement_VoluntaryLeaving (WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+	
+	System.out.println("value of ssn is" +ssn);
+
+	
+	
+	FutureDatePastDate fdpd = new FutureDatePastDate();
+	String ed = fdpd.previousyeardate(-14);
+	
+	
+	String ed1 = fdpd.previousmonthdate(-1);
+	
+	
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.file_unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	Thread.sleep(2000);
+	wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+	wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	//personal information
+	
+	cit.first_name().sendKeys("robert");
+	cit.last_name().sendKeys("clive");
+	cit.dob1().click();
+	Thread.sleep(2000);
+	cit.dob1().sendKeys("01");
+	cit.dob2().sendKeys("01");
+	cit.dob3().sendKeys("1980");
+	cit.gender().click();
+	cit.ethinicity().click();
+	cit.us_citizen_yes().click();
+	cit.military_vetern().click();
+	cit.highest_grade().click();
+	Thread.sleep(2000);
+	cit.highest_grade_selection().click();
+	cit.language_interpreter().click();
+	cit.dependent().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	
+	//Contact Details
+	cit.Address_1().sendKeys("1 London");
+    cit.Address_2().sendKeys("new street");
+    cit.city().sendKeys("Paris");
+    Thread.sleep(2000);
+    cit.state().click();
+    Thread.sleep(3000);
+    cit.state_selection().click();
+    Thread.sleep(2000);
+    cit.Zipcode().sendKeys("06001");
+    cit.residential_address().click();
+    Thread.sleep(2000);
+    cit.primary_number().click();
+    cit.primary_number().sendKeys("9555511111");
+    cit.notification_text_message().click();
+    cit.email().clear();
+    cit.email().sendKeys("abc@test.com");
+    cit.confirm_email().clear();
+    cit.confirm_email().sendKeys("abc@test.com");	
+    cit.correspondence_language().click();
+    Thread.sleep(2000);
+    cit.correspondence_language_selection().click();
+    Thread.sleep(2000);
+    cit.authorize_ct().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+    
+    //verify contact details
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Security Confirmation
+    cit.fname_on_ssn().sendKeys("Peter");
+    cit.lname_on_ssn().sendKeys("lambert");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //File Claim
+    cit.where_claim_filed().click();
+    Thread.sleep(2000);
+    cit.where_claim_filed_option().click();
+    cit.federal_govt().click();
+    cit.military().click();
+    cit.worked_for_any_employer().click();
+    Thread.sleep(2000);
+    cit.ct_selection().click();
+    cit.date_of_return().click();
+    cit.last_12_months().click();
+    cit.head_emp().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //File Claim Continuation
+    cit.construction_worker().click();
+    cit.union_hall().click();
+    cit.worker_compensation().click();
+    cit.sick_disability().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Employment History
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Primary Job Title/Description Search
+    cit.Job_title().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+    cit.Job_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    
+    //Job Title Summary
+    cit.work_exp_year().sendKeys("2");
+    cit.work_exp_month().sendKeys("2");
+    cit.another_exp_jobh().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+  //Geographical Preference for Work
+    cit.distance().click();
+    Thread.sleep(2000);
+    cit.distance_selection().click();
+    cit.work_city().sendKeys("Jackson");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    cit.another_emp_yes().click();
+    Thread.sleep(2000);
+    cit.type_of_emp().click();
+    Thread.sleep(2000);
+    cit.type_emp_selection().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+ 
+    
+    //Search for employer
+   cit.emp_name().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+   cit.emp_selection().click();
+   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    //Add Employment Details
+    cit.first_date_work().click();
+    cit.first_date_work().sendKeys(ed);
+    Thread.sleep(2000);
+    cit.last_date_work().click();
+    cit.last_date_work().sendKeys(ed1);
+    Thread.sleep(2000);
+    cit.work_location_city().sendKeys("brisbane");
+    cit.work_location_state().click();
+    Thread.sleep(2000);
+    cit.work_location_state_selection().click();
+    cit.job_title_description().sendKeys("QA");
+    cit.rate_of_pay().sendKeys("20");
+    cit.rate_of_pay_hour().click();
+    Thread.sleep(2000);
+    cit.rate_of_pay_hour_selection().click();
+    cit.hours_per_week().sendKeys("40");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.shift1st().click();
+    cit.did_you_work().click();
+    Thread.sleep(2000);
+    cit.did_you_work_selection().click();
+    cit.worl_week_mon().click();
+    cit.worl_week_tues().click();
+    cit.worl_week_wed().click();
+    cit.worl_week_thur().click();
+    cit.worl_week_fri().click();
+    cit.reason_not_working().click();
+    Thread.sleep(2000);
+    cit.reason_not_working_selection_voluntary_quit().click();
+    cit.voluntary_quit_reason().click();
+    Thread.sleep(2000);
+    cit.voluntary_quit_select_reason().click();
+    cit.total_wages().sendKeys("20000");
+    cit.pension_no().click();
+    cit.emp_telephone_num().click();
+    cit.emp_telephone_num().sendKeys("9566612345");
+    cit.severance_pay().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    Thread.sleep(2000);
+     wcl.clickNext().click();
+     
+    
+     
+       // Dismissal Pay-Supplemental Unemployment Benefit (SUB)
+	    
+	  
+	  
+    //Application for Reconsideration of Wages
+    Thread.sleep(2000);
+    cit.person_who_hired_you().sendKeys("john");
+    cit.nature_of_employer_business().sendKeys("business");
+    cit.people_worked().sendKeys("77");
+    cit.type_of_work().sendKeys("testing");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.paid_directly().click();
+    cit.how_were_you_paid().click();
+    cit.document_received().click();
+    cit.have_other_ssn().click();
+    cit.wage_1().sendKeys("4000");
+    cit.wage_2().sendKeys("4000");
+    cit.wage_3().sendKeys("4000");
+    cit.wage_4().sendKeys("4000");
+    cit.wage_5().sendKeys("4000");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Employement summary
+    
+    cit.another_emp_no().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    		
+    
+    
+    
+    
+    //Requalify/Lift Issue
+    Thread.sleep(2000);
+    cit.requalify_lift_discharge_action().click();
+    Thread.sleep(2000);
+    cit.requalify_lift_discharge_action_selection().click();
+    cit.requalify_lift_remarks().sendKeys("Test only");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+   
+    
+    //Able and Available Details
+    cit.currently_self_employed().click();
+    cit.refused_work().click();
+    cit.attending_school_training().click();
+    cit.accepted_work().click();
+    cit.corporate_officer().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //General Voluntary Quit Questionnaire
+    cit.reason_quit_your_job().sendKeys("testing purpose");
+    cit.retire_from_labour_market_yes().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Tax Withholding and Payment Option
+    cit.ui_benefit_que1().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //American Job Center
+    cit.american_call_centre().click();
+    Thread.sleep(2000);
+    cit.american_call_centre_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Benefit Rights Information
+    Thread.sleep(2000);
+    cit.bri_condition_checkbox().click();
+    Thread.sleep(2000);
+    cit.bri_ssn_last4().click();
+    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.submit().click();
+    
+    //Important Weekly Certification Filing Instructions
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+}
+
+public static  void regularClaim_Supplemental_UB (WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+	
+	System.out.println("value of ssn is" +ssn);
+
+	
+	
+	FutureDatePastDate fdpd = new FutureDatePastDate();
+	String ed = fdpd.previousyeardate(-14);
+	
+	
+	String ed1 = fdpd.previousmonthdate(-1);
+	
+	
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.file_unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	Thread.sleep(2000);
+	wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+	wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	//personal information
+	
+	cit.first_name().sendKeys("robert");
+	cit.last_name().sendKeys("clive");
+	cit.dob1().click();
+	Thread.sleep(2000);
+	cit.dob1().click();
+	cit.dob1().sendKeys("01");
+	cit.dob2().sendKeys("01");
+	cit.dob3().sendKeys("1980");
+	cit.gender().click();
+	cit.ethinicity().click();
+	cit.us_citizen_yes().click();
+	cit.military_vetern().click();
+	cit.highest_grade().click();
+	Thread.sleep(2000);
+	cit.highest_grade_selection().click();
+	cit.language_interpreter().click();
+	cit.dependent().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	
+	//Contact Details
+	cit.Address_1().sendKeys("1 London");
+    cit.Address_2().sendKeys("new street");
+    cit.city().sendKeys("Paris");
+    Thread.sleep(2000);
+    cit.state().click();
+    Thread.sleep(3000);
+    cit.state_selection().click();
+    Thread.sleep(2000);
+    cit.Zipcode().sendKeys("06001");
+    cit.residential_address().click();
+    Thread.sleep(2000);
+    cit.primary_number().click();
+    cit.primary_number().sendKeys("9555511111");
+    cit.notification_text_message().click();
+    cit.email().clear();
+    cit.email().sendKeys("abc@test.com");
+    cit.confirm_email().clear();
+    cit.confirm_email().sendKeys("abc@test.com");	
+    cit.correspondence_language().click();
+    Thread.sleep(2000);
+    cit.correspondence_language_selection().click();
+    Thread.sleep(2000);
+    cit.authorize_ct().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+    
+    //verify contact details
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Security Confirmation
+    cit.fname_on_ssn().sendKeys("Peter");
+    cit.lname_on_ssn().sendKeys("lambert");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //File Claim
+    cit.where_claim_filed().click();
+    Thread.sleep(2000);
+    cit.where_claim_filed_option().click();
+    cit.federal_govt().click();
+    cit.military().click();
+    cit.worked_for_any_employer().click();
+    Thread.sleep(2000);
+    cit.ct_selection().click();
+    cit.date_of_return().click();
+    cit.last_12_months().click();
+    cit.head_emp().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //File Claim Continuation
+    cit.construction_worker().click();
+    cit.union_hall().click();
+    cit.worker_compensation().click();
+    cit.sick_disability().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Employment History
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Primary Job Title/Description Search
+    cit.Job_title().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+    cit.Job_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    
+    //Job Title Summary
+    cit.work_exp_year().sendKeys("2");
+    cit.work_exp_month().sendKeys("2");
+    cit.another_exp_jobh().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+  //Geographical Preference for Work
+    cit.distance().click();
+    Thread.sleep(2000);
+    cit.distance_selection().click();
+    cit.work_city().sendKeys("Jackson");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    cit.another_emp_yes().click();
+    Thread.sleep(2000);
+    cit.type_of_emp().click();
+    Thread.sleep(2000);
+    cit.type_emp_selection().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+ 
+    
+    //Search for employer
+   cit.emp_name().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+   cit.emp_selection().click();
+   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    //Add Employment Details
+    cit.first_date_work().click();
+    cit.first_date_work().sendKeys(ed);
+    Thread.sleep(2000);
+    cit.last_date_work().click();
+    cit.last_date_work().sendKeys(ed1);
+    Thread.sleep(2000);
+    cit.work_location_city().sendKeys("brisbane");
+    cit.work_location_state().click();
+    Thread.sleep(2000);
+    cit.work_location_state_selection().click();
+    cit.job_title_description().sendKeys("QA");
+    cit.rate_of_pay().sendKeys("20");
+    cit.rate_of_pay_hour().click();
+    Thread.sleep(2000);
+    cit.rate_of_pay_hour_selection().click();
+    cit.hours_per_week().sendKeys("40");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.shift1st().click();
+    cit.did_you_work().click();
+    Thread.sleep(2000);
+    cit.did_you_work_selection().click();
+    cit.worl_week_mon().click();
+    cit.worl_week_tues().click();
+    cit.worl_week_wed().click();
+    cit.worl_week_thur().click();
+    cit.worl_week_fri().click();
+    cit.reason_not_working().click();
+    Thread.sleep(2000);
+    cit.reason_not_working_selection().click();
+    cit.total_wages().sendKeys("20000");
+    cit.pension_no().click();
+    cit.emp_telephone_num().click();
+    cit.emp_telephone_num().sendKeys("9566612345");
+    cit.severance_pay_yes().click();
+    Thread.sleep(2000);
+    cit.SUB_check_box().click();
+    Thread.sleep(2000);
+    cit.large_layoff_20people_no().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    Thread.sleep(2000);
+     wcl.clickNext().click();
+    
+     
+       
+	    
+	  
+	  
+    //Application for Reconsideration of Wages
+    Thread.sleep(2000);
+    cit.person_who_hired_you().sendKeys("john");
+    cit.nature_of_employer_business().sendKeys("business");
+    cit.people_worked().sendKeys("77");
+    cit.type_of_work().sendKeys("testing");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.paid_directly().click();
+    cit.how_were_you_paid().click();
+    cit.document_received().click();
+    cit.have_other_ssn().click();
+    cit.wage_1().sendKeys("4000");
+    cit.wage_2().sendKeys("4000");
+    cit.wage_3().sendKeys("4000");
+    cit.wage_4().sendKeys("4000");
+    cit.wage_5().sendKeys("4000");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Employement summary
+    
+    cit.another_emp_no().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    		
+    
+    
+    
+    
+    //Requalify/Lift Issue
+    Thread.sleep(2000);
+    cit.requalify_lift_remarks().sendKeys("Test only");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Able and Available Details
+    cit.currently_self_employed().click();
+    cit.refused_work().click();
+    cit.attending_school_training().click();
+    Thread.sleep(20000);
+    cit.accepted_work().click();
+    cit.corporate_officer().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+  //upplemental Unemployment Benefit (SUB) Questionnaire
+    cit.severance_hours_worked_per_week().sendKeys("10");
+    cit.severance_days_worked_monday().click();
+    cit.severance_days_worked_Tuesday().click();
+    Thread.sleep(2000);
+    cit.SUB_payments().sendKeys("BATA");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+
+    //Tax Withholding and Payment Option
+    cit.ui_benefit_que1().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //American Job Center
+    cit.american_call_centre().click();
+    Thread.sleep(2000);
+    cit.american_call_centre_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Benefit Rights Information
+    Thread.sleep(2000);
+    cit.bri_condition_checkbox().click();
+    Thread.sleep(2000);
+    cit.bri_ssn_last4().click();
+    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.submit().click();
+    
+    //Important Weekly Certification Filing Instructions
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+}
+
+public static  void regularClaim_separation_Educational_Employee (WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+	
+	System.out.println("value of ssn is" +ssn);
+
+	
+	
+	FutureDatePastDate fdpd = new FutureDatePastDate();
+	String ed = fdpd.previousyeardate(-14);
+	
+	
+	String ed1 = fdpd.previousmonthdate(-1);
+	String ed2 = fdpd.previousmonthdate(1);
+	System.out.println(ed2);
+	
+	
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.file_unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	Thread.sleep(2000);
+	wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+	wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	//personal information
+	
+	cit.first_name().sendKeys("robert");
+	cit.last_name().sendKeys("clive");
+	Thread.sleep(2000);
+	cit.dob1().click();
+	cit.dob1().sendKeys("01");
+	cit.dob2().sendKeys("01");
+	cit.dob3().sendKeys("1980");
+	cit.gender().click();
+	cit.ethinicity().click();
+	cit.us_citizen_yes().click();
+	cit.military_vetern().click();
+	cit.highest_grade().click();
+	Thread.sleep(2000);
+	cit.highest_grade_selection().click();
+	cit.language_interpreter().click();
+	cit.dependent().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	
+	//Contact Details
+	cit.Address_1().sendKeys("1 London");
+    cit.Address_2().sendKeys("new street");
+    cit.city().sendKeys("Paris");
+    Thread.sleep(2000);
+    cit.state().click();
+    Thread.sleep(3000);
+    cit.state_selection().click();
+    Thread.sleep(2000);
+    cit.Zipcode().sendKeys("06001");
+    cit.residential_address().click();
+    Thread.sleep(2000);
+    cit.primary_number().click();
+    cit.primary_number().sendKeys("9555511111");
+    cit.notification_text_message().click();
+    cit.email().clear();
+    cit.email().sendKeys("abc@test.com");
+    cit.confirm_email().clear();
+    cit.confirm_email().sendKeys("abc@test.com");	
+    cit.correspondence_language().click();
+    Thread.sleep(2000);
+    cit.correspondence_language_selection().click();
+    Thread.sleep(2000);
+    cit.authorize_ct().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+    
+    //verify contact details
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Security Confirmation
+    cit.fname_on_ssn().sendKeys("Peter");
+    cit.lname_on_ssn().sendKeys("lambert");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //File Claim
+    cit.where_claim_filed().click();
+    Thread.sleep(2000);
+    cit.where_claim_filed_option().click();
+    cit.federal_govt().click();
+    cit.military().click();
+    cit.worked_for_any_employer().click();
+    Thread.sleep(2000);
+    cit.ct_selection().click();
+    cit.date_of_return().click();
+    cit.last_12_months().click();
+    cit.head_emp().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //File Claim Continuation
+    cit.construction_worker().click();
+    cit.union_hall().click();
+    cit.worker_compensation().click();
+    cit.sick_disability().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Employment History
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Primary Job Title/Description Search
+    cit.Job_title().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+    cit.Job_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    
+    //Job Title Summary
+    cit.work_exp_year().sendKeys("2");
+    cit.work_exp_month().sendKeys("2");
+    cit.another_exp_jobh().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+  //Geographical Preference for Work
+    cit.distance().click();
+    Thread.sleep(2000);
+    cit.distance_selection().click();
+    cit.work_city().sendKeys("Jackson");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    cit.another_emp_yes().click();
+    Thread.sleep(2000);
+    cit.type_of_emp().click();
+    Thread.sleep(2000);
+    cit.type_emp_selection().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+ 
+    
+    //Search for employer
+   cit.emp_name().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+   cit.emp_selection().click();
+   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    //Add Employment Details
+    cit.first_date_work().click();
+    cit.first_date_work().sendKeys(ed);
+    Thread.sleep(2000);
+    cit.last_date_work().click();
+    cit.last_date_work().sendKeys(ed1);
+    Thread.sleep(2000);
+    cit.work_location_city().sendKeys("brisbane");
+    cit.work_location_state().click();
+    Thread.sleep(2000);
+    cit.work_location_state_selection().click();
+    cit.job_title_description().sendKeys("QA");
+    cit.rate_of_pay().sendKeys("20");
+    cit.rate_of_pay_hour().click();
+    Thread.sleep(2000);
+    cit.rate_of_pay_hour_selection().click();
+    cit.hours_per_week().sendKeys("40");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.shift1st().click();
+    cit.did_you_work().click();
+    Thread.sleep(2000);
+    cit.did_you_work_selection().click();
+    cit.worl_week_mon().click();
+    cit.worl_week_tues().click();
+    cit.worl_week_wed().click();
+    cit.worl_week_thur().click();
+    cit.worl_week_fri().click();
+    cit.reason_not_working().click();
+    Thread.sleep(2000);
+    cit.reason_not_working_selection_educational_employee().click();
+    cit.total_wages().sendKeys("20000");
+    cit.pension_no().click();
+    cit.emp_telephone_num().click();
+    cit.emp_telephone_num().sendKeys("9566612345");
+    cit.severance_pay().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    Thread.sleep(2000);
+     wcl.clickNext().click();
+    
+     
+       
+	    
+	  
+	  
+    //Application for Reconsideration of Wages
+    Thread.sleep(2000);
+    cit.person_who_hired_you().sendKeys("john");
+    cit.nature_of_employer_business().sendKeys("business");
+    cit.people_worked().sendKeys("77");
+    cit.type_of_work().sendKeys("testing");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.paid_directly().click();
+    cit.how_were_you_paid().click();
+    cit.document_received().click();
+    cit.have_other_ssn().click();
+    cit.wage_1().sendKeys("4000");
+    cit.wage_2().sendKeys("4000");
+    cit.wage_3().sendKeys("4000");
+    cit.wage_4().sendKeys("4000");
+    cit.wage_5().sendKeys("4000");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Employement summary
+    
+    cit.another_emp_no().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    		
+    
+    
+    
+    
+    //Requalify/Lift Issue
+    Thread.sleep(2000);
+    cit.requalify_lift_remarks().sendKeys("Test only");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Able and Available Details
+    cit.currently_self_employed().click();
+    cit.refused_work().click();
+    cit.attending_school_training().click();
+    cit.accepted_work().click();
+    cit.corporate_officer().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+   //Between Terms Questionnaire
+    Thread.sleep(2000);
+    cit.Were_you_employed_during_the_recently_completed_school_semester_yes().click();
+    Thread.sleep(2000);
+    cit.date_school_started().click();
+    cit.date_school_started().sendKeys(ed);
+    Thread.sleep(2000);
+    cit.school_last_day_worked().click();
+    cit.school_last_day_worked().sendKeys(ed1);
+    Thread.sleep(2000);
+    cit.date_school_ended().click();
+    cit.date_school_ended().sendKeys(ed1);
+    Thread.sleep(2000);
+    cit.school_title_position().sendKeys("principal");
+    cit.school_rate__of_pay().sendKeys("20");
+    cit.school_hours__of_pay().sendKeys("10");
+    cit.school_position().click();
+    cit.school_position_selection().click();
+    cit.school_assurance_of_returing_to_work_yes().click();
+    Thread.sleep(2000);
+    cit.school_assurance_of_returing_to_work_date().click();
+    Thread.sleep(2000);
+    cit.school_assurance_of_returing_to_work_date().sendKeys(ed2);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    Thread.sleep(2000);
+    wcl.clickNext().click();		
+    
+    
+    
+    
+    //Tax Withholding and Payment Option
+    cit.ui_benefit_que1().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //American Job Center
+    cit.american_call_centre().click();
+    Thread.sleep(2000);
+    cit.american_call_centre_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Benefit Rights Information
+    Thread.sleep(2000);
+    cit.bri_condition_checkbox().click();
+    Thread.sleep(2000);
+    cit.bri_ssn_last4().click();
+    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.submit().click();
+    
+    //Important Weekly Certification Filing Instructions
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+}
+
+
+public static  void regularClaim_pension (WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+	
+	System.out.println("value of ssn is" +ssn);
+
+	
+	
+	FutureDatePastDate fdpd = new FutureDatePastDate();
+	String ed = fdpd.previousyeardate(-14);
+	
+	
+	String ed1 = fdpd.previousmonthdate(-1);
+	
+	
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.file_unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	Thread.sleep(2000);
+	wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+	wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	//personal information
+	
+	cit.first_name().sendKeys("robert");
+	cit.last_name().sendKeys("clive");
+	Thread.sleep(2000);
+	cit.dob1().click();
+	Thread.sleep(2000);
+	cit.dob1().sendKeys("01");
+	cit.dob2().sendKeys("01");
+	cit.dob3().sendKeys("1980");
+	cit.gender().click();
+	cit.ethinicity().click();
+	cit.us_citizen_yes().click();
+	cit.military_vetern().click();
+	cit.highest_grade().click();
+	Thread.sleep(2000);
+	cit.highest_grade_selection().click();
+	cit.language_interpreter().click();
+	cit.dependent().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	
+	//Contact Details
+	cit.Address_1().sendKeys("1 London");
+    cit.Address_2().sendKeys("new street");
+    cit.city().sendKeys("Paris");
+    Thread.sleep(2000);
+    cit.state().click();
+    Thread.sleep(3000);
+    cit.state_selection().click();
+    Thread.sleep(2000);
+    cit.Zipcode().sendKeys("06001");
+    cit.residential_address().click();
+    Thread.sleep(2000);
+    cit.primary_number().click();
+    cit.primary_number().sendKeys("9555511111");
+    cit.notification_text_message().click();
+    cit.email().clear();
+    cit.email().sendKeys("abc@test.com");
+    cit.confirm_email().clear();
+    cit.confirm_email().sendKeys("abc@test.com");	
+    cit.correspondence_language().click();
+    Thread.sleep(2000);
+    cit.correspondence_language_selection().click();
+    Thread.sleep(2000);
+    cit.authorize_ct().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+    
+    //verify contact details
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Security Confirmation
+    cit.fname_on_ssn().sendKeys("Peter");
+    cit.lname_on_ssn().sendKeys("lambert");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //File Claim
+    cit.where_claim_filed().click();
+    Thread.sleep(2000);
+    cit.where_claim_filed_option().click();
+    cit.federal_govt().click();
+    cit.military().click();
+    cit.worked_for_any_employer().click();
+    Thread.sleep(2000);
+    cit.ct_selection().click();
+    cit.date_of_return().click();
+    cit.last_12_months().click();
+    cit.head_emp().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //File Claim Continuation
+    cit.construction_worker().click();
+    cit.union_hall().click();
+    cit.worker_compensation().click();
+    cit.sick_disability().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Employment History
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Primary Job Title/Description Search
+    cit.Job_title().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+    cit.Job_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    
+    //Job Title Summary
+    cit.work_exp_year().sendKeys("2");
+    cit.work_exp_month().sendKeys("2");
+    cit.another_exp_jobh().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+  //Geographical Preference for Work
+    cit.distance().click();
+    Thread.sleep(2000);
+    cit.distance_selection().click();
+    cit.work_city().sendKeys("Jackson");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    cit.another_emp_yes().click();
+    Thread.sleep(2000);
+    cit.type_of_emp().click();
+    Thread.sleep(2000);
+    cit.type_emp_selection().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+ 
+    
+    //Search for employer
+   cit.emp_name().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+   cit.emp_selection().click();
+   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    //Add Employment Details
+    cit.first_date_work().click();
+    cit.first_date_work().sendKeys(ed);
+    Thread.sleep(2000);
+    cit.last_date_work().click();
+    cit.last_date_work().sendKeys(ed1);
+    Thread.sleep(2000);
+    cit.work_location_city().sendKeys("brisbane");
+    cit.work_location_state().click();
+    Thread.sleep(2000);
+    cit.work_location_state_selection().click();
+    cit.job_title_description().sendKeys("QA");
+    cit.rate_of_pay().sendKeys("20");
+    cit.rate_of_pay_hour().click();
+    Thread.sleep(2000);
+    cit.rate_of_pay_hour_selection().click();
+    cit.hours_per_week().sendKeys("40");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.shift1st().click();
+    cit.did_you_work().click();
+    Thread.sleep(2000);
+    cit.did_you_work_selection().click();
+    cit.worl_week_mon().click();
+    cit.worl_week_tues().click();
+    cit.worl_week_wed().click();
+    cit.worl_week_thur().click();
+    cit.worl_week_fri().click();
+    cit.reason_not_working().click();
+    Thread.sleep(2000);
+    cit.reason_not_working_selection().click();
+    cit.total_wages().sendKeys("20000");
+    cit.pension_yes().click();
+    cit.pension_date().click();
+    Thread.sleep(2000);
+    cit.pension_date().sendKeys(ed1);
+    cit.emp_telephone_num().click();
+    cit.emp_telephone_num().sendKeys("9566612345");
+    cit.severance_pay().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    Thread.sleep(2000);
+     wcl.clickNext().click();
+    
+     
+       
+	    
+	  
+	  
+    //Application for Reconsideration of Wages
+    Thread.sleep(2000);
+    cit.person_who_hired_you().sendKeys("john");
+    cit.nature_of_employer_business().sendKeys("business");
+    cit.people_worked().sendKeys("77");
+    cit.type_of_work().sendKeys("testing");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.paid_directly().click();
+    cit.how_were_you_paid().click();
+    cit.document_received().click();
+    cit.have_other_ssn().click();
+    cit.wage_1().sendKeys("4000");
+    cit.wage_2().sendKeys("4000");
+    cit.wage_3().sendKeys("4000");
+    cit.wage_4().sendKeys("4000");
+    cit.wage_5().sendKeys("4000");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Employement summary
+    
+    cit.another_emp_no().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    		
+    
+    
+    
+    
+    //Requalify/Lift Issue
+    Thread.sleep(2000);
+    cit.requalify_lift_remarks().sendKeys("Test only");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Able and Available Details
+    cit.currently_self_employed().click();
+    cit.refused_work().click();
+    cit.attending_school_training().click();
+    cit.accepted_work().click();
+    cit.corporate_officer().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+  //Pension - Other
+    Thread.sleep(2000);
+    cit.pension_sponsered_by_union_no().click();
+    cit.pension_date_payment_made().click();
+    Thread.sleep(2000);
+    cit.pension_date_payment_made().sendKeys(ed1);
+    cit.pension_amount().sendKeys("200");
+    cit.pension_did_employer_contribute_no().click();
+    cit.pension_did_you_contribute_pension_plan_no().click();
+    cit.pension_is_this_disability().click();
+    cit.pension_lump_sum_date().click();
+    Thread.sleep(2000);
+    cit.pension_lump_sum_date().sendKeys(ed1);
+    cit.pension_lump_sum_employement_contribution().sendKeys("20");
+    cit.pension_lump_sum_gross_amount().sendKeys("20");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Tax Withholding and Payment Option
+    cit.ui_benefit_que1().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //American Job Center
+    cit.american_call_centre().click();
+    Thread.sleep(2000);
+    cit.american_call_centre_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Benefit Rights Information
+    Thread.sleep(2000);
+    cit.bri_condition_checkbox().click();
+    Thread.sleep(2000);
+    cit.bri_ssn_last4().click();
+    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.submit().click();
+    
+    //Important Weekly Certification Filing Instructions
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+}
+
+
+public static  void regularClaim_worker_compensation (WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+	
+	System.out.println("value of ssn is" +ssn);
+
+	
+	
+	FutureDatePastDate fdpd = new FutureDatePastDate();
+	String ed = fdpd.previousyeardate(-14);
+	
+	
+	String ed1 = fdpd.previousmonthdate(-1);
+	
+	
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.file_unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	Thread.sleep(2000);
+	wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+	wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	//personal information
+	
+	cit.first_name().sendKeys("robert");
+	cit.last_name().sendKeys("clive");
+	cit.dob1().click();
+	Thread.sleep(2000);
+	cit.dob1().sendKeys("01");
+	cit.dob2().sendKeys("01");
+	cit.dob3().sendKeys("1980");
+	cit.gender().click();
+	cit.ethinicity().click();
+	cit.us_citizen_yes().click();
+	cit.military_vetern().click();
+	cit.highest_grade().click();
+	Thread.sleep(2000);
+	cit.highest_grade_selection().click();
+	cit.language_interpreter().click();
+	cit.dependent().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	
+	//Contact Details
+	cit.Address_1().sendKeys("1 London");
+    cit.Address_2().sendKeys("new street");
+    cit.city().sendKeys("Paris");
+    Thread.sleep(2000);
+    cit.state().click();
+    Thread.sleep(3000);
+    cit.state_selection().click();
+    Thread.sleep(2000);
+    cit.Zipcode().sendKeys("06001");
+    cit.residential_address().click();
+    Thread.sleep(2000);
+    cit.primary_number().click();
+    cit.primary_number().sendKeys("9555511111");
+    cit.notification_text_message().click();
+    cit.email().clear();
+    cit.email().sendKeys("abc@test.com");
+    cit.confirm_email().clear();
+    cit.confirm_email().sendKeys("abc@test.com");	
+    cit.correspondence_language().click();
+    Thread.sleep(2000);
+    cit.correspondence_language_selection().click();
+    Thread.sleep(2000);
+    cit.authorize_ct().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+    
+    //verify contact details
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Security Confirmation
+    cit.fname_on_ssn().sendKeys("Peter");
+    cit.lname_on_ssn().sendKeys("lambert");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //File Claim
+    cit.where_claim_filed().click();
+    Thread.sleep(2000);
+    cit.where_claim_filed_option().click();
+    cit.federal_govt().click();
+    cit.military().click();
+    cit.worked_for_any_employer().click();
+    Thread.sleep(2000);
+    cit.ct_selection().click();
+    cit.date_of_return().click();
+    cit.last_12_months().click();
+    cit.head_emp().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //File Claim Continuation
+    cit.construction_worker().click();
+    cit.union_hall().click();
+    cit.worker_compensation_yes().click();
+    cit.sick_disability().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    
+    //Worker's Compensation Questionnaire
+    Thread.sleep(2000);
+    cit.injured_on_job_date().click();
+    Thread.sleep(2000);
+    cit.injured_on_job_date().sendKeys(ed1);
+    cit.worker_compensation_employer_name().sendKeys("Ericson");
+    cit.worker_compensation_address1().sendKeys("1 London");
+    cit.worker_compensation_address2().sendKeys("bridge");
+    cit.worker_compensation_city().sendKeys("Paris");
+    cit.worker_compensation_state().click();
+    Thread.sleep(2000);
+    cit.worker_compensation_state_selection().click();
+    
+    cit.worker_compensation_zipcode().sendKeys("20130");
+    
+    cit.worker_compensation_country().click();
+    Thread.sleep(2000);
+    cit.worker_compensation_country_selection().click();
+    
+    cit.worker_compensation_phone().click();
+    cit.worker_compensation_phone().sendKeys("9566612345");
+    cit.worker_compensation_type_of_payment().sendKeys("Cash");
+    cit.worker_compensation_name_issuaence_company().sendKeys("National");
+    cit.worker_compensation_claim_number().sendKeys("45");
+    cit.worker_compensation_date_started_receiving_payment().sendKeys(ed1);
+    cit.worker_compensation_name_agent().sendKeys("Rahul");
+    cit.worker_agent_number().click();
+    cit.worker_agent_number().sendKeys("9566612345");
+    cit.worker_compensation_employer_selection().click();
+    cit.worker_compensation_date_employer_To().click();
+    Thread.sleep(2000);
+    cit.worker_compensation_date_employer_To().sendKeys(ed1);
+    cit.worker_compensation_date_from().click();
+    Thread.sleep(2000);
+    cit.worker_compensation_date_from().sendKeys(ed);
+    cit.worker_compensation_date_stop().click();
+    cit.worker_compensation_date_stop().sendKeys(ed1);
+    
+    
+    
+    
+    //Employment History
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Primary Job Title/Description Search
+    cit.Job_title().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+    cit.Job_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    
+    //Job Title Summary
+    cit.work_exp_year().sendKeys("2");
+    cit.work_exp_month().sendKeys("2");
+    cit.another_exp_jobh().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+  //Geographical Preference for Work
+    cit.distance().click();
+    Thread.sleep(2000);
+    cit.distance_selection().click();
+    cit.work_city().sendKeys("Jackson");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    cit.another_emp_yes().click();
+    Thread.sleep(2000);
+    cit.type_of_emp().click();
+    Thread.sleep(2000);
+    cit.type_emp_selection().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+ 
+    
+    //Search for employer
+   cit.emp_name().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+   cit.emp_selection().click();
+   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    //Add Employment Details
+    cit.first_date_work().click();
+    Thread.sleep(2000);
+    cit.first_date_work().sendKeys(ed);
+   
+    cit.last_date_work().click();
+    Thread.sleep(2000);
+    cit.last_date_work().sendKeys(ed1);
+    
+    cit.work_location_city().sendKeys("brisbane");
+    cit.work_location_state().click();
+    Thread.sleep(2000);
+    cit.work_location_state_selection().click();
+    cit.job_title_description().sendKeys("QA");
+    cit.rate_of_pay().sendKeys("20");
+    cit.rate_of_pay_hour().click();
+    Thread.sleep(2000);
+    cit.rate_of_pay_hour_selection().click();
+    cit.hours_per_week().sendKeys("40");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.shift1st().click();
+    cit.did_you_work().click();
+    Thread.sleep(2000);
+    cit.did_you_work_selection().click();
+    cit.worl_week_mon().click();
+    cit.worl_week_tues().click();
+    cit.worl_week_wed().click();
+    cit.worl_week_thur().click();
+    cit.worl_week_fri().click();
+    cit.reason_not_working().click();
+    Thread.sleep(2000);
+    cit.reason_not_working_selection().click();
+    cit.total_wages().sendKeys("20000");
+    cit.pension_no().click();
+    cit.emp_telephone_num().click();
+    cit.emp_telephone_num().sendKeys("9566612345");
+    cit.severance_pay().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    Thread.sleep(2000);
+     wcl.clickNext().click();
+    
+     
+       
+	    
+	  
+	  
+    //Application for Reconsideration of Wages
+    Thread.sleep(2000);
+    cit.person_who_hired_you().sendKeys("john");
+    cit.nature_of_employer_business().sendKeys("business");
+    cit.people_worked().sendKeys("77");
+    cit.type_of_work().sendKeys("testing");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.paid_directly().click();
+    cit.how_were_you_paid().click();
+    cit.document_received().click();
+    cit.have_other_ssn().click();
+    cit.wage_1().sendKeys("4000");
+    cit.wage_2().sendKeys("4000");
+    cit.wage_3().sendKeys("4000");
+    cit.wage_4().sendKeys("4000");
+    cit.wage_5().sendKeys("4000");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Employement summary
+    
+    cit.another_emp_no().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    		
+    
+    
+    
+    
+    //Requalify/Lift Issue
+    Thread.sleep(2000);
+    cit.requalify_lift_remarks().sendKeys("Test only");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Able and Available Details
+    cit.currently_self_employed().click();
+    cit.refused_work().click();
+    cit.attending_school_training().click();
+    cit.accepted_work().click();
+    cit.corporate_officer().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+   
+    
+    //Tax Withholding and Payment Option
+    cit.ui_benefit_que1().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //American Job Center
+    cit.american_call_centre().click();
+    Thread.sleep(2000);
+    cit.american_call_centre_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Benefit Rights Information
+    Thread.sleep(2000);
+    cit.bri_condition_checkbox().click();
+    Thread.sleep(2000);
+    cit.bri_ssn_last4().click();
+    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.submit().click();
+    
+    //Important Weekly Certification Filing Instructions
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+}
+
+public static void regularClaim_dependent(WebDriver driver, String snapshotPath, String SimpleClassname ,String  ssn) throws InterruptedException {
+	
+	System.out.println("value of ssn is" +ssn);
+
+	
+	
+	FutureDatePastDate fdpd = new FutureDatePastDate();
+	String ed = fdpd.previousyeardate(-14);
+	
+	
+	String ed1 = fdpd.previousmonthdate(-1);
+
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	cit.file_unemployement_claim().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	Thread.sleep(2000);
+	wcl.ssn1().sendKeys(prop.getProperty("claimssn"));
+	wcl.confirmssn1().sendKeys(prop.getProperty("claimssn"));
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	//personal information
+	
+	cit.first_name().sendKeys("robert");
+	cit.last_name().sendKeys("clive");
+	cit.dob1().click();
+	Thread.sleep(2000);
+	cit.dob1().sendKeys("01");
+	cit.dob2().sendKeys("01");
+	cit.dob3().sendKeys("1980");
+	cit.gender().click();
+	cit.ethinicity().click();
+	cit.us_citizen_yes().click();
+	cit.military_vetern().click();
+	cit.highest_grade().click();
+	Thread.sleep(2000);
+	cit.highest_grade_selection().click();
+	cit.language_interpreter().click();
+	cit.dependent().click();
+	Thread.sleep(2000);
+	driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	wcl.clickNext().click();
+	
+	
+	//Contact Details
+	cit.Address_1().sendKeys("1 London");
+    cit.Address_2().sendKeys("new street");
+    cit.city().sendKeys("Paris");
+    Thread.sleep(2000);
+    cit.state().click();
+    Thread.sleep(3000);
+    cit.state_selection().click();
+    Thread.sleep(2000);
+    cit.Zipcode().sendKeys("06001");
+    cit.residential_address().click();
+    Thread.sleep(2000);
+    cit.primary_number().click();
+    cit.primary_number().sendKeys("9555511111");
+    cit.notification_text_message().click();
+    cit.email().clear();
+    cit.email().sendKeys("abc@test.com");
+    cit.confirm_email().clear();
+    cit.confirm_email().sendKeys("abc@test.com");	
+    cit.correspondence_language().click();
+    Thread.sleep(2000);
+    cit.correspondence_language_selection().click();
+    Thread.sleep(2000);
+    cit.authorize_ct().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+    
+    //verify contact details
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Security Confirmation
+    cit.fname_on_ssn().sendKeys("Peter");
+    cit.lname_on_ssn().sendKeys("lambert");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //File Claim
+    cit.where_claim_filed().click();
+    Thread.sleep(2000);
+    cit.where_claim_filed_option().click();
+    cit.federal_govt().click();
+    cit.military().click();
+    cit.worked_for_any_employer().click();
+    Thread.sleep(2000);
+    cit.ct_selection().click();
+    cit.date_of_return().click();
+    cit.last_12_months().click();
+    cit.head_emp().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //File Claim Continuation
+    cit.construction_worker().click();
+    cit.union_hall().click();
+    cit.worker_compensation().click();
+    cit.sick_disability().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Employment History
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+    //Primary Job Title/Description Search
+    cit.Job_title().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+    cit.Job_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    
+    //Job Title Summary
+    cit.work_exp_year().sendKeys("2");
+    cit.work_exp_month().sendKeys("2");
+    cit.another_exp_jobh().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+   
+  //Geographical Preference for Work
+    cit.distance().click();
+    Thread.sleep(2000);
+    cit.distance_selection().click();
+    cit.work_city().sendKeys("Jackson");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    cit.another_emp_yes().click();
+    Thread.sleep(2000);
+    cit.type_of_emp().click();
+    Thread.sleep(2000);
+    cit.type_emp_selection().click();
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+ 
+    
+    //Search for employer
+   cit.emp_name().sendKeys("test");
+    wcl.clickSearch().click();
+    Thread.sleep(4000);
+   cit.emp_selection().click();
+   driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    Thread.sleep(4000);
+    
+    
+    //Add Employment Details
+    cit.first_date_work().click();
+    cit.first_date_work().sendKeys(ed);
+    Thread.sleep(2000);
+    cit.last_date_work().click();
+    cit.last_date_work().sendKeys(ed1);
+    Thread.sleep(2000);
+    cit.work_location_city().sendKeys("brisbane");
+    cit.work_location_state().click();
+    Thread.sleep(2000);
+    cit.work_location_state_selection().click();
+    cit.job_title_description().sendKeys("QA");
+    cit.rate_of_pay().sendKeys("20");
+    cit.rate_of_pay_hour().click();
+    Thread.sleep(2000);
+    cit.rate_of_pay_hour_selection().click();
+    cit.hours_per_week().sendKeys("40");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.shift1st().click();
+    cit.did_you_work().click();
+    Thread.sleep(2000);
+    cit.did_you_work_selection().click();
+    cit.worl_week_mon().click();
+    cit.worl_week_tues().click();
+    cit.worl_week_wed().click();
+    cit.worl_week_thur().click();
+    cit.worl_week_fri().click();
+    cit.reason_not_working().click();
+    Thread.sleep(2000);
+    cit.reason_not_working_selection().click();
+    cit.total_wages().sendKeys("20000");
+    cit.pension_no().click();
+    cit.emp_telephone_num().click();
+    cit.emp_telephone_num().sendKeys("9566612345");
+    cit.severance_pay().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    Thread.sleep(2000);
+     wcl.clickNext().click();
+    
+     
+       
+	    
+	  
+	  
+    //Application for Reconsideration of Wages
+    Thread.sleep(2000);
+    cit.person_who_hired_you().sendKeys("john");
+    cit.nature_of_employer_business().sendKeys("business");
+    cit.people_worked().sendKeys("77");
+    cit.type_of_work().sendKeys("testing");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    cit.paid_directly().click();
+    cit.how_were_you_paid().click();
+    cit.document_received().click();
+    cit.have_other_ssn().click();
+    cit.wage_1().sendKeys("4000");
+    cit.wage_2().sendKeys("4000");
+    cit.wage_3().sendKeys("4000");
+    cit.wage_4().sendKeys("4000");
+    cit.wage_5().sendKeys("4000");
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Employement summary
+    
+    cit.another_emp_no().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    		
+    
+    
+    
+    
+    //Requalify/Lift Issue
+    Thread.sleep(2000);
+    cit.requalify_lift_remarks().sendKeys("Test only");
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Able and Available Details
+    cit.currently_self_employed().click();
+    cit.refused_work().click();
+    cit.attending_school_training().click();
+    cit.accepted_work().click();
+    cit.corporate_officer().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+   
+    
+    //Tax Withholding and Payment Option
+    cit.ui_benefit_que1().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //American Job Center
+    cit.american_call_centre().click();
+    Thread.sleep(2000);
+    cit.american_call_centre_selection().click();
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    //Benefit Rights Information
+    Thread.sleep(2000);
+    cit.bri_condition_checkbox().click();
+    Thread.sleep(2000);
+    cit.bri_ssn_last4().click();
+    cit.bri_ssn_last4().sendKeys(ssn.substring(5, 9));
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.submit().click();
+    
+    //Important Weekly Certification Filing Instructions
+    Thread.sleep(2000);
+    driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+    wcl.clickNext().click();
+    
+    
+}
+
+}

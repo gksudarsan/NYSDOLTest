@@ -1,0 +1,755 @@
+package com.ui.pages;
+
+
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.SearchWorkItem;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class weekly_cert_pension extends TestBase
+{
+	static LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static PageHeading ph;
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static weekly_cert_pension ClassObject;
+
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+	static Payments_Locators pml;
+	
+	
+	static FutureDatePastDate f;
+	
+	static String heading;
+	static int counter = 0;
+	static JavascriptExecutor js = ((JavascriptExecutor)driver);
+	static Random rand = new Random();
+	
+	public static Wait <WebDriver> wait1 = new FluentWait<WebDriver>(driver)
+			.withTimeout(Duration.ofSeconds(20000))
+			.pollingEvery(Duration.ofSeconds(5))
+			.ignoring(org.openqa.selenium.NoSuchElementException.class);
+
+	
+	public void setup(String browser) throws InterruptedException
+
+	{
+		ClassObject =new weekly_cert_pension();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+
+	}
+
+	
+	public void pension_select() throws InterruptedException, ParseException
+	{
+		ClassObject =new weekly_cert_pension();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl = new Wc_locators();
+		pml=new Payments_Locators();
+		
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		Thread.sleep(2000);
+	
+		System.out.println("@test initiated");
+		ph=new PageHeading();
+				Wait <WebDriver> wait1 = new FluentWait<WebDriver>(driver)
+						.withTimeout(Duration.ofSeconds(20000))
+						.pollingEvery(Duration.ofSeconds(5))
+						.ignoring(org.openqa.selenium.NoSuchElementException.class);
+		wcl=new Wc_locators();
+		Thread.sleep(2000);
+		
+
+		wcl.clickWcLink().click();
+
+
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.fileWeeklyCertification().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.ssn1().sendKeys(prop.getProperty("ssn_59016"));
+
+		wcl.confirmssn1().sendKeys(prop.getProperty("ssn_59016"));
+
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		wcl.Didyouactivelylookforwork().click();
+		Thread.sleep(5000);
+
+
+		wcl.clickNext().click();
+
+		Thread.sleep(5000);
+		wcl.clickicon().click();
+		wcl.selectEmployer().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext();
+		Thread.sleep(5000);
+
+
+		String dt = driver.findElement(By.xpath("//*[@class='ui-panelgrid ui-widget tablefields']/tbody/tr[2]/td/b[3]")).getText();
+
+
+		System.out.println(FutureDatePastDate.dat(dt));
+
+		wcl.selectWorkSearchDate().sendKeys(FutureDatePastDate.dat(dt));
+
+		Thread.sleep(2000);
+
+		wcl.clickSearch().click();
+		Thread.sleep(2000);
+		wcl.enterEmployerName().sendKeys("CITY OF ANSONIA");
+		wcl.clickSearch().click();
+
+	ph.EmployerNameScreen();
+
+
+		Thread.sleep(10000);
+
+		wcl.clickEmployerChecbox().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+
+		Thread.sleep(2000);	
+		wcl.positionAppliedFor().sendKeys("QA Engineer");
+		wcl.methoOfContact().click();
+		wcl.selectTelephone().click();
+		wcl.areaCode().sendKeys("601");
+		wcl.contactNum1().sendKeys("597");
+		wcl.contactNum2().sendKeys("8854");
+
+		wcl.result().click();
+		Thread.sleep(5000);
+		wcl.resultvalue().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+
+
+		//Verifying work search page
+		ph.WorkSearchSummary();
+
+		wcl.submit().click();
+
+		//Verify the screen "Weekly Certification and Work Search Record Acknowledgement"
+		//ph.WKCAcknowledgementScreen();
+
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		wcl.ssnnum().sendKeys(prop.getProperty("ssn_p_59018"));
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+
+		ph.buttonToFileWeeklyCertification();
+
+		Thread.sleep(3000);
+		wcl.fileWeeklyCertBtn().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+
+
+		wcl.check1Yes().click(); Thread.sleep(5000);
+		wcl.check2Yes().click();Thread.sleep(5000);
+		wcl.check3No().click();Thread.sleep(5000);
+		wcl.check4No().click();Thread.sleep(5000);
+		wcl.check5Yes().click();Thread.sleep(5000);
+		wcl.check5aNo().click();Thread.sleep(5000);
+		wcl.check6No().click();Thread.sleep(5000);
+		wcl.check7No().click();Thread.sleep(5000);
+		wcl.check8Yes().click();Thread.sleep(5000);
+		wcl.check9No().click();Thread.sleep(5000);
+		wcl.pensionemployerselection().click();
+		Thread.sleep(5000);
+
+
+		System.out.println("all question answered  ");		
+
+
+
+
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+
+		Thread.sleep(5000);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.enterEmployerName().sendKeys("CITY OF ANSONIA");
+		wcl.clickSearch().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		//ph.EmployerNameScreen();
+
+
+
+		wcl.clickEmployerChecbox().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.IndicateEmployStatus().click();
+		wcl.SelectIndicateEmployStatus().click();
+		wcl.EnterAmount().sendKeys("50");
+		wcl.EnterWorkingHrs().sendKeys("10");
+		Thread.sleep(1000);
+		wcl.PerformWorkCheckNo().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+
+
+
+		Thread.sleep(5000);
+		wcl.pension_sponsored_by().click();
+
+		//wcl.lump_sum_paid_month().sendKeys("04");
+		//wcl.lump_sum_paid_day().sendKeys("06");
+		//wcl.lump_sum_paid_year().sendKeys("2020");
+
+		Thread.sleep(2000);
+		wcl.lump_sum_paid_to_the_claimant().sendKeys("50");
+
+		Thread.sleep(2000);
+		wcl.contributions_made_by_the_claimant().sendKeys("5");
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+
+
+
+
+
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+
+		Thread.sleep(5000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+
+
+
+		Thread.sleep(4000);
+		wcl.ssnnum().sendKeys(prop.getProperty("ssn_p_59018"));
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+
+
+		System.out.println("ready to submit weekly certification");
+
+
+
+
+
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.submit().click();
+		Thread.sleep(5000);
+		System.out.println("submitted weekly certification sucessfully");
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);   
+	}
+
+	
+	public static void  SubmitWeeklyCertification_SSN(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN,String SSN2) throws InterruptedException, ParseException
+	{
+			
+		
+		ClassObject =new weekly_cert_pension();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl = new Wc_locators();
+		pml=new Payments_Locators();
+		ph=ph=new PageHeading();
+		Wait <WebDriver> wait1 = new FluentWait<WebDriver>(driver)
+				.withTimeout(Duration.ofSeconds(20000))
+				.pollingEvery(Duration.ofSeconds(5))
+				.ignoring(org.openqa.selenium.NoSuchElementException.class);		
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		Thread.sleep(2000);
+			Thread.sleep(2000);
+			wcl.clickWcLink().click();
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.fileWeeklyCertification().click();
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.ssn1().sendKeys(SSN);
+
+			wcl.confirmssn1().sendKeys(SSN);
+
+			
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			//wcl.clickNext().click(); //optional
+			Thread.sleep(5000);
+			wcl.clickNext().click();
+			Thread.sleep(2000);
+			wcl.clickcheck().click();
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(5000);
+			wcl.clickicon().click();
+			wcl.selectEmployer().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext();
+			Thread.sleep(5000);
+
+			//*[@class='ui-panelgrid ui-widget tablefields']/tbody/tr[2]/td/b[3]
+			String dt = driver.findElement(By.xpath("//*[@class='ui-panelgrid ui-widget tablefields']/tbody/tr[2]/td/b[3]")).getText();
+
+			
+			System.out.println(FutureDatePastDate.dat(dt));
+			
+			wcl.selectWorkSearchDate().sendKeys(FutureDatePastDate.dat(dt));
+
+			Thread.sleep(2000);
+
+			wcl.clickSearch().click();
+			Thread.sleep(2000);
+			wcl.enterEmployerName().sendKeys("CITY OF ANSONIA");
+			wcl.clickSearch().click();
+
+// Verifying Employer name Page
+			//ph.EmployerNameScreen();
+		
+
+			Thread.sleep(10000);
+
+			wcl.clickEmployerChecbox().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+
+			Thread.sleep(2000);	
+			wcl.positionAppliedFor().sendKeys("QA Engineer");
+			wcl.methoOfContact().click();
+			wcl.selectTelephone().click();
+			wcl.areaCode().sendKeys("601");
+			wcl.contactNum1().sendKeys("597");
+			wcl.contactNum2().sendKeys("8854");
+
+			wcl.result().click();
+			Thread.sleep(5000);
+			wcl.resultvalue().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			
+			
+			//Verifying work search page.
+			ph.WorkSearchSummary();
+			
+			wcl.submit().click();
+			
+			//Verify the screen "Weekly Certification and Work Search Record Acknowledgement"
+			ph.WKCAcknowledgementScreen();
+			
+			
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(1000);
+			wcl.ssnnum().sendKeys(SSN2);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			
+			ph.buttonToFileWeeklyCertification();
+			
+			Thread.sleep(3000);
+			wcl.fileWeeklyCertBtn().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		
+
+	}
+	
+	public static void WCF_DeatilsForNonPartialEmpolyment(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN2) throws InterruptedException
+	{ 
+		
+		
+		WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='ctweeklycertform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("Weekly Certification Details"))
+				{
+					String st2=ele.getText();
+					System.out.println("Element Found: " +st2);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		System.out.println(text1.isDisplayed());
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(6000);
+		wcl.check1Yes().click();Thread.sleep(500);
+		wcl.check2Yes().click();Thread.sleep(500);
+		wcl.check3No().click();Thread.sleep(500);
+		wcl.check4No().click();Thread.sleep(500);
+		wcl.check5No().click();Thread.sleep(500);
+		wcl.check6No().click();Thread.sleep(500);
+		wcl.check7No().click();Thread.sleep(500);
+		wcl.check8No().click();Thread.sleep(500);
+		wcl.check9No().click();Thread.sleep(500);
+		Thread.sleep(2500);    Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2500);
+		wcl.clickNext().click();
+		
+		
+		
+		WebElement text2 = wait1.until(new Function<WebDriver, WebElement>() {
+		      public WebElement apply(WebDriver driver) {
+		        WebElement ele= driver.findElement(By.xpath("//*[@id='wcresponsereviewform']/div[2]"));
+		        if (ele.getText().equalsIgnoreCase("Verify Weekly Certification Responses"))
+		        {
+		        	System.out.println("Element Found :"+ ele.getText());
+		        	return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+		     }
+		    });
+		System.out.println(text2.isDisplayed());
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	
+		Thread.sleep(5000);
+		try {
+			wcl.clickNext().click();
+		  } catch (Exception e) {
+		     JavascriptExecutor executor = (JavascriptExecutor) driver;
+		     executor.executeScript("arguments[0].click();",wcl.clickNext());
+		  }
+		
+		Thread.sleep(1000);
+		wcl.ssnnum().sendKeys(SSN2);
+		Thread.sleep(3000);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(3000);
+		
+		WebElement text7 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='wcconfirmationform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("Weekly Certification Confirmation"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		System.out.println(text7.isDisplayed());
+		if(text7.isDisplayed())
+		{
+			System.out.println(SimpleClassname+" Passed");
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		else
+		{
+		System.out.println(SimpleClassname+" Failed");
+		}
+	}
+	
+
+	public static void fileWeeklyCertification55739(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Weekly Certification").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'File Weekly Certification')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);
+		wcl.confirmssn1().sendKeys(SSN);
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		wcl.clickcheck().click();
+		wcl.clickNext().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(5000);
+
+		//Submission of Work Search Record Details page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Work Search Record Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//FirstRecord
+		wcl.clickSelect().click(); Thread.sleep(500);
+		wcl.typeofworksearch(" Employer Contact").click(); Thread.sleep(2500);
+		wcl.dateofworksearch().sendKeys(f.d(-7)); Thread.sleep(500);
+		wcl.clickSearch().click(); Thread.sleep(5000);
+		Thread.sleep(2500);
+		wcl.enterEmployerName().sendKeys("LIBRARY"); Thread.sleep(500);
+		wcl.clickSearch().click();
+		Thread.sleep(10000);
+		int i = rand.nextInt(24);
+		i = i+1;
+		System.out.println("Selecting record no. "+i);
+		do
+		{
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr["+i+"]//child::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(500);
+			counter++;
+		}
+		while(counter<=10);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(10000);
+		wcl.positionAppliedFor().sendKeys("Librarian"); Thread.sleep(500);
+		wcl.methoOfContact().click(); Thread.sleep(1000);
+		wcl.clickMethodOfContact("Telephone").click(); Thread.sleep(1000);
+		wcl.enterTelephone().sendKeys("9450205718"); Thread.sleep(1000);
+		wcl.result().click(); Thread.sleep(1000);
+		wcl.clickResult("Application/Resume Filed But Not Hired").click(); Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickAddAnotherWorkSearch().click();
+		Thread.sleep(5000);
+
+		//SecondRecord
+		wcl.clickSelect().click(); Thread.sleep(500);
+		wcl.typeofworksearch("Creating a personal user profile on a professional networking site").click(); Thread.sleep(2500);
+		wcl.enterprflNetworkSite().sendKeys("Testing Purpose"); Thread.sleep(500);
+		wcl.enterprflCreatedDate().sendKeys(f.d(-7));	Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickAddAnotherWorkSearch().click();
+		Thread.sleep(5000);
+
+		//ThirdRecord
+		wcl.clickSelect().click(); Thread.sleep(500);
+		wcl.typeofworksearch("Creating and uploading resume to the CTDOL State Job Bank").click(); Thread.sleep(2500);
+		wcl.resmCreatedDate().sendKeys(f.d(-6)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+
+		Thread.sleep(5000);
+		wcl.submit().click();
+		Thread.sleep(5000);
+
+		//Submission of Weekly Certification and Work Search Record Acknowledgement page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Weekly Certification and Work Search Record Acknowledgement"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssnnum().sendKeys(SSN.substring(5, 9)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		wcl.fileWeeklyCertBtn().click();
+		Thread.sleep(5000);
+
+		//Submission of Request for Weekly TRA Benefits page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Request for Weekly TRA Benefits"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.checkMainQuestion("presently enrolled in full time TAA training", "No").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("physically able to work full time", "Yes").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("available for full time work", "Yes").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("refuse any offer or work or rehire", "No").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("receive your first payment from a pension", "No").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("perform any work", "No").click(); Thread.sleep(500);
+		wcl.checkMainQuestion("did you quit training", "Yes").click(); Thread.sleep(500);
+		wcl.enterQuitDate().sendKeys(f.d(-7)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//Submission of TRA Questionnaire page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Request for Weekly TRA Benefits"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.freeTextBox(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//Submission of Verify Weekly Certification Responses page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Verify Weekly Certification Responses"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(15000);
+
+		//Submission of Weekly Certification and Work Search Record Acknowledgement page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Weekly Certification and Work Search Record Acknowledgement"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssnnum().sendKeys(SSN.substring(5));	Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(15000);
+
+		//Final Confirmation page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Weekly Certification Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+	
+
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

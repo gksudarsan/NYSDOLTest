@@ -1,0 +1,38 @@
+<table border='1'>
+<tr>
+<th>Class name</th>
+<th>Method name</th>
+<th>Groups</th>
+</tr><tr>
+<<<<<<< .mine
+<td>com.Payments.TC_56798</td>
+||||||| .r666
+=======
+<td>com.Payments.TC_56807</td>
+>>>>>>> .r778
+<td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr>
+<td align='center' colspan='3'>@Test</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<<<<<<< .mine
+<td>TC_59018</td>
+||||||| .r666
+=======
+<td>TC_56807_WC</td>
+>>>>>>> .r778
+<td>&nbsp;</td></tr>
+<tr>
+<td align='center' colspan='3'>@BeforeClass</td>
+</tr>
+<tr>
+<td align='center' colspan='3'>@BeforeMethod</td>
+</tr>
+<tr>
+<td align='center' colspan='3'>@AfterMethod</td>
+</tr>
+<tr>
+<td align='center' colspan='3'>@AfterClass</td>
+</tr>
+</table>

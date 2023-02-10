@@ -1,0 +1,182 @@
+/**
+ * 
+ */
+package com.WeeklyCertification;
+
+import java.text.ParseException;
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+/**
+ * @author nnegi
+ *
+ */
+public class TC_59289 extends TestBase {
+
+	LoginLogoutPage lp;
+	PageHeading ps;
+	ClaimSummary cs;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_59289 ClassObject;
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+	static FutureDatePastDate Pdate;
+	static String date1;
+	
+	//Test Data
+	static String cweDate="05092020";
+
+	public TC_59289()
+	{
+		super();
+	}
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser)
+
+	{
+		ClassObject =new TC_59289();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+
+
+	}
+	@Test(priority=1)
+	public void applicationLogin() throws InterruptedException
+	{
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		//driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+	@Test(priority=2,description ="Filing claimant weekly cert and claimant did not indicate Refusal")
+	public void WKC_SharedWork() throws InterruptedException, ParseException
+	{
+		Pdate=new FutureDatePastDate();
+		ps=new PageHeading();
+		wcl=new Wc_locators();
+		Thread.sleep(2000);
+		wcl.clickWcLink().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.ChangeReported().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.ssn1().sendKeys(prop.getProperty("ssn1"));
+
+		wcl.confirmssn1().sendKeys(prop.getProperty("ssn1"));
+		Thread.sleep(1000);
+		wcl.claimWeekEndingDate().sendKeys(cweDate);
+
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		ps.EnterFinalEarningsScreen();
+		//---------------------------
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.AddEmployment().click();
+
+		Thread.sleep(1000);
+		ps.EmploymentDetailsScreen();
+		
+		wcl.clickSearch().click();
+		Thread.sleep(2000);
+		wcl.enterEmployerName().sendKeys("CITY OF ANSONIA");
+		wcl.clickSearch().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		ps.EmployerNameScreen();
+
+
+		driver.findElement(By.xpath("//*[@id='j_id_58_data']/tr[1]/td[1]/div/div[2]/span")).click();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.IndicateEmployStatus().click();
+		wcl.SelectIndicateEmployStatus1("Lack of work / Laid off").click();
+		
+		String dt=driver.findElement(By.xpath("//*[@class='ui-panelgrid ui-widget tablefields']/tbody/tr[2]/td/b[3]")).getText();
+		
+		
+		
+		System.out.println(FutureDatePastDate.dat(dt));
+		
+		wcl.lastdayworked().sendKeys(FutureDatePastDate.dat(dt));
+		
+		
+		
+		wcl.EnterAmount().sendKeys("100");Thread.sleep(500);
+		wcl.EnterWorkingHrs().sendKeys("20");Thread.sleep(500);
+		
+		
+		Thread.sleep(1000);
+		wcl.PerformWorkCheckNo().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		ps.EnterFinalEarningsScreen();
+
+
+		wcl.claimantFinalEarnings().sendKeys("100");Thread.sleep(500);
+		wcl.finalHoursOfWork().sendKeys("20");Thread.sleep(500);
+		
+		wcl.Emplyr2Input1().sendKeys("100"); Thread.sleep(500);
+		wcl.Emplyr2Input2().sendKeys("20"); Thread.sleep(500);
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ps.EarningVerificationScreen();
+		
+		Thread.sleep(3000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		PageHeading.EarningConfirmationScreen(snapshotPath, SimpleClassname);
+		wcl.HomeButton().click();
+		
+
+	}
+	@Test(priority=3)
+	public void claimSummary() throws InterruptedException
+	{
+		cs=new ClaimSummary();
+		cs.claimsummary(prop.getProperty("ssn1"), snapshotPath, SimpleClassname, "Pending Weekly Certification(s)");
+	}
+	
+	@AfterTest
+	public void tearDown()
+	{
+		driver.close();
+	}
+}

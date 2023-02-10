@@ -1,0 +1,136 @@
+package com.ClaimsIntakeSharedWork;
+
+/**@author mjape*/
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimsIntake;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_49316 extends TestBase
+{
+	String unitStatus = "Denied";
+	String planStatus = "Denied";
+	int noOfEmployess = 5;
+	
+	LoginLogoutPage lp;
+	ClaimsIntake ci;
+	QuerySearch q;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath;
+	TC_49316 ClassObject;
+	CreateDirectory CD;
+	String EAN, query;
+
+	//Properties prop;
+	public TC_49316()
+	{
+		super();
+	}
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Fetching EAN...
+		q = new QuerySearch();
+		query = "SELECT EAN FROM T_EMPLOYER WHERE EAN IS NOT NULL ORDER BY UPDATED_TS ASC";
+		EAN = q.randomData(query, "EAN");
+		System.out.println("Plan will be created on :"+EAN);
+
+		ClassObject =new TC_49316();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		//Opening browser... Hitting URL...
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Shared Work- Add Unit Denied and Shared work unit denial Correspondence is issued to "
+			+ "employer.")
+	public void Testing49316() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login("sttestingcsr", "Msui@#12345");
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Creating Plan...
+		ci = new ClaimsIntake();
+		ci.creatingSharedWorkPlan(driver, snapshotPath, SimpleClassname, EAN);
+
+		//Creating Unit...
+		wcl.clickHome(); Thread.sleep(5000);
+		ci.creatingSharedWorkUnit(driver, snapshotPath, SimpleClassname, EAN);
+
+		//Adding Employees to Unit...
+		wcl.clickHome(); Thread.sleep(5000);
+		ci.addingEmployees(driver, snapshotPath, SimpleClassname, EAN, noOfEmployess);
+		
+		//Changing the status of Unit...
+		wcl.clickHome(); Thread.sleep(5000);
+		ci.changingUnitStatus(driver, snapshotPath, SimpleClassname, EAN, unitStatus);
+		
+		//Changing the status of Plan...
+		wcl.clickHome(); Thread.sleep(5000);
+		ci.changingPlanStatus(driver, snapshotPath, SimpleClassname, EAN, planStatus);
+		
+		//Check for Correspondence in DB...
+		String ID = "";
+		String employerID = q.Data("SELECT EMPLOYER_ID FROM T_EMPLOYER WHERE EAN = '"+EAN+"'", "EMPLOYER_ID");
+		do
+		{
+			try
+			{
+				ID = q.Data("SELECT CORRESPONDENCE_ID FROM T_CORRESPONDENCE WHERE EMPLOYER_ID = '"+employerID+"' AND "
+						+ "DATE(CREATED_TS) = CURRENT_DATE ORDER BY CREATED_TS DESC", "CORRESPONDENCE_ID");
+				System.out.println("CORRESPONDENCE_ID : "+ID);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+				System.out.println("Waiting for correspondence to appear in DB...");
+				Thread.sleep(1000*60);
+			}
+		}
+		while(ID.isEmpty());
+		System.out.println("Correspondence entry in DB successful...");
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

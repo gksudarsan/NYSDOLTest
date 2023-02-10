@@ -1,0 +1,75 @@
+2023-01-12 03:04:25,670 [Worker-6: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2023-01-12 08:21:46,443 [Worker-13: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2023-01-12 08:29:36,672 [Worker-14: Building] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: UI:UI_Project:0.0.1-SNAPSHOT @ C:\Users\vikas.singh\Downloads\sample\test\pom.xml.
+2023-01-12 08:29:39,414 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 08:29:39,415 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\vikas.singh\Downloads\sample\test\src\main\resources
+2023-01-12 08:29:39,420 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 08:29:39,421 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\vikas.singh\Downloads\sample\test\src\test\resources
+2023-01-12 08:29:42,030 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 08:29:42,030 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\vikas.singh\Downloads\sample\test\src\main\resources
+2023-01-12 08:29:42,036 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 08:29:42,037 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\vikas.singh\Downloads\sample\test\src\test\resources
+2023-01-12 08:30:48,751 [Worker-18: Updating Maven Dependencies] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: UI:UI_Project:0.0.1-SNAPSHOT @ D:\vikas singh\eclipse\sample\abc\pom.xml.
+2023-01-12 08:30:51,531 [Worker-12: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 08:30:51,532 [Worker-12: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\main\resources
+2023-01-12 08:30:51,535 [Worker-12: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 08:30:51,535 [Worker-12: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\test\resources
+2023-01-12 08:30:54,639 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 08:30:54,640 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\main\resources
+2023-01-12 08:30:54,645 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 08:30:54,645 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\test\resources
+2023-01-12 09:42:39,172 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 09:42:39,179 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\main\resources
+2023-01-12 09:42:39,194 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-12 09:42:39,195 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\test\resources
+2023-01-12 09:42:40,745 [Worker-15: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2023-01-13 00:41:01,038 [Worker-19: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:41:01,039 [Worker-19: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\main\resources
+2023-01-13 00:41:01,044 [Worker-19: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:41:01,045 [Worker-19: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\test\resources
+2023-01-13 00:43:43,438 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:43:43,439 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\main\resources
+2023-01-13 00:43:43,443 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:43:43,443 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\test\resources
+2023-01-13 00:45:26,942 [Worker-17: Updating workspace] ERROR o.e.m.j.i.l.MavenLaunchConfigurationListener - Launch configuration TC_475 references non-existing project abc.
+org.eclipse.core.runtime.CoreException: Launch configuration TC_475 references non-existing project abc.
+	at org.eclipse.jdt.launching.JavaRuntime.abort(JavaRuntime.java:1861) ~[na:na]
+	at org.eclipse.jdt.launching.JavaRuntime.getJavaProject(JavaRuntime.java:1736) ~[na:na]
+	at org.eclipse.m2e.jdt.internal.launch.MavenLaunchConfigurationListener.updateLaunchConfiguration(MavenLaunchConfigurationListener.java:64) ~[na:na]
+	at org.eclipse.m2e.jdt.internal.launch.MavenLaunchConfigurationListener.launchConfigurationAdded(MavenLaunchConfigurationListener.java:45) ~[na:na]
+	at org.eclipse.debug.internal.core.LaunchManager$ConfigurationNotifier.run(LaunchManager.java:219) ~[na:na]
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45) ~[org.eclipse.equinox.common_3.16.200.v20220817-1601.jar:na]
+	at org.eclipse.debug.internal.core.LaunchManager$ConfigurationNotifier.notify(LaunchManager.java:209) ~[na:na]
+	at org.eclipse.debug.internal.core.LaunchManager.launchConfigurationAdded(LaunchManager.java:2120) ~[na:na]
+	at org.eclipse.debug.internal.core.LaunchManager$LaunchManagerVisitor.visit(LaunchManager.java:370) ~[na:na]
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:67) ~[na:na]
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:77) ~[na:na]
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:77) ~[na:na]
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:77) ~[na:na]
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:77) ~[na:na]
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:77) ~[na:na]
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:77) ~[na:na]
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:77) ~[na:na]
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:51) ~[na:na]
+	at org.eclipse.debug.internal.core.LaunchManager.resourceChanged(LaunchManager.java:2272) ~[na:na]
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:307) ~[na:na]
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45) ~[org.eclipse.equinox.common_3.16.200.v20220817-1601.jar:na]
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:297) ~[na:na]
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:160) ~[na:na]
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:388) ~[na:na]
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1514) ~[na:na]
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2394) ~[na:na]
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:46) ~[na:na]
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63) ~[org.eclipse.core.jobs_3.13.100.v20220817-1539.jar:na]
+2023-01-13 00:46:14,267 [Worker-17: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:46:14,267 [Worker-17: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\main\resources
+2023-01-13 00:46:14,273 [Worker-17: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:46:14,273 [Worker-17: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\test\resources
+2023-01-13 00:46:44,118 [Worker-17: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:46:44,119 [Worker-17: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\main\resources
+2023-01-13 00:46:44,122 [Worker-17: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:46:44,123 [Worker-17: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\test\resources
+2023-01-13 00:46:56,526 [Worker-22: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:46:56,526 [Worker-22: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\main\resources
+2023-01-13 00:46:56,529 [Worker-22: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2023-01-13 00:46:56,530 [Worker-22: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\vikas singh\eclipse\sample\abc\src\test\resources

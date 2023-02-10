@@ -1,0 +1,129 @@
+package com.Repayments;
+
+/** @author mjape */
+
+import java.io.IOException;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.OverpaymentMaintenance;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_58285 extends TestBase
+{
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	OverpaymentMaintenance om;
+	ClaimSummary c;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "047703868", createdDate = "";
+	TC_58285 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B, T_CT_REPAYMENT_PLAN C, T_OVERPAYMENT D WHERE A.CLAIMANT_ID = "
+			+ "B.CLAIMANT_ID AND B.CLAIM_ID = D.CLAIM_ID AND C.OVERPAYMENT_ID = D.OVERPAYMENT_ID AND B.STATUS = 'ACTV' AND "
+			+ "C.ACTIVE_FLAG = '1' AND C.CREATED_TS > '";
+
+	//Properties prop;
+	public TC_58285()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		createdDate = f.d(-29);
+		createdDate = createdDate.substring(4, 8) + "-" + createdDate.substring(0, 2) + "-" + createdDate.substring(2, 4);
+		query = query + createdDate + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_58285();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "A modified repayment schedule has been modified since the last batch and "
+			+ "verification of correspondence generation")
+	public void Testing58285() throws InterruptedException, ClassNotFoundException, SQLException, IOException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Modify Repayment Schedule...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		om = new OverpaymentMaintenance();
+		om.modifyRepaymentSchedule(driver, snapshotPath, SimpleClassname, SSN);
+		
+		//Generate Correspondence...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+		
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(text(), 'View Correspondence')]"))).click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		String currentDate = DateTimeFormatter.ofPattern("MM/dd/yyyy").format(LocalDateTime.now());
+		new Highlighter().highlight(driver, "//td[contains(text(), '"+currentDate+"')]//preceding::a[contains(text(), 'REP_SCDL')]"); Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '"+currentDate+"')]//preceding::a[contains(text(), 'REP_SCDL')]"))).click(); Thread.sleep(5000);
+		String path = "..//UI_Project/Download/Document.pdf";
+		new screenShot().getScreenshotFromPDF(driver, snapshotPath, SimpleClassname, path);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

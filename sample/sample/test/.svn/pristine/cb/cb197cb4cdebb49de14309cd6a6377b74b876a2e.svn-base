@@ -1,0 +1,65 @@
+package com.ui.testcases;
+
+import java.time.Duration;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.*;
+
+import com.ui.base.TestBase;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+public  class LoginPageTest extends TestBase {
+	static screenShot screen=new screenShot();
+	 static String classname;
+	 static String SimpleClassname;
+	 static String snapshotPath;
+	 static LoginPageTest ClassObject;
+	 static  CreateDirectory CD;
+	 static LoginLogoutPage lp;
+	 
+	
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public  void setup(String browser)
+	{
+		ClassObject =new LoginPageTest();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(1000));
+		driver.get(prop.getProperty("applicationUrl"));
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+	}
+	@Test(priority=1,description="Verify the application login")
+	public static void LoginTest() throws InterruptedException
+	{ 
+		lp=new LoginLogoutPage();
+		
+		lp.login(prop.getProperty("username"),prop.getProperty("password"));
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(10000);
+		
+	}
+	@Test(priority=2)
+	public void LogoutTest()
+	{
+		lp.logout();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+	@AfterClass
+	public void tearDown()
+	{
+	System.out.println("Pass");
+	driver.close();
+	 
+	}
+}

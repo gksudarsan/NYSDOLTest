@@ -1,0 +1,68 @@
+package com.ui.pages;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.screenShot;
+
+public class ClaimSummary extends TestBase
+{
+	Wc_locators wcl;
+	Highlighter h;
+	String heading;
+	screenShot screen = new screenShot();
+	
+	public void claimsummary(String ssn, String snapshotPath, String SimpleClassname, String headingToVerify) throws InterruptedException
+	{
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		wcl.clickHome();
+		Thread.sleep(5000);
+		wcl.homeTabs("Inquiry").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//tbody/tr[1]/td/a/span[contains(text(), 'Benefits')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Claimant / Claim Inquiry')]")).click();
+		Thread.sleep(2500);
+
+		//Submission of Claimant Search page...
+		heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("Claimant Search"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 30 more seconds for page to load...");
+			Thread.sleep(30000);
+		}
+		wcl.ssn1().sendKeys(ssn);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(2500);
+		wcl.checkRecord().click();	Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(10000);
+
+		//Submission of Claim Summary page...
+		heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("Claim Summary"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		h = new Highlighter();
+		h.highlight(driver, "//td[text() =  '"+headingToVerify+"']");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

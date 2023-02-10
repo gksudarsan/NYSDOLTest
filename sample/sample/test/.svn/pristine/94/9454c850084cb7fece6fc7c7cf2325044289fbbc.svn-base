@@ -1,0 +1,168 @@
+package com.Overpayments;
+/** @author vsingh  */
+import static org.testng.Assert.assertEquals;
+
+/** @author vsingh  */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_59484 extends TestBase
+{
+	int CWE = -400;
+	int numberOfWeeks = 1;
+
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	UpdateIssueDates uid;
+	WeeklyCert w;
+	ClaimSummary c;
+	 Highlighter h;
+	Overpayment o;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "731183215" ; 
+	TC_59484 ClassObject;
+	CreateDirectory CD;
+
+	
+	//Properties prop;
+	public TC_59484()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException, InterruptedException
+	{
+	
+
+		ClassObject =new TC_59484();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+		
+		
+	}
+
+	@Test( description ="TC_55816_OVERPAYMENT")
+	public void TC_55816_op() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		
+		c = new ClaimSummary();
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		//Thread.sleep(5000);
+		
+		
+		//Check Claim Summary process...
+		wcl.clickHome();
+		//Thread.sleep(5000);
+		
+		//c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+
+		//Creating Overpayment Issue...
+		
+		
+		wcl.clickHome();
+		Thread.sleep(5000);
+		o = new Overpayment();
+		
+		o.createOverpaymentIssueWithSameEmply(driver, snapshotPath, SimpleClassname, SSN, "National New Hire Crossmatch", CWE, numberOfWeeks);
+
+		//Investigating Overpayment Iusse...
+		wcl.clickHome();
+		//Thread.sleep(5000);
+		
+		Overpayment.NationalNewHireInvestigationOverpayment_Issue( driver,  snapshotPath,  SimpleClassname, SSN, "-435", "National New Hire Crossmatch", "Non-Fraud", "120", "12");
+		
+		
+		//Run Predetermination Notice Batch...
+		
+		System.out.println("Waiting for Predetermination Notice batch to run...");
+		//Thread.sleep(60000);
+		
+		//Provide Claimant's Responce..................
+		wcl.clickHome();
+		Thread.sleep(5000);
+		
+		//Run Overpayment Batches..............
+		//Run Corrs Batches.....................
+		System.out.println("Waiting for Overpayment batches to run...");
+		//Thread.sleep(60000*5);
+		
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//a[text()='Overpayments']")).click();
+		Thread.sleep(2000);
+		
+		Highlighter h = new Highlighter();
+		h.highlight(driver, "//td[ contains (text(), 'National New Hire Crossmatch Pre-determination Letter Generated.')]");
+		
+	
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		Thread.sleep(1000);
+		
+		driver.findElement(By.xpath("//span[text()='<Back']")).click();
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//a[text()='View Correspondence']")).click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//label[text()='Outgoing']//preceding::div[1]")).click();
+		wcl.clickSearch().click();Thread.sleep(10000);
+		
+		
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		
+		//driver.close();
+		//driver.quit();
+	}
+}

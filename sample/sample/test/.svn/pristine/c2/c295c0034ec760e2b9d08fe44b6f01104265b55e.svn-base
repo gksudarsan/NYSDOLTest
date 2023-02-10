@@ -1,0 +1,86 @@
+package com.WeeklyCertification;
+
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Reassign_WorkItem;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+public class TC_56915 extends TestBase {
+	LoginLogoutPage lp;
+
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_56915 ClassObject;
+
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+
+
+	static FutureDatePastDate Pdate;
+	static String date1;
+
+
+	public TC_56915()
+	{
+		super();
+	}
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException
+
+	{
+		ClassObject =new TC_56915();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+
+
+	}
+	
+	@Test(description ="TC_56915 File Weekly Certification for a Week Regular claim and claimant indicated work and reason for separation is Voluntary Quit")
+	public void TC_56915_FWCRegularClaim_VoluntaryQuit() throws InterruptedException, ParseException
+	{
+		FileWeeklyCertification.SubmitWeeklyCertification(driver, snapshotPath, SimpleClassname);
+		FileWeeklyCertification.EmploymentDetailsPageForPartialEmplmnt(driver, "Voluntary Quit", snapshotPath, SimpleClassname,"Distance to Work");
+		Reassign_WorkItem.SearchCreatedPensionIssue(driver, snapshotPath, SimpleClassname);
+
+	}
+	
+	@AfterTest
+	public void tearDown()
+	{
+		driver.close();
+	}
+
+}

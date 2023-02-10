@@ -1,0 +1,123 @@
+package com.ui.pages;
+
+import java.util.Random;
+
+import org.openqa.selenium.By;
+
+/**
+ * @author nnegi
+ *
+ */
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.RandomGenerator;
+import com.ui.utilities.screenShot;
+
+
+public class Overpayment extends TestBase
+{
+	Wc_locators wcl;
+	OverPayment_Locators ol;
+	screenShot screen = new screenShot();
+	String heading;
+	FutureDatePastDate f;
+	RandomGenerator rg;
+	Random rnd = new Random();
+	int counter = 0;
+	
+	public void createOverpaymentIssue(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, int CWE) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		ol = new OverPayment_Locators();
+		f = new FutureDatePastDate();
+		rg = new RandomGenerator();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Overpayments").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Create Overpayment Issue").click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		
+		//Submission of Overpayment Issue Details page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Overpayment Issue Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		ol.issueSource("Quality Control"); Thread.sleep(500);
+		ol.Date("issueCreateDate", f.d(0)); Thread.sleep(500);
+		ol.Date("issueStartDate", f.Sunday(CWE)); Thread.sleep(500);
+		ol.Date("issueEndDate", f.Saturday(CWE)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		ol.clickAddEmployer();
+		Thread.sleep(2500);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Add Other State Employer"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		/*ol.employerName(rg.randomStringGenerator(8)); Thread.sleep(500);
+		ol.address("Address Line 1", rg.randomStringGenerator(7)); Thread.sleep(500);
+		ol.address("Address Line 2", rg.randomStringGenerator(6)); Thread.sleep(500);
+		ol.address("City", rg.randomStringGenerator(5)); Thread.sleep(500);
+		ol.selectState("Connecticut"); Thread.sleep(500);
+		ol.address("ZIP Code", rg.randomNumberGenerator(5)); Thread.sleep(500);
+		ol.selectCountry("United States"); Thread.sleep(500);*/
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Select Employer"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.enterEmployerName().sendKeys("LIBRARY"); Thread.sleep(500);
+		wcl.clickSearch().click();
+		Thread.sleep(10000);
+		int i = rnd.nextInt(24);
+		i = i+1;
+		System.out.println("Selecting record no. "+i);
+		do
+		{
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr["+i+"]//child::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(500);
+			counter++;
+		}
+		while(counter<=10);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(10000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Overpayment Issue Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		ol.generateWageLetterRequest("Yes"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+	}
+}

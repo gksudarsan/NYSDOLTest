@@ -1,0 +1,115 @@
+package com.Overpayments;
+
+/** @author mjape */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.Add_Overpayment;
+import com.ui.pages.FileDUAclaimpage;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.ManualPaymentRequest;
+import com.ui.pages.Modify_Overpayment;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC56628_Modifyoverpayment_Delete_Week extends TestBase
+{
+	FutureDatePastDate f = new FutureDatePastDate();
+	int CWE = -21;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	FileDUAclaimpage fdc;
+	Wc_locators wcl = new Wc_locators();	
+	OverPayment_Locators ol = new OverPayment_Locators() ;
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "029743762", ed;
+	TC56628_Modifyoverpayment_Delete_Week ClassObject;
+	CreateDirectory CD;
+	Add_Overpayment addo ;
+	Modify_Overpayment modify ;
+	
+	//Properties prop;
+	public TC56628_Modifyoverpayment_Delete_Week()
+	{
+		super();
+	}
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+	
+		
+		ClassObject =new TC56628_Modifyoverpayment_Delete_Week();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		//Opening browser... Hitting URL...
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1,description="Log into CT ACCESS system")
+	public void applicationLogin() throws InterruptedException
+	{
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+	}
+	
+	@Test(priority=2, description = "Delete Weeks scenario")
+	public void Modifyoverpayment() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		
+		
+		ol.Overpayment_Maintenance().click();
+		Thread.sleep(2000);
+		ol.Modify_Overpayment().click();
+		Thread.sleep(2000);
+		wcl.ssn1().sendKeys(prop.getProperty("overpaymentssn"));
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ol.Select_week_record().click();
+		wcl.clickNext().click();
+		
+		
+	    
+	
+		Thread.sleep(2000);
+		ol.CWE_Details_radio().click();
+		Thread.sleep(2000);
+		ol.Overpayment_determination_No().click();
+	
+		Thread.sleep(2000);
+		ol.Delete_Weeks().click();
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.submit().click();
+		
+		
+	   
+		
+	}
+
+	
+	
+}

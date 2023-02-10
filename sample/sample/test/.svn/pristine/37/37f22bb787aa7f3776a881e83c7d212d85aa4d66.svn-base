@@ -1,0 +1,123 @@
+package com.ui.pages;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.screenShot;
+
+public class Modify_Overpayment extends TestBase{
+	
+	static OverPayment_Locators ol ;
+	static LoginLogoutPage llp ;
+	static Wc_locators wcl ;
+	static Payments_Locators pl ;
+	static screenShot screen=new screenShot();
+
+	
+	public void Modify_Overpayment_Case(WebDriver driver ,String snapshotPath,String SimpleClassname,String SSN, String selection5 ) throws InterruptedException{
+	
+		
+		wcl = new Wc_locators();
+		llp = new LoginLogoutPage();
+		ol = new OverPayment_Locators();
+		driver.manage().timeouts().implicitlyWait(3000, TimeUnit.SECONDS);
+		
+		
+		ol.Overpayment_Maintenance().click();
+		Thread.sleep(2000);
+		ol.Modify_Overpayment().click();
+		Thread.sleep(2000);
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ol.Select_week_record().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		
+		ol.Interest_Amount().clear();
+		ol.Interest_Amount().sendKeys("2");
+	    
+	
+		Thread.sleep(2000);
+		ol.CWE_Details_radio().click();
+		Thread.sleep(2000);
+		ol.Overpayment_determination_No().click();
+		ol.Overpayment_status_dropdown().click();
+		Thread.sleep(2000);
+		ol.Overpayment_status_selection(selection5);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		//ol.Overpaymentstatusreason().sendKeys(prop.getProperty("Status changed"));
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.submit().click();
+		Thread.sleep(2000);
+		
+		
+		
+		
+		
+		/*ol.Add_Weeks().click();
+		Thread.sleep(2000);
+		ol.CWE_start_date().click();
+		ol.CWE_start_date().sendKeys(prop.getProperty("overpaymentsdate"));
+		ol.CWE_end_date().click();
+		ol.CWE_end_date().sendKeys(prop.getProperty("overpaymentedate"));
+		wcl.clickSearch().click();
+		ol.Select_week_record().click();
+		wcl.clickNext().click();
+		
+		
+		
+		
+		ol.overpaymentslink().click();
+		Thread.sleep(3000);
+		ol.AddOverpayments().click();
+		Thread.sleep(3000);
+		wcl.ssn1().sendKeys(prop.getProperty("overpaymentssn"));
+		wcl.clickNext().click();
+		ol.Select_week_record().click();
+		Thread.sleep(3000);
+		wcl.clickNext().click();
+		ol.Overpayment_Source().click();
+		ol.Overpayment_Source_dropdown().click();
+		Thread.sleep(3000);
+		ol.Overpayment_Cause().click();
+		ol.Overpayment_Cause_dropdown().click();
+		Thread.sleep(3000);
+		ol.Overpayment_Class().click();
+		ol.Overpayment_Class_dropdown().click();
+		ol.Overpayment_determination_No().click();
+		ol.Add_Weeks().click();
+		Thread.sleep(2000);
+		ol.CWE_start_date().click();
+		ol.CWE_start_date().sendKeys(prop.getProperty("overpaymentsdate"));
+		ol.CWE_end_date().click();
+		ol.CWE_end_date().sendKeys(prop.getProperty("overpaymentedate"));
+		wcl.clickSearch().click();
+		ol.Select_week_record().click();
+		wcl.clickNext().click();
+		Thread.sleep(10000);
+		ol.overpaid_amount().sendKeys("10");
+		ol.overpaid_da().sendKeys("2");
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.submit().click();
+		Thread.sleep(2000);*/
+		
+		
+		
+		
+		
+	}
+
+}

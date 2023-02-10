@@ -1,0 +1,584 @@
+package com.ui.pages;
+
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.RandomGenerator;
+import com.ui.utilities.screenShot;
+
+
+public class Overpayment extends TestBase {
+	static Wc_locators wcl=new Wc_locators();
+	static OverPayment_Locators opl=new OverPayment_Locators();
+	static PageHeading ph=new PageHeading();
+	static screenShot screen=new screenShot();
+	String heading;
+	static FutureDatePastDate f=new FutureDatePastDate();
+	RandomGenerator rg;
+	Random rnd = new Random();
+	QuerySearch q = new QuerySearch();
+	int counter = 0;
+
+	public static void NationalNewHireInvestigationOverpayment_Issue(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN,String CWE,String IssueType,String ClassofOverpayment,String EarningAmount,String WorkingHours) throws InterruptedException
+	{
+		
+		System.out.println("CWE Date is "+CWE);
+		wcl.homeTabs("Overpayment").click();
+		Thread.sleep(1000);
+		wcl.homeTabs("Investigate Overpayment Issue").click();
+
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ph.ListOvrPymnt_Screen();
+		opl.SelectOvrPymntIssue(IssueType).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickNext().click();
+		ph.OvrPymntSummary_Screen();
+		Thread.sleep(1500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		opl.ClickEmplyrResponse().click();
+		ph.OvrPymntEmplyrRespose_Screen();
+		Thread.sleep(500);
+		wcl.checkMainQuestion("Was the claimant employed by the employer?", "Yes").click();
+		Thread.sleep(500);
+		opl.HireDate().sendKeys(f.Saturday(Integer.parseInt(CWE)));
+		Thread.sleep(1500);
+		opl.SelectOption().click();
+		Thread.sleep(500);
+		wcl.selectReasonForBacdating("Part Time").click();
+		Thread.sleep(500);
+		
+		Thread.sleep(500);
+		opl.EnterEarning().sendKeys(EarningAmount);
+		Thread.sleep(500);
+		opl.EnterHours().sendKeys(WorkingHours);
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSave();
+		ph.OvrPymntSummary_Screen();
+		Thread.sleep(500);
+		opl.checkMainQuestion("Clear this issue?", "No").click();
+		Thread.sleep(500);
+		opl.SelectOption().click();
+		Thread.sleep(500);
+		wcl.selectReasonForBacdating("Test User").click();
+		Thread.sleep(500);
+
+		opl.checkMainQuestion("Class of Overpayment", ClassofOverpayment).click();
+		Thread.sleep(500);
+		opl.CsrRemark().sendKeys("Testing");
+		Thread.sleep(500);
+		opl.checkMainQuestion("Generate Pre-determination Letter", "Yes").click();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		//opl.Click_SaveAndClose().click();
+		ph.OvrPymntConfirmation_Screen();
+
+
+
+
+
+	}
+
+
+
+
+
+	public void createOverpaymentIssue(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String issuesource, int CWE, int numberOfEmployers) throws InterruptedException, ClassNotFoundException, SQLException
+	{		
+		f = new FutureDatePastDate();
+		rg = new RandomGenerator();
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Overpayments").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Create Overpayment Issue").click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+
+		//Submission of Overpayment Issue Details page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Overpayment Issue Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		opl.issueSource(issuesource); Thread.sleep(500);
+		opl.Date("issueCreateDate", f.d(0)); Thread.sleep(500);
+		opl.Date("issueStartDate", f.Sunday(CWE)); Thread.sleep(500);
+		opl.Date("issueEndDate", f.Saturday(CWE)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		for(int j = 1 ; j <= numberOfEmployers ; j++)
+		{
+			counter = 0;
+			opl.clickAddEmployer();
+			Thread.sleep(2500);
+
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("Add Other State Employer"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			if(j==1)
+			{
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+				wcl.clickNext().click();
+				Thread.sleep(2500);
+
+				heading = wcl.heading();
+				if(heading.equalsIgnoreCase("Select Employer"))
+					Thread.sleep(1000);
+				else
+				{
+					System.out.println("Waiting for 15 more seconds for page to load...");
+					Thread.sleep(15000);
+				}
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+				
+				String employer = q.getBasePeriodEmployer("SELECT EMPLOYER_NAME FROM T_CLAIM_APPLICATION_EMPLOYER WHERE "
+						+ "CLAIM_APPLICATION_ID IN (SELECT CLAIM_APPLICATION_ID FROM T_CLAIM WHERE STATUS = 'ACTV' AND "
+						+ "ENTITLEMENT_TYPE = 'REG' AND BYE_DATE > CURRENT_DATE AND CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM "
+						+ "T_CLAIMANT WHERE SSN = '"+SSN+"'))");
+
+				wcl.enterEmployerName().sendKeys(employer); Thread.sleep(500);
+				wcl.clickSearch().click();
+				Thread.sleep(60000);
+				do
+				{
+					wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(), 'Select')]//following::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(1000);
+					counter++;
+				}
+				while(counter<=10);
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			}
+			else
+			{
+				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[contains(text(), 'Yes')]//preceding::span[1]"))).click(); Thread.sleep(500);
+				opl.employerName(rg.randomStringGenerator(8)); Thread.sleep(500);
+				opl.address("Address Line 1", rg.randomStringGenerator(7)); Thread.sleep(500);
+				opl.address("Address Line 2", rg.randomStringGenerator(6)); Thread.sleep(500);
+				opl.address("City", rg.randomStringGenerator(5)); Thread.sleep(500);
+				opl.selectState("Connecticut"); Thread.sleep(500);
+				opl.address("ZIP Code", rg.randomNumberGenerator(5)); Thread.sleep(500);
+				opl.selectCountry("United States"); Thread.sleep(500);
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);				
+			}
+			wcl.clickNext().click();
+			Thread.sleep(5000);
+			
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("Overpayment Issue Details"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			List<WebElement> element = driver.findElements(By.xpath("//td[contains(text(), 'Generate Wage Request Letter')]//following::label[contains(text(), 'Yes')]//preceding::span[1]"));
+			element.get(j-1).click(); Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		wcl.submit().click();
+		Thread.sleep(5000);
+	}
+
+	public void InvestigationOverpaymentIssueQualityControl(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN,int CWE,String IssueType,String ClassofOverpayment) throws InterruptedException
+	{
+		wcl.homeTabs("Overpayment").click();
+		Thread.sleep(1000);
+		wcl.homeTabs("Investigate Overpayment Issue").click();
+
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ph.ListOvrPymnt_Screen();
+		opl.SelectOvrPymntIssue(IssueType).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		List<WebElement> element = driver.findElements(By.xpath("//td[contains(text(), 'Employer Response Pending')]//following::a[1]"));
+		int t = element.size();
+		System.out.println(t + " employers found...");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		do
+		{
+			t--;
+			driver.findElement(By.xpath("//td[contains(text(), 'Employer Response Pending')]//following::a[1]")).click();
+			Thread.sleep(2500);
+			wcl.checkMainQuestion("Was the claimant employed by the employer?", "Yes").click(); Thread.sleep(500);
+			driver.findElement(By.xpath("//input[contains(@name, 'employerActualWages')]")).clear();
+			driver.findElement(By.xpath("//input[contains(@name, 'employerActualWages')]")).sendKeys(String.valueOf(20*(t+1))); Thread.sleep(500);
+			driver.findElement(By.xpath("//input[contains(@name, 'finalHoursWorkedThisEmp')]")).clear();
+			driver.findElement(By.xpath("//input[contains(@name, 'finalHoursWorkedThisEmp')]")).sendKeys(String.valueOf(3*(t+1))); Thread.sleep(500);
+			wcl.clickSave(); Thread.sleep(5000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickBack(); Thread.sleep(5000);
+		}
+		while(t!=0);
+		opl.checkMainQuestion("Clear this issue?", "No").click();
+		Thread.sleep(500);
+		opl.SelectOption().click();
+		Thread.sleep(500);
+		wcl.selectReasonForBacdating("Test User").click();
+		Thread.sleep(500);	
+		opl.checkMainQuestion("Class of Overpayment", ClassofOverpayment).click();
+		Thread.sleep(500);
+		opl.CsrRemark().sendKeys("Testing");
+		Thread.sleep(500);
+		opl.checkMainQuestion("Generate Pre-determination Letter", "Yes").click();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		opl.Click_SaveAndClose().click();
+		ph.OvrPymntConfirmation_Screen();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	public static void InvestigationOverpayment_Withearning(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN,String IssueType,String ClassofOverpayment) throws InterruptedException
+	{
+		wcl.homeTabs("Overpayment").click();
+		Thread.sleep(1000);
+		wcl.homeTabs("Investigate Overpayment Issue").click();
+
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ph.ListOvrPymnt_Screen();
+		opl.SelectOvrPymntIssue(IssueType).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickNext().click();
+		ph.OvrPymntSummary_Screen();
+		Thread.sleep(1500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		opl.ClickEmplyrResponse().click();
+		ph.OvrPymntEmplyrRespose_Screen();
+		Thread.sleep(500);
+		wcl.checkMainQuestion("Was the claimant employed by the employer?", "Yes").click();
+		Thread.sleep(500);
+
+		Thread.sleep(1500);
+
+
+		//opl.useReportedEarnings_018();
+		Thread.sleep(500);
+
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickSave();
+		ph.OvrPymntSummary_Screen();
+		Thread.sleep(500);
+
+		opl.useReportedEarnings();Thread.sleep(500);
+		opl.checkMainQuestion("Clear this issue?", "No").click();
+		Thread.sleep(500);
+		opl.SelectOption().click();
+		Thread.sleep(500);
+		wcl.selectReasonForBacdating("Test User").click();
+		Thread.sleep(500);
+
+		opl.checkMainQuestion("Class of Overpayment", ClassofOverpayment).click();
+		Thread.sleep(500);
+		opl.CsrRemark().sendKeys("Testing");
+		Thread.sleep(500);
+		opl.checkMainQuestion("Generate Pre-determination Letter", "Yes").click();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		opl.Click_SaveAndClose().click();
+		ph.OvrPymntConfirmation_Screen();		
+	}
+
+
+	
+	
+	public static void VerifyInvestigationOverpaymentTablesAndEmployerDetails(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN,String CWE,String IssueType,String ClassofOverpayment) throws InterruptedException
+	{
+		//Verify Investigation screen and employer Details 
+		wcl.homeTabs("Overpayment").click();
+		Thread.sleep(1000);
+		wcl.homeTabs("Investigate Overpayment Issue").click();
+		
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ph.ListOvrPymnt_Screen();
+		opl.SelectOvrPymntIssue(IssueType).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickNext().click();
+		ph.OvrPymntSummary_Screen();
+		Thread.sleep(1000);
+		wcl.clickNext().click();
+		Thread.sleep(3000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		opl.ClickEmplyrResponse().click();
+		ph.OvrPymntEmplyrRespose_Screen();
+		Thread.sleep(1000);
+		wcl.clickSave();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.checkMainQuestion("Was the claimant employed by the employer?", "Yes").click();
+		Thread.sleep(1500);
+		opl.EnterEarning().sendKeys("50");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1500);
+		wcl.clickSave();
+		
+		//opl.useReportedEarnings_018();
+		
+
+		Thread.sleep(500);
+		wcl.clickSave();
+		ph.OvrPymntSummary_Screen();
+		Thread.sleep(2000);
+		
+		Thread.sleep(500);
+		opl.ReportedEarningCheck().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1500);
+		
+		opl.ReportedEarningCheck().click();
+		Thread.sleep(1500);
+		opl.EnterHourMainScreen().sendKeys("20");
+		//opl.useReportedEarnings();Thread.sleep(500);
+		opl.checkMainQuestion("Clear this issue?", "No").click();
+		Thread.sleep(500);
+		opl.SelectOption().click();
+		Thread.sleep(500);
+		wcl.selectReasonForBacdating("Test User").click();
+		Thread.sleep(500);
+		
+		opl.checkMainQuestion("Class of Overpayment", ClassofOverpayment).click();
+		Thread.sleep(500);
+		opl.CsrRemark().sendKeys("Testing");
+		Thread.sleep(500);
+		opl.checkMainQuestion("Generate Pre-determination Letter", "Yes").click();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		opl.Click_SaveAndClose().click();
+		ph.OvrPymntConfirmation_Screen();
+		
+	}
+	
+	
+
+
+
+	public void preDeterminationLetterResponse(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String IssueType, String ClassofOverpayment) throws InterruptedException
+	{
+		wcl.homeTabs("Overpayment").click();
+		Thread.sleep(1000);
+		wcl.homeTabs("Investigate Overpayment Issue").click();
+
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ph.ListOvrPymnt_Screen();
+		opl.SelectOvrPymntIssue(IssueType).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Pre-determination Letter Response Pending')]//following::a[1]"))).click(); Thread.sleep(5000);
+		opl.overpaymentFactFindingQuestion("disagree with the reasons", "Yes"); Thread.sleep(500);
+		opl.overpaymentFactFindingExplaination("disagree with the reasons"); Thread.sleep(500);
+		opl.overpaymentFactFindingQuestion("because you knowingly", "No"); Thread.sleep(500);
+		opl.overpaymentFactFindingExplaination("because you knowingly"); Thread.sleep(500);
+		opl.overpaymentFactFindingQuestion("misrepresentation", "No"); Thread.sleep(500);
+		opl.overpaymentFactFindingExplaination("misrepresentation"); Thread.sleep(500);
+		opl.overpaymentFactFindingQuestion("material fact", "No"); Thread.sleep(500);
+		opl.overpaymentFactFindingExplaination("material fact"); Thread.sleep(500);
+		opl.overpaymentFactFindingQuestion("weeks overpaid", "Yes"); Thread.sleep(500);
+		opl.overpaymentFactFindingExplaination("weeks overpaid"); Thread.sleep(500);
+		opl.overpaymentFactFindingQuestion("total amount", "Yes"); Thread.sleep(500);
+		opl.overpaymentFactFindingExplaination("total amount"); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Remarks')]//following::textarea[1]"))).sendKeys("Testing Purpose");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		opl.SelectOption().click(); Thread.sleep(500);
+		wcl.selectReasonForBacdating("Test User").click(); Thread.sleep(500);	
+		opl.checkMainQuestion("Class of Overpayment", ClassofOverpayment).click(); Thread.sleep(500);
+		opl.checkMainQuestion("Generate Pre-determination Letter", "No").click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname); Thread.sleep(5000);
+		wcl.clickNext();
+		Thread.sleep(5000);
+		ph.OvrPymntConfirmation_Screen();
+	}	
+	
+	public void createOverpaymentIssueWithSameEmply(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String issuesource, int CWE, int numberOfEmployers) throws InterruptedException
+	{		
+		f = new FutureDatePastDate();
+		rg = new RandomGenerator();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Overpayments").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Create Overpayment Issue").click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		
+		//Submission of Overpayment Issue Details page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Overpayment Issue Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		opl.issueSource(issuesource); Thread.sleep(500);
+		opl.Date("issueCreateDate", f.d(0)); Thread.sleep(500);
+		opl.Date("issueStartDate", f.Sunday(CWE)); Thread.sleep(500);
+		opl.Date("issueEndDate", f.Saturday(CWE)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		for(int j = 1 ; j <= numberOfEmployers ; j++)
+		{
+			opl.clickAddEmployer();
+			Thread.sleep(2500);
+			
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("Add Other State Employer"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			/*ol.employerName(rg.randomStringGenerator(8)); Thread.sleep(500);
+			ol.address("Address Line 1", rg.randomStringGenerator(7)); Thread.sleep(500);
+			ol.address("Address Line 2", rg.randomStringGenerator(6)); Thread.sleep(500);
+			ol.address("City", rg.randomStringGenerator(5)); Thread.sleep(500);
+			ol.selectState("Connecticut"); Thread.sleep(500);
+			ol.address("ZIP Code", rg.randomNumberGenerator(5)); Thread.sleep(500);
+			ol.selectCountry("United States"); Thread.sleep(500);*/
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(2500);
+			
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("Select Employer"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			wcl.enterEmployerName().sendKeys("CITY OF ANSONIA"); Thread.sleep(500);
+			wcl.clickSearch().click();
+			ph.EmployerNameScreen();
+			wcl.clickEmployerChecbox().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(10000);
+			
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("Overpayment Issue Details"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			List<WebElement> element = driver.findElements(By.xpath("//td[contains(text(), 'Generate Wage Request Letter')]//following::label[contains(text(), 'Yes')]//preceding::span[1]"));
+			element.get(j-1).click(); Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		wcl.submit().click();
+		Thread.sleep(5000);
+	}
+	
+	public void InvestigationOverpaymentIssueAddWeeks(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN,int CWE,String IssueType,String ClassofOverpayment) throws InterruptedException
+	{
+		wcl.homeTabs("Overpayment").click();
+		Thread.sleep(1000);
+		wcl.homeTabs("Investigate Overpayment Issue").click();
+
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ph.ListOvrPymnt_Screen();
+		opl.SelectOvrPymntIssue(IssueType).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		List<WebElement> element = driver.findElements(By.xpath("//td[contains(text(), 'Employer Response Pending')]//following::a[1]"));
+		int t = element.size();
+		System.out.println(t + " employers found...");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		do
+		{
+			t--;
+			driver.findElement(By.xpath("//td[contains(text(), 'Employer Response Pending')]//following::a[1]")).click();
+			Thread.sleep(2500);
+			wcl.checkMainQuestion("Was the claimant employed by the employer?", "Yes").click(); Thread.sleep(500);
+			wcl.clickSave(); Thread.sleep(5000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickBack(); Thread.sleep(5000);
+		}
+		while(t!=0);
+		opl.clickHyperlink("Add Weeks"); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		opl.Date("firstAffectedWeekEndingDate", f.Sunday(CWE-7)); Thread.sleep(500);
+		opl.Date("lastAffectedWeekEndingDate", f.Saturday(CWE+7)); Thread.sleep(500);
+		wcl.clickSave(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickBack(); Thread.sleep(5000);
+		opl.checkMainQuestion("Clear this issue?", "No").click();
+		Thread.sleep(500);
+		opl.SelectOption().click();
+		Thread.sleep(500);
+		wcl.selectReasonForBacdating("Test User").click();
+		Thread.sleep(500);	
+		opl.checkMainQuestion("Class of Overpayment", ClassofOverpayment).click();
+		Thread.sleep(500);
+		opl.CsrRemark().sendKeys("Testing");
+		Thread.sleep(500);
+		opl.checkMainQuestion("Generate Pre-determination Letter", "Yes").click();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+	}
+}

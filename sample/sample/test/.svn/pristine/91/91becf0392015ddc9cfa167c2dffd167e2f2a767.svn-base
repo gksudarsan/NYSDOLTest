@@ -1,0 +1,72 @@
+package com.ui.pages;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+public class UpdateClaimantProfile extends TestBase
+{
+	Wc_locators wcl;
+	OverPayment_Locators opl;
+	screenShot screen = new screenShot();
+	String heading;
+	FutureDatePastDate f;
+
+	public void updatePrimaryContactNumber(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String primaryNumber) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		opl = new OverPayment_Locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Benefit Maintenance").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Update Claimant Profile").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Contact Details").click();
+		Thread.sleep(2500);
+		opl.enterSSN("searchSsn").sendKeys(SSN); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(2500);
+		wcl.checkRecord().click();	Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(10000);
+
+		//Submission of Update Contact Information page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Update Contact Information"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Update Contact Information");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		opl.Date("dateOfBirth", f.d(-15000)); Thread.sleep(500);
+		opl.enterPhoneNumber("phone", primaryNumber); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+
+		//Submission of Update Contact Information Confirmation page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Update Contact Information Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Update Contact Information Confirmation");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

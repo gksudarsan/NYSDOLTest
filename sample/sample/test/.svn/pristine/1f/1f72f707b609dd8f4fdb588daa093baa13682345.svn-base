@@ -1,0 +1,143 @@
+package com.WeeklyCertification;
+
+/** @author mjape */
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_58566 extends TestBase
+{
+	LoginLogoutPage lp;
+	Wc_locators wcl = new Wc_locators();
+	WeeklyCert  w;
+	QuerySearch q;
+	FutureDatePastDate f;
+	static screenShot screen=new screenShot();
+	static String classname, SimpleClassname, snapshotPath, SSN, ed;
+	static TC_58566 ClassObject;
+	static CreateDirectory CD;
+	static String query = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'REG' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+
+	//Properties prop;
+	public TC_58566()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		ed = f.Sunday(-7);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') and c.effective_date = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_58566();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	
+	@Test(priority=1, description = "Validate that a weekly certification is filed and work search is adequate as per the BR49542")
+	public void Testing58566() throws InterruptedException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		
+		//Weekly Certification Process Process...
+		w = new WeeklyCert();
+		w.fileWeeklyCertificationWithoutWaiver(driver, snapshotPath, SimpleClassname, SSN);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+
+
+	public String query(String query) throws ClassNotFoundException, SQLException
+	{
+		List<String> ssn;
+		Connection con;
+		Statement stmt;
+		ResultSet rs;
+		int i=-1;
+		String ed;
+		FutureDatePastDate f;
+		Random r = new Random();
+		f = new FutureDatePastDate();
+		ed = f.Sunday(-7);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + "'" + ed + "'";
+		System.out.println(query);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query);
+		while(rs.next())
+		{
+			System.out.println(rs.getString("SSN"));
+			ssn.add(rs.getString("SSN"));
+			i++;
+		}
+		con.close();
+		if(i==0)
+			i++;
+		return ssn.get(r.nextInt(i));
+	}
+}

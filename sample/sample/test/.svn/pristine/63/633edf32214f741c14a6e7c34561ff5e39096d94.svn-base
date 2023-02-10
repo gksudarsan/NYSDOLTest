@@ -1,0 +1,95 @@
+package com.ui.pages;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+public class ManualPaymentRequest extends TestBase
+{
+	Wc_locators wcl;
+	Payments_Locators pl;
+	FutureDatePastDate f;
+	screenShot screen = new screenShot();
+	Connection con;
+	Statement stmt;
+	ResultSet rs;
+
+	public void manualPaymentRequest(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, int CWE) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		wcl = new Wc_locators();
+		pl = new Payments_Locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Weekly Certification").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/a/span[contains(text(), 'Process CWEs')]"))).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/a/span[contains(text(), 'Process Weekly Certification')]"))).click();
+		wcl.ssn1().sendKeys(SSN); Thread.sleep(500);
+		pl.Date("startDate").sendKeys(f.Sunday(CWE)); Thread.sleep(500);
+		pl.Date("endDate").sendKeys(f.Saturday(CWE)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'CWE Details')]")));
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'CWE Details')]//following::span[contains(@class, 'chkbox')][1]"))).click(); Thread.sleep(500);
+		String CWEDate = f.Saturday(CWE).substring(0, 2) + "/" + f.Saturday(CWE).substring(2, 4) + "/" + f.Saturday(CWE).substring(4);
+		try
+		{
+			pl.isWaiverRequired("No"); Thread.sleep(500);
+			pl.isTimesheetRequired("Yes"); Thread.sleep(500);
+		}
+		catch(Exception e)
+		{
+			System.out.println("'Is a training waiver required?' and 'Is a timesheet required?' are N/A...");
+		}
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/span[contains(text(), '"+CWEDate+"')]//following::label[contains(text(), '-Select-')]"))).click(); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), 'REDE')]"))).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		List<String> ssn = new ArrayList<String>();
+		int i=-1;
+		Random r = new Random();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con = DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt = con.createStatement();
+		rs = stmt.executeQuery("SELECT PROCESSING_REASON FROM T_WEEKLY_CERTIFICATION_JRNL WHERE MANUAL_PAYMENT_ID IS NOT NULL "
+				+ "AND WEEKLY_CERTIFICATION_ID IN (SELECT WEEKLY_CERTIFICATION_ID FROM T_WEEKLY_CERTIFICATION "
+				+ "WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"'))");
+		while(rs.next())
+		{
+			ssn.add(rs.getString("PROCESSING_REASON"));
+			i++;
+		}
+		con.close();
+		if(i==0)
+			i++;
+		ssn.get(r.nextInt(i));
+		String reason = ssn.get(r.nextInt(i));
+		System.out.println("Processing reason for "+SSN+" : "+reason);
+	}
+}

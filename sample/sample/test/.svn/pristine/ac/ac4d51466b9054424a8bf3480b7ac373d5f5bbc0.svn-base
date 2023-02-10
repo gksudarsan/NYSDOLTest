@@ -1,0 +1,111 @@
+package com.WeeklyCertification;
+
+/** @author mjape */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.BackdateClaimRequest;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_56491 extends TestBase
+{
+	SimpleDateFormat sdf;
+	Date date;
+	LoginLogoutPage lp;
+	BackdateClaimRequest bcr;	
+	Wc_locators wcl = new Wc_locators();
+	QuerySearch q;
+	FutureDatePastDate f;
+	static screenShot screen=new screenShot();
+	static String classname, SimpleClassname, snapshotPath, SSN, ed;
+	static TC_56491 ClassObject;
+	static CreateDirectory CD;
+	static String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B, T_AIC_REOPEN C, T_WEEKLY_CERTIFICATION D, (SELECT A.SSN "
+			+ "FROM T_CLAIMANT A,T_CLAIM B WHERE A.CLAIMANT_ID = B.CLAIMANT_ID GROUP BY SSN HAVING COUNT < 2)Z "
+			+ "WHERE A.SSN = Z.SSN AND A.CLAIMANT_ID = B.CLAIMANT_ID AND B.CLAIM_ID = C.CLAIM_ID "
+			+ "AND A.CLAIMANT_ID = D.CLAIMANT_ID AND B.STATUS = 'ACTV' AND B.ENTITLEMENT_TYPE = 'REG' AND C.TYPE_FLAG = 'A' "
+			+ "AND C.EFFECTIVE_DATE = ";
+
+	//Properties prop;
+	public TC_56491()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		ed = f.Sunday(-7);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + "'" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_56491();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	
+	@Test(priority=1, description = "Process of viewing certified back-dated week(s) and "
+			+ "certifying the remaining back-dated week(s) (IW CLAIM)")
+	public void Testing56491() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Backdate Claim Request Process...
+		bcr = new BackdateClaimRequest();
+		bcr.backDateClaimRequest(snapshotPath, SimpleClassname, SSN, "Additional");
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

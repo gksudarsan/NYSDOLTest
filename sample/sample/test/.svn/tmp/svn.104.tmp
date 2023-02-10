@@ -1,0 +1,172 @@
+
+package com.Overpayments;
+
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+
+import com.ui.pages.Add_dependent;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.ResolveWorkItem;
+import com.ui.pages.SearchWorkItem;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.pages.weekly_cert_pension;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+
+
+public class TC_55813 extends TestBase
+{
+
+
+
+	static LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static PageHeading ph;
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_55813 ClassObject;
+
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+	static Payments_Locators pml;
+	static FileWeeklyCertification fwc;
+	static String date1;
+	static ClaimSummary cs;
+	static UpdateIssueDates uid;
+	static weekly_cert_pension  wc;
+	static ResolveWorkItem rwi;
+	static WeeklyCert w;
+	int CWE = -14;
+	static Overpayment op;
+	static String issuesource = "Quality Control";
+	static String ClassofOverpayment = "Non-Fraud";
+	static String IssueType= "Quality Control";
+	static  String EarningAmount= "40";
+	static  String WorkingHours = "5";
+	
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException
+
+	{
+		ClassObject =new TC_55813();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+
+
+
+	}
+	@Test(description ="TC_55813" )
+	public void TC_55813_op() throws InterruptedException, ParseException
+	{
+		System.out.println("@test initiated");
+		wcl=new Wc_locators();
+		fwc=new FileWeeklyCertification();
+
+		pml=new Payments_Locators();
+		
+		 cs = new ClaimSummary();
+
+		uid= new UpdateIssueDates();
+		op = new Overpayment();
+		 w = new WeeklyCert();
+
+
+		//uid.updateFutureIssueStartDate(driver, snapshotPath, SimpleClassname,prop.getProperty("ssn_55813"),CWE);
+
+		//Weekly Cert By SSN/CWE Process...
+		//wcl.clickHome();
+		Thread.sleep(5000);
+		
+      // weekly_cert_pension.fileWeeklyCertification_withearning(driver, snapshotPath, SimpleClassname, prop.getProperty("ssn_55813"), CWE);
+		 //wcl.clickHome();
+		 
+		
+			
+		//w.WeeklyCertBySSN_CWE_Em( driver,  snapshotPath,  SimpleClassname,  prop.getProperty("ssn_55813"), CWE, EarningAmount, WorkingHours);
+		 //wcl.clickHome();
+		//cs.claimsummary(prop.getProperty("ssn_55813"), snapshotPath, SimpleClassname, "wba");
+		//Creating ovp issue
+		
+		
+		//op.createOverpaymentIssue(driver, snapshotPath, SimpleClassname, prop.getProperty("ssn_55813"), issuesource, CWE,1);
+		 //wcl.clickHome();
+		op.createOverpaymentIssueWithSameEmply(driver, snapshotPath, SimpleClassname, prop.getProperty("ssn_55813"),"Quality Control", CWE,1);
+		wcl.clickHome();
+		op.InvestigationOverpaymentIssueQualityControl(driver, snapshotPath, SimpleClassname, prop.getProperty("ssn_55813"), CWE, "Quality Control", ClassofOverpayment);
+		//wcl.clickHome();
+		 
+		
+		// Overpayment.InvestigationOverpayment_Withearning_claimant( driver,  snapshotPath,  SimpleClassname, prop.getProperty("ssn_55813"), "Quality Control", ClassofOverpayment);
+		 wcl.clickHome();
+		
+		//cs.claimsummary(prop.getProperty("ssn_55813"), snapshotPath, SimpleClassname, "wba");
+		 
+		 
+		 
+		 
+		    
+
+		
+		
+		     
+		        // op.createOverpaymentIssueWithSameEmply(driver, snapshotPath, SimpleClassname, prop.getProperty("ssn_55813"),"National New Hire Crossmatch", CWE,1);
+
+		 
+		 
+		 
+		
+		
+
+
+
+	}
+	@AfterTest
+	public void close_browser()
+	{
+		//driver.close();
+		//driver.quit();
+		System.out.println("Testcase executed and browser closed");
+	}
+
+}

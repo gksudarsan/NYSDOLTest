@@ -1,0 +1,121 @@
+package com.ClaimsIntake;
+
+/**@author mjape*/
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.SharedWork_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_153 extends TestBase
+{
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	Wc_locators wcl = new Wc_locators();
+	SharedWork_Locators swl = new SharedWork_Locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath;
+	TC_153 ClassObject;
+	CreateDirectory CD;
+	String sd, ed, query, SSN;
+
+	//Properties prop;
+	public TC_153()
+	{
+		super();
+	}
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Fetching SSN...
+		f = new FutureDatePastDate();
+		sd = f.d(-365);
+		sd = sd.substring(4, 8) + "-" + sd.substring(0, 2) + "-" + sd.substring(2, 4);
+		ed = f.d(-180);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		query = "SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIM WHERE STATUS = 'ACTV' AND "
+				+ "EFFECTIVE_DATE > '"+sd+"' AND EFFECTIVE_DATE <= '"+ed+"' ORDER BY EFFECTIVE_DATE ASC)";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();
+		SSN = q.randomData(query, "SSN");
+		System.out.println("SSN to be used : "+SSN);
+
+		ClassObject =new TC_153();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		//Opening browser... Hitting URL...
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Validate that the CSR is able to cancel the claim and gets a Claim cancelled successfully "
+			+ "confirmation with claim employment Status updated as Inactive and Claim status updated as Cancel.")
+	public void Testing153() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Cancel Claim...
+		wcl.homeTabs("Benefit Maintenance").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Cancel a Claim").click(); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.employeeSSN("claimantSsn", SSN); Thread.sleep(500);
+		swl.employeeSSN("confirmSsnBean", SSN); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Next>"); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickRadioButton("//td[contains(text(), 'Status')]//following::input[contains(@value, 'Active')][1]//preceding::span[1]"); Thread.sleep(500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		swl.clickButton("Submit"); Thread.sleep(2500);
+		driver = screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		String message = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@role, 'heading')]//following::td[1]"))).getText(); Thread.sleep(500);
+		Assert.assertEquals("The selected claim has been successfully cancelled.", message);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

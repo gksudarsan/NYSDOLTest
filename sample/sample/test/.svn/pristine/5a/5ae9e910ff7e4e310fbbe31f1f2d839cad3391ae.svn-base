@@ -1,0 +1,58 @@
+package com.ui.pages;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.screenShot;
+
+public class ISAInquiry extends TestBase
+{
+	Wc_locators wcl;
+	OverPayment_Locators opl;
+	screenShot screen = new screenShot();
+
+	public void fradulentClaimant(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		opl = new OverPayment_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("ISA").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Inquiry").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Fraudulent Claimant").click();
+		Thread.sleep(2500);
+		
+		//Getting the current month and year...
+		LocalDate currentdate = LocalDate.now();
+		Month currentMonth = currentdate.getMonth();
+		int currentYear = currentdate.getYear();
+		System.out.println("Current month: "+currentMonth+" "+currentYear);
+		String month = String.valueOf(currentMonth);
+		month = month.substring(0, 3);
+		month = month.substring(0, 1) + month.substring(1).toLowerCase();
+		String year = String.valueOf(currentYear);
+		System.out.println("Current month: "+month+" "+year);
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//label[contains(text(), 'Month')]//following::label[contains(text(), '-Select-')][1]")).click(); Thread.sleep(1000);
+		driver.findElement(By.xpath("//li[contains(text(), '"+month+"')]")).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//label[contains(text(), 'Year')]//following::label[contains(text(), '-Select-')][1]")).click(); Thread.sleep(1000);
+		driver.findElement(By.xpath("//li[contains(text(), '"+year+"')]")).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

@@ -1,0 +1,169 @@
+package com.ui.locators;
+
+import com.ui.base.TestBase;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+public class Payments_Locators extends TestBase
+{
+	public WebElement mbaBalance()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, 'mbaBalance')]")));
+		return driver.findElement(By.xpath("//input[contains(@name, 'mbaBalance')]"));
+	}
+	
+	public WebElement selectParty(String selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'a. Select Party')]//following::label[1]"))).click(); Thread.sleep(500);
+		return driver.findElement(By.xpath("//ul[contains(@id, 'partyType')]/li[contains(text(), '"+selection+"')]"));
+	}
+	
+	public WebElement questionnaireCategory(String selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'b. Questionnaire Category ')]//following::label[1]"))).click(); Thread.sleep(500);
+		return driver.findElement(By.xpath("//ul[contains(@id, 'questionnaireCategory')]/li[contains(text(), '"+selection+"')]"));
+	}
+	
+	public WebElement questionnaireSubCategory(String selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'i. Questionnaire Sub Category')]/following::label[1]"))).click(); Thread.sleep(500);
+		return driver.findElement(By.xpath("//ul[contains(@id, 'questionnaireSubcategory')]/li[contains(text(), '"+selection+"')]"));
+	}
+
+	public void employerStatement(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Was the employer')]/..//child::label[contains(text(), 'Yes')]//preceding::span[1]"))).click();
+	}
+
+	public WebElement employerDateInterviewed()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//b[contains(text(), 'Employer Statement')]//following::td[contains(text(), 'Date Interviewed')]/..//child::input[contains(@id, '-month')]"))).click();
+		return driver.findElement(By.xpath("//b[contains(text(), 'Employer Statement')]//following::td[contains(text(), 'Date Interviewed')]/..//child::input[contains(@id, '-month')]"));	
+	}
+
+	public void employerContactNameTitle()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//b[contains(text(), 'Employer Statement')]//following::td[contains(text(), 'Contact Name and Title')]/..//following::textarea[1]"))).sendKeys("Mr Testing Purpose");
+	}
+
+	public void methodOfContact() throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//b[contains(text(), 'Employer Statement')]//following::td[contains(text(), 'Method of contact')]//ancestor::tr//child::label"))).click();
+	}
+	
+	public void adjudicationDecision(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Decision')]//ancestor::tr//child::label[contains(text(), '"+selection+"')]//preceding::span[1]"))).click();
+	}
+
+	public void isEmpPartimely(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'timely')]//ancestor::tr//child::label[contains(text(), '"+selection+"')]//preceding::span[1]"))).click();		
+	}
+	
+	public void isEmpParAdequate(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'adequate')]//ancestor::tr//child::label[contains(text(), '"+selection+"')]//preceding::span[1]"))).click();		
+	}
+
+	public void issueDetails(String selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Issue Details')]//following::label[1]"))).click(); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '"+selection+"')]"))).click();
+	}
+
+	public WebElement Date(String xpath)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, '"+xpath+"_-month')]"))).click();
+		return driver.findElement(By.xpath("//input[contains(@id, '"+xpath+"_-month')]"));
+	}
+
+	public void allowReason()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Allow Reason')]//ancestor::tr//child::textarea"))).sendKeys("Testing Purpose");
+	}
+
+	public void isChargeOnly(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Is this a Charge Only issue?')]//following::label[contains(text(), '"+selection+"')]//preceding::span[1]"))).click();
+	}
+	
+	public void hiredDate(String date)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Date Hired')]//following::input[1]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Date Hired')]//following::input[1]"))).sendKeys(date);
+	}
+
+	public void dateLastWorked(String date)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Date last worked')]//following::input[1]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Date last worked')]//following::input[1]"))).sendKeys(date);
+	}
+
+	public void claimantUnionMember(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Is the claimant a Union Member?')]//following::label[contains(text(), '"+selection+"')]"))).click();
+	}
+
+	public void rateOfPay(String rate)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Rate of pay')]//following::input[1]"))).sendKeys(rate);		
+	}
+
+	public void hoursWorkedPerWeek(String hours)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Rate of pay')]//following::td[contains(text(), 'Hours worked per week')]//following::input[1]"))).sendKeys(hours);		
+	}
+
+	public void rateOfPayFrequency(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Rate of pay')]//following::label[1]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '"+selection+"')]"))).click();		
+	}
+
+	public void daysWorkedPerWeek(int dow)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Indicate below any other payments the claimant will receive:')]//preceding::span["+dow+"]"))).click();		
+	}
+	
+	public void checkOtherPayment(String type)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Indicate below any other payments the claimant will receive:')]//following::td[contains(text(), '"+type+"')]//following::span[2]"))).click();
+	}
+	
+	public void enterGrossAmount(String type, String amount)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Indicate below any other payments the claimant will receive:')]//following::td[contains(text(), '"+type+"')]//following::tr[1]//child::input"))).sendKeys(amount);
+	}
+
+	public void typeOfEarning(String type)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[text() = '"+type+"']//preceding::span[1]"))).click();
+	}
+
+	public void overpaymentType(String type)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[text() = '"+type+"']//preceding::span[1]"))).click();
+	}
+
+	public void waiverApproval(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Do you approve the overpayment waiver?')]//following::label[contains(text(), '"+selection+"')]//preceding::span[1]"))).click();		
+	}
+
+	public void remarks()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Remarks for overpayment waiver')]//following::textarea"))).sendKeys("Testing Purpose");
+	}
+
+	public void PayAmt(String xpath, String amount)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), '"+xpath+"')]//following::input[1]"))).sendKeys(amount);
+	}
+
+	public void allocateDismissalPay()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), 'Allocate Dismissal Payment')]"))).click();
+	}
+}

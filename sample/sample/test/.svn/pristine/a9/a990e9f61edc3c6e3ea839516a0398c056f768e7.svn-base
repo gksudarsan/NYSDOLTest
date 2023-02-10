@@ -1,0 +1,96 @@
+package com.ui.utilities;
+
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+public class Test {
+	
+	   
+	
+		// TODO
+		
+		static String ot;
+		
+	 public static String dat(String inputText) throws ParseException
+	 {
+
+		//String inputText = "Saturday, May 16, 2020";
+		DateFormat outputFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+		DateFormat inputFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.US);
+		Date date1 = inputFormat.parse(inputText);
+		Calendar calender= Calendar.getInstance();
+		calender.add(Calendar.DATE, -6);
+		Date date=calender.getTime();
+		DateFormat df=new SimpleDateFormat("MMddyyyy");
+		//need to check
+		ot= outputFormat.format(date1);
+		return ot;
+		
+		
+	}
+	 public static void main(String args[]) throws ParseException, ClassNotFoundException, SQLException
+	 {
+		 /*Test.dat("Saturday, May 16, 2020");
+		 
+		 System.out.println(ot);
+		 
+		 String WBA="$ 200.00";
+		
+		 String St=WBA.replaceAll("[\\s{$}]", "");
+		 System.out.println(St);
+		 
+		double WBAmount= Double.parseDouble(St)+100;
+		System.out.println(WBAmount);*/
+		 QuerySearch q=new QuerySearch();
+		 String TotalEarning1 =q.getTotalEarning("select b.TOTAL_EARNINGS from T_CLAIMANT a, "
+					+ "t_weekly_certification b where a.SSN='123456957' and a.CLAIMANT_ID=b.CLAIMANT_ID");
+		 double TotalEarning = (Integer.parseInt(TotalEarning1.substring(0, TotalEarning1.lastIndexOf('.'))));
+			
+			 
+			 
+			 String WBA1 = q.getGrossEarning("SELECT WBA FROM T_CLAIM WHERE STATUS = 'ACTV' AND BYE_DATE > CURRENT_DATE AND "
+						+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE  SSN = '123456957')");
+			 double WBA= (Integer.parseInt(WBA1.substring(0, WBA1.lastIndexOf('.'))));
+			 
+			 System.out.println(WBA);
+			 String FIT1 = q.getFIT_DEDUCTION("Select d.FIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+			 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='123456957' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+			 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double FIT= (Integer.parseInt(FIT1.substring(0, FIT1.lastIndexOf('.'))));
+			 
+			 String SIT1=q.getSIT_DEDUCTION("Select d.SIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+				 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='123456957' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+				 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double SIT= (Integer.parseInt(SIT1.substring(0, SIT1.lastIndexOf('.'))));
+					 
+			String DeductedAmt1=q.getDEDUCTIBLE_AMOUNT("Select e.DEDUCTIBLE_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d,T_CT_WEEKLY_CERT_PMNT_DEDUCTION_DETAIL e"
+					+ " where a.SSN='123456957' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+					+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and d.WEEKLY_CERT_PMNT_DEDUCTION_ID=e.WEEKLY_CERT_PMNT_DEDUCTION_ID");	 
+			double DeductedAmt= (Integer.parseInt(DeductedAmt1.substring(0, DeductedAmt1.lastIndexOf('.'))));
+			
+			
+			System.out.println("WBA "+WBA);
+			System.out.println("Total earnings "+TotalEarning);
+			System.out.println("Federal Tax " +FIT);
+			System.out.println("State Tax " +SIT);
+			System.out.println("Deducted Amount " +DeductedAmt);
+			
+			double calculation =WBA-((Math.round(TotalEarning*2/3+DeductedAmt)));
+			double TotalPaidAmount =calculation-(FIT+SIT);
+			System.out.println(TotalPaidAmount);
+			
+			
+				 
+	 }
+	}
+
+	
+
+

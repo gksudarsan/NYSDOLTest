@@ -1,0 +1,162 @@
+package com.ui.utilities;
+
+/** @author mjape */
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+
+import com.sun.media.sound.InvalidFormatException;
+
+public class CreateExcel
+{
+	public void create_t_correspondence_table(String CorrespondenceID, String CorrespondenceCode, String ClaimantID, String CreatedTS, String CreatedBy) throws InvalidFormatException
+	{
+		String excelFilePath = System.getProperty("user.dir")+"\\Database Download\\T_CORRESPONDENCE.xlsx";
+		try
+		{
+			FileInputStream inputStream = new FileInputStream(new File(excelFilePath));
+			System.out.println("File found...");
+			Workbook workbook = WorkbookFactory.create(inputStream);
+			SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy_HHmmss");
+		    Date date = new Date();
+			Sheet newSheet = workbook.createSheet(formatter.format(date));
+			System.out.println("Sheet created...");
+			Object[][] bookComments = {{"CORRESPONDENCE_ID", "CORRESPONDENCE_CODE", "CLAIMANT_ID", "CREATED_TS", "CREATED_BY"},
+					{CorrespondenceID, CorrespondenceCode, ClaimantID, CreatedTS, CreatedBy},};
+
+			int rowCount = 0;
+
+			for (Object[] aBook : bookComments)
+			{
+				Row row = newSheet.createRow(++rowCount);
+
+				int columnCount = 0;
+
+				for (Object field : aBook)
+				{
+					Cell cell = row.createCell(++columnCount);
+					if (field instanceof String)
+						cell.setCellValue((String) field);
+					else if (field instanceof Integer)
+						cell.setCellValue((Integer) field);
+				}
+			}
+
+			FileOutputStream outputStream = new FileOutputStream(System.getProperty("user.dir")+"\\Database Download\\T_CORRESPONDENCE.xlsx");
+			System.out.println("Data entry done...");
+			workbook.write(outputStream);
+			workbook.close();
+			outputStream.close();
+		}
+		catch (IOException | EncryptedDocumentException ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	public void create_t_correspondence_OverpaymentPreDeter(String CorrespondenceID, String CorrespondenceCode, String ClaimantID, String CreatedTS, String CreatedBy,String UpdatedTS,String UpdatedBy) throws InvalidFormatException
+	{
+		String excelFilePath = System.getProperty("user.dir")+"\\src\\main\\java\\"
+				+ "com\\ui\\testdata\\DB Data\\OvpPredeter.xlsx";
+		try
+		{
+			FileInputStream inputStream = new FileInputStream(new File(excelFilePath));
+			System.out.println("File found...");
+			Workbook workbook = WorkbookFactory.create(inputStream);
+			SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy_HHmmss");
+		    Date date = new Date();
+			Sheet newSheet = workbook.createSheet(formatter.format(date));
+			System.out.println("Sheet created...");
+			Object[][] bookComments = {{"CORRESPONDENCE_ID", "CORRESPONDENCE_CODE", "CLAIMANT_ID", "CREATED_TS", "CREATED_BY","UPDATED_TS","UPDATED_BY"},
+					{CorrespondenceID, CorrespondenceCode, ClaimantID, CreatedTS, CreatedBy,UpdatedTS,UpdatedBy},};
+
+			int rowCount = 0;
+
+			for (Object[] aBook : bookComments)
+			{
+				Row row = newSheet.createRow(++rowCount);
+
+				int columnCount = 0;
+
+				for (Object field : aBook)
+				{
+					Cell cell = row.createCell(++columnCount);
+					if (field instanceof String)
+						cell.setCellValue((String) field);
+					else if (field instanceof Integer)
+						cell.setCellValue((Integer) field);
+				}
+			}
+
+			FileOutputStream outputStream = new FileOutputStream(System.getProperty("user.dir")+"\\src\\main\\java\\com\\ui\\testdata\\DB Data\\"
+					+ "OvpPredeter.xlsx");
+			System.out.println("Data entry done...");
+			workbook.write(outputStream);
+			workbook.close();
+			outputStream.close();
+		}
+		catch (IOException | EncryptedDocumentException ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	public void create_t_correspondence59438(String CorrespondenceID,String CorrespondenceCode, String ClaimantID, String CreatedTS, String CreatedBy,String UpdatedTS,String UpdatedBy) throws InvalidFormatException
+	{
+		String excelFilePath = System.getProperty("user.dir")+"\\src\\main\\java\\"
+				+ "com\\ui\\testdata\\DB Data\\OvpPredeter.xlsx";
+		try
+		{
+			FileInputStream inputStream = new FileInputStream(new File(excelFilePath));
+			System.out.println("File found...");
+			Workbook workbook = WorkbookFactory.create(inputStream);
+			SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy_HHmmss");
+		    Date date = new Date();
+			Sheet newSheet = workbook.createSheet(formatter.format(date));
+			System.out.println("Sheet created...");
+			Object[][] bookComments = {{"CORRESPONDENCE_ID", "CORRESPONDENCE_CODE", "CLAIMANT_ID", "CREATED_TS", "CREATED_BY","UPDATED_TS","UPDATED_BY"},
+					{CorrespondenceID, CorrespondenceCode, ClaimantID, CreatedTS, CreatedBy,UpdatedTS,UpdatedBy},};
+			
+
+			int rowCount = 0;
+
+			for (Object[] aBook : bookComments)
+			{
+				Row row = newSheet.createRow(++rowCount);
+
+				int columnCount = 0;
+
+				for (Object field : aBook)
+				{
+					Cell cell = row.createCell(++columnCount);
+					if (field instanceof String)
+						cell.setCellValue((String) field);
+					else if (field instanceof Integer)
+						cell.setCellValue((Integer) field);
+				}
+			}
+			
+
+			FileOutputStream outputStream = new FileOutputStream(System.getProperty("user.dir")+"\\src\\main\\java\\com\\ui\\testdata\\DB Data\\"
+					+ "OvpPredeter.xlsx");
+			System.out.println("Data entry done...");
+			workbook.write(outputStream);
+			workbook.close();
+			outputStream.close();
+		}
+		catch (IOException | EncryptedDocumentException ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+}

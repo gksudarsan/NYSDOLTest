@@ -1,0 +1,185 @@
+package com.ui.pages;
+
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverpaymentMaintenance_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class OverpaymentMaintenance extends TestBase
+{
+	screenShot screen=new screenShot();
+	Wc_locators wcl;
+	OverpaymentMaintenance_Locators oml;
+	String heading = "";
+	QuerySearch q;
+
+	public void enterRepaymentDetails(WebDriver driver, String snapshotPath, String SimpleClassname, String repaymentMode, String number, String amount, String date, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		oml = new OverpaymentMaintenance_Locators();
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Overpayment Maintenance").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Enter Repayment Details").click();
+		Thread.sleep(5000);
+
+		//Submission of Process Repayment page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Process Repayment"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		oml.repaymentMode_focus(repaymentMode); Thread.sleep(500);
+		oml.checkOrMoneyOrderNumber(number); Thread.sleep(500);
+		oml.paymentAmount(amount); Thread.sleep(500);
+		oml.Date("checkDate", date); Thread.sleep(500);
+		oml.receiptNumber(String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000))); Thread.sleep(500);
+		oml.enterSSN("claimantSsn", SSN); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		oml.clickSearch(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		oml.repaymentAmount(amount);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//Submission of Process Repayment Verification page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Process Repayment Verification"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+
+		//Submission of Process Repayment Confirmation page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Process Repayment Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Run Repayment Batch...
+		String diff = "";
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for repayment batch to run...");
+			Thread.sleep(1000*60);
+			try
+			{
+				diff = q.getDiff("SELECT (CURRENT_DATE - DATE(UPDATED_TS)) DIFF FROM T_OVERPAYMENT WHERE "
+						+ "DATE(UPDATED_TS) = CURRENT_DATE AND CLAIM_ID IN (SELECT CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER BY ESTABLISHMENT_DATE DESC");
+				System.out.println("Last updated date : "+diff);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(!diff.equalsIgnoreCase("0"));
+		System.out.println("Repayment Successful...");
+	}
+
+	public void modifyRepaymentSchedule(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		oml = new OverpaymentMaintenance_Locators();
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Overpayment Maintenance").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Modify Repayment Schedule").click();
+		Thread.sleep(5000);
+
+		oml.enterSSN("claimantSsnBean", SSN); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click(); Thread.sleep(5000);
+
+		//Submission of Active Mandatory Repayment Schedules page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Active Mandatory Repayment Schedules"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		oml.selectOverpaymentRecord(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click(); Thread.sleep(5000);
+
+		//Submission of Modify Mandatory Monthly Repayment Schedule page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Modify Mandatory Monthly Repayment Schedule"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		String oldAmount = driver.findElement(By.xpath("//input[contains(@name, 'monthlyRepaymentAmount')]")).getAttribute("value"); Thread.sleep(500);
+		String newAmount = String.valueOf(Double.parseDouble(oldAmount)*0.50);
+		oml.newModifiedAmount(newAmount); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click(); Thread.sleep(5000);
+
+		//Submission of Modify Mandatory Repayment Schedule Confirmation page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Modify Mandatory Repayment Schedule Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Run BatchGenerateRepaymentPlanSchedule Batch...
+		String ID = "";
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for batch to run...");
+			Thread.sleep(1000*60);
+			try
+			{
+				ID = q.getOverpaymentID("SELECT OVERPAYMENT_ID FROM T_CT_REPAYMENT_PLAN WHERE OVERPAYMENT_ID IN (SELECT "
+						+ "OVERPAYMENT_ID FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"'))) AND DATE(CREATED_TS) = CURRENT_DATE "
+								+ "ORDER BY UPDATED_TS DESC");
+				System.out.println("OVERPAYMENT_ID : "+ID);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(ID.isEmpty());
+		System.out.println("Repayment Plan Schedule Successful...");
+	}
+}

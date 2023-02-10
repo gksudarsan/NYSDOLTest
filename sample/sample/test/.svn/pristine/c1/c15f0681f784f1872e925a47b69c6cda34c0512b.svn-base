@@ -1,0 +1,161 @@
+package com.Payments;
+
+import java.text.ParseException;
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.WeeklyCertification.TC_FWC_WithNoPartialEmployment;
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+public class FileDUAclaim extends TestBase {
+	PageHeading ph;
+	LoginLogoutPage lp;
+	Wc_locators wc;
+	static Payments_Locators pl ;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static FileDUAclaim ClassObject;
+	
+	static  CreateDirectory CD;
+	
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser)
+
+	{
+		ClassObject =new FileDUAclaim();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		//wait=new WebDriverWait(driver, Duration.ofSeconds(50));
+		driver.get(prop.getProperty("applicationUrl"));
+		
+		
+	}
+	@Test(priority=1,description="Log into CT ACCESS system")
+	public void applicationLogin() throws InterruptedException
+	{
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		//driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+	@Test(priority=2,description ="DUA Claim")
+	public void DUAClaim() throws InterruptedException, ParseException
+	{
+		
+		pl = new Payments_Locators();
+		ph=new PageHeading();
+		
+		
+		driver.findElement(By.xpath("//span[text()='Unemployment Claim']/../../../td[2]")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.xpath("//span[text()='Disaster Assistance (DUA)']/../../../td[2]")).click();
+		Thread.sleep(4000);
+	    driver.findElement(By.xpath("//span[text()='File DUA Claim']/../../../td[2]")).click();
+	    Thread.sleep(4000);
+	    
+	    driver.findElement(By.xpath("//input[@id='ssnBean_-ssn1']")).click();
+	    driver.findElement(By.xpath("//input[@id='ssnBean_-ssn1']")).sendKeys(prop.getProperty("DUASSN"));
+	    driver.findElement(By.xpath("//input[@id='confirmSsnBean_-ssn1']")).click();
+	    driver.findElement(By.xpath("//input[@id='confirmSsnBean_-ssn1']")).sendKeys(prop.getProperty("DUASSN"));
+        driver.findElement(By.xpath("//*[text()='Next>']")).click();
+        Thread.sleep(4000);
+        
+        driver.findElement(By.xpath("//*[@id='disaster']/div[3]/span")).click();
+        driver.findElement(By.xpath("//*[text()='COVID-19']/../../ul[1]/li[2]")).click();
+        driver.findElement(By.xpath("//*[text()='Next>']")).click();
+        Thread.sleep(4000);
+        
+        driver.findElement(By.id("maritalStatus_label")).click();
+        driver.findElement(By.id("maritalStatus_1")).click();
+        driver.findElement(By.name("numberOfDependents")).clear();
+        driver.findElement(By.name("numberOfDependents")).sendKeys("0");
+        driver.findElement(By.id("county_label")).click();
+        driver.findElement(By.id("county_1")).click();
+        driver.findElement(By.id("livingCounty_label")).click();
+        driver.findElement(By.id("livingCounty_1")).click();
+        driver.findElement(By.xpath("//label[@for='wereSelfEmp:1']")).click();
+        
+        driver.findElement(By.xpath("//label[@for='familyBusiness:1']")).click();
+        driver.findElement(By.name("lastOccupation")).clear();
+        driver.findElement(By.name("lastOccupation")).sendKeys("QA");
+        driver.findElement(By.xpath("//label[@for='hasReturnToWrkDate:1']")).click();
+        driver.findElement(By.name("lastDate_-month")).click();
+        driver.findElement(By.name("lastDate_-month")).sendKeys(prop.getProperty("DUAdate"));
+        driver.findElement(By.xpath("//*[@id='j_id_5y:0:j_id_6b']/div[2]/span")).click();
+        driver.findElement(By.name("claimantRequest")).clear();
+        driver.findElement(By.name("claimantRequest")).sendKeys("SSSSSSS");
+        driver.findElement(By.xpath("//label[@for='employedPartTime:1']")).click();
+        driver.findElement(By.xpath("//label[@for='unempCompFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='primInsFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='otherBenFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='lossWageFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='worksCompFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='retOrPenOrAnnAmount:1']")).click();
+        driver.findElement(By.xpath("//label[@for='isBussinessOperateYearAround:0']")).click();
+        driver.findElement(By.xpath("//label[@for='isBussinessResumeOperations:1']")).click();
+        driver.findElement(By.xpath("//label[@for='areYouMinor:1']")).click();
+        driver.findElement(By.xpath("//label[@for='areYouMinor:1']")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//table[3]/tbody/tr[1]/td[1]")).click();
+        driver.findElement(By.xpath("//table[3]/tbody/tr[2]/td[1]")).click();
+        driver.findElement(By.xpath("//table[3]/tbody/tr[3]/td[1]")).click();
+        driver.findElement(By.xpath("//label[@for='availableForWork:0']")).click();
+        driver.findElement(By.xpath("//label[@for='acceptWork:0']")).click();
+        driver.findElement(By.xpath("//span[text()='Next>']")).click();
+        
+        //Prior Tax Year Wage Details
+        
+        driver.findElement(By.xpath("//span[text()='Next>']"));
+        driver.findElement(By.xpath("//a[text()='Add Wage Information']")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.name("empDetails")).clear();
+        driver.findElement(By.name("empDetails")).sendKeys("TCS Noida");
+        driver.findElement(By.name("wageQtr1")).clear();
+        driver.findElement(By.name("wageQtr1")).sendKeys("6000");
+        driver.findElement(By.name("wageQtr2")).clear();
+        driver.findElement(By.name("wageQtr2")).sendKeys("6000");
+        driver.findElement(By.name("wageQtr3")).clear();
+        driver.findElement(By.name("wageQtr3")).sendKeys("6000");
+        driver.findElement(By.name("wageQtr4")).clear();
+        driver.findElement(By.name("wageQtr4")).sendKeys("7000");
+         driver.findElement(By.xpath("//span[text()='Next>']")).click();
+         Thread.sleep(3000);
+        driver.findElement(By.xpath("//span[text()='Next>']")).click();
+        driver.findElement(By.name("accept")).click();
+        driver.findElement(By.name("accept")).sendKeys("3603");
+        driver.findElement(By.name("method__3")).click(); 
+        
+		
+		
+		
+	}
+
+
+}
+
+

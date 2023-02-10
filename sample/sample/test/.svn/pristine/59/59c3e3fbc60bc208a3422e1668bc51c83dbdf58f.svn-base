@@ -1,0 +1,171 @@
+package com.ui.pages;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+public class FileDUAclaimpage extends TestBase
+{
+	Wc_locators wcl;
+	Payments_Locators pl;
+	FutureDatePastDate f;
+	screenShot screen = new screenShot();
+	Connection con;
+	Statement stmt;
+	ResultSet rs;
+
+	public void fileDUAclaimpage(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, int CWE) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		wcl = new Wc_locators();
+		pl = new Payments_Locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		driver.findElement(By.xpath("//span[text()='Unemployment Claim']/../../../td[2]")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.xpath("//span[text()='Disaster Assistance (DUA)']/../../../td[2]")).click();
+		Thread.sleep(4000);
+	    driver.findElement(By.xpath("//span[text()='File DUA Claim']/../../../td[2]")).click();
+	    Thread.sleep(4000);
+	    
+	    driver.findElement(By.xpath("//input[@id='ssnBean_-ssn1']")).click();
+	    driver.findElement(By.xpath("//input[@id='ssnBean_-ssn1']")).sendKeys(prop.getProperty("DUASSN"));
+	    driver.findElement(By.xpath("//input[@id='confirmSsnBean_-ssn1']")).click();
+	    driver.findElement(By.xpath("//input[@id='confirmSsnBean_-ssn1']")).sendKeys(prop.getProperty("DUASSN"));
+        driver.findElement(By.xpath("//*[text()='Next>']")).click();
+        Thread.sleep(4000);
+        
+        driver.findElement(By.xpath("//*[@id='disaster']/div[3]/span")).click();
+        driver.findElement(By.xpath("//*[text()='COVID-19']/../../ul[1]/li[2]")).click();
+        driver.findElement(By.xpath("//*[text()='Next>']")).click();
+        Thread.sleep(4000);
+        
+        driver.findElement(By.id("maritalStatus_label")).click();
+        driver.findElement(By.id("maritalStatus_1")).click();
+        driver.findElement(By.name("numberOfDependents")).clear();
+        driver.findElement(By.name("numberOfDependents")).sendKeys("0");
+        driver.findElement(By.id("county_label")).click();
+        driver.findElement(By.id("county_1")).click();
+        driver.findElement(By.id("livingCounty_label")).click();
+        driver.findElement(By.id("livingCounty_1")).click();
+        driver.findElement(By.xpath("//label[@for='wereSelfEmp:1']")).click();
+        
+        driver.findElement(By.xpath("//label[@for='familyBusiness:1']")).click();
+        driver.findElement(By.name("lastOccupation")).clear();
+        driver.findElement(By.name("lastOccupation")).sendKeys("QA");
+        driver.findElement(By.xpath("//label[@for='hasReturnToWrkDate:1']")).click();
+        driver.findElement(By.name("lastDate_-month")).click();
+        driver.findElement(By.name("lastDate_-month")).sendKeys(prop.getProperty("DUAdate"));
+        driver.findElement(By.xpath("//*[@id='j_id_5y:0:j_id_6b']/div[2]/span")).click();
+        driver.findElement(By.name("claimantRequest")).clear();
+        driver.findElement(By.name("claimantRequest")).sendKeys("SSSSSSS");
+        driver.findElement(By.xpath("//label[@for='employedPartTime:1']")).click();
+        driver.findElement(By.xpath("//label[@for='unempCompFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='primInsFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='otherBenFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='lossWageFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='worksCompFlag:1']")).click();
+        driver.findElement(By.xpath("//label[@for='retOrPenOrAnnAmount:1']")).click();
+        driver.findElement(By.xpath("//label[@for='isBussinessOperateYearAround:0']")).click();
+        driver.findElement(By.xpath("//label[@for='isBussinessResumeOperations:1']")).click();
+        driver.findElement(By.xpath("//label[@for='areYouMinor:1']")).click();
+        driver.findElement(By.xpath("//label[@for='areYouMinor:1']")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//table[3]/tbody/tr[1]/td[1]")).click();
+        driver.findElement(By.xpath("//table[3]/tbody/tr[2]/td[1]")).click();
+        driver.findElement(By.xpath("//table[3]/tbody/tr[3]/td[1]")).click();
+        driver.findElement(By.xpath("//label[@for='availableForWork:0']")).click();
+        driver.findElement(By.xpath("//label[@for='acceptWork:0']")).click();
+        driver.findElement(By.xpath("//span[text()='Next>']")).click();
+        
+        //Prior Tax Year Wage Details
+        
+        driver.findElement(By.xpath("//span[text()='Next>']"));
+        driver.findElement(By.xpath("//a[text()='Add Wage Information']")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.name("empDetails")).clear();
+        driver.findElement(By.name("empDetails")).sendKeys("TCS Noida");
+        driver.findElement(By.name("wageQtr1")).clear();
+        driver.findElement(By.name("wageQtr1")).sendKeys("6000");
+        driver.findElement(By.name("wageQtr2")).clear();
+        driver.findElement(By.name("wageQtr2")).sendKeys("6000");
+        driver.findElement(By.name("wageQtr3")).clear();
+        driver.findElement(By.name("wageQtr3")).sendKeys("6000");
+        driver.findElement(By.name("wageQtr4")).clear();
+        driver.findElement(By.name("wageQtr4")).sendKeys("7000");
+         driver.findElement(By.xpath("//span[text()='Next>']")).click();
+         Thread.sleep(3000);
+        driver.findElement(By.xpath("//span[text()='Next>']")).click();
+        driver.findElement(By.name("accept")).click();
+        driver.findElement(By.name("accept")).sendKeys("8152");
+        driver.findElement(By.name("method__3")).click(); 
+		
+		
+		
+		
+		
+		
+		/*wcl.homeTabs("Weekly Certification").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/a/span[contains(text(), 'Process CWEs')]"))).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/a/span[contains(text(), 'Process Weekly Certification')]"))).click();
+		wcl.ssn1().sendKeys(SSN); Thread.sleep(500);
+		pl.Date("startDate").sendKeys(f.Sunday(CWE)); Thread.sleep(500);
+		pl.Date("endDate").sendKeys(f.Saturday(CWE)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'CWE Details')]")));
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'CWE Details')]//following::span[contains(@class, 'chkbox')][1]"))).click(); Thread.sleep(500);
+		String CWEDate = f.Saturday(CWE).substring(0, 2) + "/" + f.Saturday(CWE).substring(2, 4) + "/" + f.Saturday(CWE).substring(4);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/span[contains(text(), '"+CWEDate+"')]//following::label[contains(text(), '-Select-')]"))).click(); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), 'REDE')]"))).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		List<String> ssn = new ArrayList<String>();
+		int i=-1;
+		Random r = new Random();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con = DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt = con.createStatement();
+		rs = stmt.executeQuery("SELECT * FROM T_WEEKLY_CERTIFICATION_JRNL WHERE MANUAL_PAYMENT_ID IS NOT NULL "
+				+ "AND WEEKLY_CERTIFICATION_ID IN (SELECT WEEKLY_CERTIFICATION_ID FROM T_WEEKLY_CERTIFICATION "
+				+ "WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"'))");
+		while(rs.next())
+		{
+			ssn.add(rs.getString("PROCESSING_REASON"));
+			i++;
+		}
+		con.close();
+		if(i==0)
+			i++;
+		ssn.get(r.nextInt(i));
+		String reason = ssn.get(r.nextInt(i));
+		System.out.println("Processing reason for "+SSN+" : "+reason); */
+	}
+}

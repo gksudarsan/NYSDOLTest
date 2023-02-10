@@ -1,0 +1,447 @@
+package com.ui.utilities;
+
+import java.time.Duration;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+
+import com.ui.base.TestBase;
+
+public class PageHeading extends TestBase {
+
+	static screenShot screen=new screenShot();
+	static Highlighter hl=new Highlighter();
+	static Wait <WebDriver> wait1 = new FluentWait<WebDriver>(driver)
+			.withTimeout(Duration.ofSeconds(20000))
+			.pollingEvery(Duration.ofSeconds(5))
+			.ignoring(org.openqa.selenium.NoSuchElementException.class);
+	
+	public WebElement EmployerNameScreen()
+	{
+		WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[text()='Employer Name']/../../../../thead/tr/th[2]/span[1]"));
+				if (ele.getText().equalsIgnoreCase("Employer Name"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+				
+			}
+		});
+		return text1;
+	}
+	
+	public WebElement EmploymentDetailsScreen()
+	{
+		WebElement text2 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//div[text()='Employment Details']"));
+				if (ele.getText().equalsIgnoreCase("Employment Details"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text2;
+	}
+	public WebElement WCEmploymentDetailsScreen()
+	{
+		WebElement text2 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//div[text()='Employment Details']"));
+				if (ele.getText().equalsIgnoreCase("Employment Details"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text2;
+	}
+	public WebElement WorkSearchSummary()
+	{
+		WebElement text2 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='worksearchsummaryform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("Work Search Summary"))
+				{
+					String st1=ele.getText();
+					System.out.println("Element Found: " +st1);
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text2;
+	}
+	
+	
+	
+	public WebElement WKCAcknowledgementScreen()
+	{
+		WebElement text3 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//div[text()='Weekly Certification and Work Search Record Acknowledgement']"));
+				if (ele.getText().equalsIgnoreCase("Weekly Certification and Work Search Record Acknowledgement"))
+				{
+					
+					String st2=ele.getText();
+					System.out.println("Element Found: " +st2);
+					return ele;
+
+				}
+				else
+				{
+					
+					return null;
+				}
+			}
+		});
+		return text3;
+	}
+	
+	public WebElement buttonToFileWeeklyCertification()
+	{
+		WebElement text4 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='defaultform']/table[1]/tbody/tr[2]/td/div"));
+				if (ele.getText().equalsIgnoreCase("Please click the button to file weekly certification"))
+				{
+					String st2=ele.getText();
+					System.out.println("Element Found: " +st2);
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text4;
+	}
+	public WebElement WeeklyCertificationResponses_Screen()
+	{
+		WebElement text4 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='wcresponsereviewform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("Verify Weekly Certification Responses"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text4;
+	}
+	public WebElement WeeklyCertificationDetails()
+	{
+		WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='ctweeklycertform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("Weekly Certification Details"))
+				{
+					String st2=ele.getText();
+					System.out.println("Element Found: " +st2);
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text1;
+	
+	}
+	public static void EnterFinalEarnings_Screen()
+	{
+	WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+		public WebElement apply(WebDriver driver) {
+			WebElement ele= driver.findElement(By.xpath("//*[@id='j_id57_7j']/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[2]/td[1]/table/tbody/tr[1]/td[2]/a/span"));
+			if (ele.getText().equalsIgnoreCase("Unemployment Claim"))
+			{
+				String st=ele.getText();
+				System.out.println("Element Found " +st);
+				return ele;
+
+			}
+			else
+			{
+				return null;
+			}
+
+		}
+	});
+	//return text1;
+	
+	System.out.println(text1.isDisplayed());
+	}
+	
+	public static void ConfirmationPage(String SimpleClassname)
+	{
+		WebElement text7 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='wcconfirmationform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("Weekly Certification Confirmation"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		System.out.println(text7.isDisplayed());
+		if(text7.isDisplayed())
+		{
+			System.out.println(SimpleClassname+" Passed");
+		}
+		else
+		{
+		System.out.println(SimpleClassname+" Failed");
+		}
+	}
+	
+	public WebElement EnterFinalEarningsScreen()
+	{
+		WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='changereportedearningsform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("Enter Final Earnings"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+
+			}
+		});
+		return text1;
+	}
+	public WebElement EarningVerificationScreen()
+	{
+		WebElement text5 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='changereportedearningsconfirmationform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("Earnings Verification"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text5;
+	}
+	
+	
+	
+	
+	public static void EarningConfirmationScreen(String snapshotPath, String SimpleClassname)
+	{
+		WebElement text6 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='defaultform']/div"));
+				if (ele.getText().equalsIgnoreCase("Change Reported Earnings Confirmation"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		if(text6.isDisplayed())
+		{
+			System.out.println(SimpleClassname+" Passed");
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		else
+		{
+			System.out.println(SimpleClassname+"Failed");
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+	}
+	
+	//Shared work emply pages
+	public WebElement VerifySharedWorkEnterEAN_NumScreen()
+	{
+		WebElement text5 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//div[text()='File Shared Work Weekly Certification Employer - Enter EAN']"));
+				if (ele.getText().equalsIgnoreCase("File Shared Work Weekly Certification Employer - Enter EAN"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text5;
+	}
+	public static void RecordNotFoundMsg(String snapshotPath, String SimpleClassname) throws InterruptedException
+	{
+		WebElement text6 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@name='ctworkshareweeklycertemployerform']/div[3]"));
+				
+				if (ele.getText().equalsIgnoreCase("No records were found that match the search criteria entered."))
+				{
+					
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		if(text6.isDisplayed())
+		{
+			//hl.highlightEle(driver, text6);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		else
+		{
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+	}
+//Shared work Employee screen
+	
+	public WebElement FWC_SharedWork()
+	{
+		WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='ctweeklycertform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("File Weekly Certification - Shared Work"))
+				{
+					String st=ele.getText();
+					System.out.println("Element Found " +st);
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+
+			}
+		});
+		return text1;
+	}
+	public WebElement Transportation_Questionnaire()
+	{
+		WebElement text3 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//*[@id='qeform']/div[2]"));
+				if (ele.getText().equalsIgnoreCase("Transportation Questionnaire"))
+				{
+					String st2=ele.getText();
+					System.out.println("Element Found: " +st2);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text3;
+	}
+	
+	//===================================MonetaryPage
+	public WebElement MonetaryPage()
+	{
+		WebElement text3 = wait1.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement ele= driver.findElement(By.xpath("//div[text()='Monetary']"));
+				if (ele.getText().equalsIgnoreCase("Monetary"))
+				{
+					String st2=ele.getText();
+					System.out.println("Element Found: " +st2);
+
+					return ele;
+
+				}
+				else
+				{
+					return null;
+				}
+			}
+		});
+		return text3;
+	}
+	
+	
+	
+}

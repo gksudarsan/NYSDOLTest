@@ -1,0 +1,168 @@
+package com.Payments;
+
+/** @author mjape
+
+  Payment Batches Pending */
+
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_56793 extends TestBase
+{
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	UpdateIssueDates uid;
+	Wc_locators wcl = new Wc_locators();
+	WeeklyCert w;
+	ClaimSummary c;
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "", ed, cd;
+	int CWE = -7;
+	TC_56793 ClassObject;
+	CreateDirectory CD;
+	/*String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B, T_CLAIM_INFORMATION D WHERE "
+			+ "A.CLAIMANT_ID = B.CLAIMANT_ID AND B.CLAIM_ID = D.CLAIM_ID AND B.ENTITLEMENT_TYPE = 'REG' AND D.MBA_BALANCE <> '0' "
+			+ "AND B.CLAIM_ID IN (SELECT CLAIM_ID FROM T_OVERPAYMENT WHERE OVERPAYMENT_BALANCE > '1' AND STATUS = 'ACTV') "
+			+ "AND A.CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_WEEKLY_CERTIFICATION WHERE CERTIFICATION_DATE < '";*/
+
+	//Properties prop;
+	public TC_56793()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException
+	{
+		//Searching for the SSN in the database...
+		q = new QuerySearch();
+		f = new FutureDatePastDate();
+		ed = f.Sunday(-30);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		cd = f.Sunday(0);
+		cd = cd.substring(4, 8) + "-" + cd.substring(0, 2) + "-" + cd.substring(2, 4);
+		List<String> claimID = q.multipleSSN("SELECT CLAIM_ID FROM T_OVERPAYMENT WHERE STATUS = 'ACTV' AND OVERPAYMENT_BALANCE > '1' AND "
+				+ "ESTABLISHMENT_DATE >= '" + ed + "'", "CLAIM_ID");
+		int i = 0;
+		do
+		{
+			try
+			{
+				String claimantID = q.Data("SELECT CLAIMANT_ID FROM T_CLAIM WHERE EFFECTIVE_DATE >= '"+ed+"' AND "
+						+ "ENTITLEMENT_TYPE = 'REG' AND WBA > '1' AND MBA > '1' AND CLAIM_ID = '"+claimID.get(i)+"'", "CLAIMANT_ID");
+
+				String lastCWE = q.Data("SELECT CWE FROM T_WEEKLY_CERTIFICATION WHERE CLAIMANT_ID = '"+claimantID+"' ORDER BY CWE DESC", 
+						"CWE");
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date d1 = sdf.parse(lastCWE);
+				Date d2 = sdf.parse(f.Saturday(CWE).substring(4, 8) + "-" + f.Saturday(CWE).substring(0, 2) + "-" + f.Saturday(CWE).substring(2, 4));
+				
+				if(d1.compareTo(d2) < 0)
+					SSN = q.Data("SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID = '"+claimantID+"'", "SSN");
+				else
+					lastCWE = q.Data("SELECT CWE FROM T_WEEKLY_CERTIFICATION WHERE CLAIMANT_ID = '"+claimantID+"' ORDER BY CWE DESC", 
+							"lastCWE");
+			}
+			catch(Exception e)
+			{
+				i++;
+			}
+		}
+		while(SSN.isEmpty());
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_56793();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Processing Reason Weekly Certification: FIT Deduction with Offset")
+	public void Testing56793() throws InterruptedException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Update Future Issue Dates...
+		uid= new UpdateIssueDates();
+		uid.updateFutureIssueStartDate(driver, snapshotPath, SimpleClassname, SSN, CWE);
+
+		//Weekly Cert By SSN/CWE Process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		w = new WeeklyCert();
+		w.fileWeeklyCertification56793(driver, snapshotPath, SimpleClassname, SSN, CWE);
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(text(), 'Processed Weekly Certifications')]"))).click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		f = new FutureDatePastDate();
+		String cweDate = f.Saturday(CWE).substring(0, 2) + "/" + f.Saturday(CWE).substring(2, 4) + "/" + f.Saturday(CWE).substring(4);
+		System.out.println(cweDate);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(text(), '"+cweDate+"')]//following::a[1]"))).click(); Thread.sleep(5000);
+		Highlighter h = new Highlighter();
+		h.highlight(driver, "//td[text() = 'CT Offset']");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

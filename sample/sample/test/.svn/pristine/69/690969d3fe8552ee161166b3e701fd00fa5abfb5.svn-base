@@ -1,0 +1,148 @@
+package com.Payments;
+
+/** @author mjape 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_58915 extends TestBase
+{
+	int CWE = -7;
+
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	Wc_locators wcl = new Wc_locators();
+	WeeklyCert w;
+	ClaimSummary c;
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "", a, b, d;
+	TC_58915 ClassObject;
+	CreateDirectory CD;
+	String query = "";
+
+	//Properties prop;
+	public TC_58915()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		a = f.Sunday(-60);
+		a = a.substring(4) + "-" + a.substring(0, 2) + "-" + a.substring(2, 4);
+		b = f.Sunday(CWE);
+		b = b.substring(4) + "-" + b.substring(0, 2) + "-" + b.substring(2, 4);
+		d = f.Saturday(CWE);
+		d = d.substring(4) + "-" + d.substring(0, 2) + "-" + d.substring(2, 4);
+
+		query = "SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_WEEKLY_CERTIFICATION WHERE "
+				+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIM WHERE STATUS = 'ACTV' AND ENTITLEMENT_TYPE = 'REG' AND WBA <> '0' "
+				+ "AND MBA <> '0' AND EFFECTIVE_DATE > '"+a+"' AND EFFECTIVE_DATE < '"+d+"' AND CLAIM_ID IN (SELECT "
+				+ "CLAIM_ID FROM T_ISSUE WHERE ISSUE_STATUS <> 'DECD' AND DETECTION_DATE > '"+a+"' AND "
+				+ "DETECTION_DATE < '"+b+"' AND ISSUE_END_DATE > '"+b+"' ORDER BY DETECTION_DATE ASC) ORDER BY EFFECTIVE_DATE ASC) AND "
+				+ "CERTIFICATION_DATE > '"+a+"' AND CERTIFICATION_DATE < '"+b+"' ORDER BY CERTIFICATION_DATE ASC)";
+
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_58915();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Process a claim week for a claimant with an Issue Source of Claims-Intake.")
+	public void Testing58915() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Weekly Cert By SSN/CWE Process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		w = new WeeklyCert();
+		w.fileWeeklyCertificationPension(driver, snapshotPath, SimpleClassname, SSN, CWE, "200000", "1000");
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Pending Weekly Certification(s)");
+
+		//Run Payments Batch...		
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob Pay010DetermineWeeklyCertType benefits_daily_515pm;"
+				+ "./qclient.sh runJob Pay040ProcessedWeeklyCert benefits_daily_515pm;./qclient.sh runJob Pay050ProvidePayment benefits_daily_515pm");
+		Thread.sleep(5000);
+		System.out.println("Waiting for Pay010DetermineWeeklyCertType, Pay040ProcessedWeeklyCert, Pay050ProvidePayment to run...");
+		Thread.sleep(5000);
+		System.out.println("Pay010DetermineWeeklyCertType, Pay040ProcessedWeeklyCert, Pay050ProvidePayment Successful...");
+		Thread.sleep(1000);
+		System.out.println("	");
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		Highlighter h = new Highlighter();
+		h.highlight(driver, "//*[contains(text(), 'Issue on File')]");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

@@ -1,0 +1,537 @@
+package com.ui.pages;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ibm.db2.jcc.t4.f;
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.RandomGenerator;
+import com.ui.utilities.screenShot;
+
+
+public class Add_dependent extends TestBase {
+	LoginLogoutPage lp;
+	FileWeeklyCertification fwc;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static Add_dependent ClassObject;
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+	static Payments_Locators pml;
+	static FutureDatePastDate f = new FutureDatePastDate();
+
+	public static void dependent_add (WebDriver driver ,String snapshotPath, String SimpleClassname ,String SSN,int CWE) throws InterruptedException
+	{
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl = new Wc_locators();
+		pml=new Payments_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		Thread.sleep(2000);
+		pml.Benefit_Maintenance().click();
+		Thread.sleep(1000);
+		pml.Benefit_Maintenance().click();
+		Thread.sleep(2000);
+		pml.update_depenent().click();
+		Thread.sleep(5000);
+		pml.enter_ssn_adddependent().sendKeys(SSN);
+		Thread.sleep(2000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		pml.select_dependency().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		pml.add_any_additional_dependen_yes().click();
+		Thread.sleep(1000);
+		pml.additional_dependents().click();
+		Thread.sleep(1000);
+		pml.additional_dependents_op2().click();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		pml.spouce_first_name().sendKeys("anjolia");
+		Thread.sleep(1000);
+		pml.spouce_last_name().sendKeys("tangie");
+		Thread.sleep(1000);
+		pml.spouce_ssn().sendKeys(prop.getProperty("ssn_depedent"));
+		Thread.sleep(1000);
+		pml.spouce_dob_mm().click();Thread.sleep(1000);
+		pml.spouce_dob_mm().sendKeys("02");Thread.sleep(1000);
+
+
+		pml.spouce_dob_dd().sendKeys("02");Thread.sleep(1000);
+
+
+		pml.spouce_dob_yy().sendKeys("1985");Thread.sleep(1000);
+
+		pml.Is_your_spouse_6().click();Thread.sleep(2000);
+		pml.Does_your_spouse_7().click();Thread.sleep(1000);
+		pml.is_Spouse_Unemployed8().click();Thread.sleep(1000);
+		pml.is_Spouse_Pregnant9().click();Thread.sleep(1000);
+		pml.Spouse_has_Disability10().click();Thread.sleep(1000);
+
+		pml.marriageDate_month().click();Thread.sleep(1000);
+		pml.marriageDate_month().sendKeys("02");Thread.sleep(1000);
+		pml.marriageDate_day().sendKeys("02");Thread.sleep(1000);
+		pml.marriageDate_year().sendKeys("2015");Thread.sleep(1000);
+
+		pml.spouseEffectiveDate_month().click();Thread.sleep(2000);
+		pml.spouseEffectiveDate_month().sendKeys(f.Sunday(CWE));Thread.sleep(1000);
+
+
+		//pml.spouseEffectiveDate_day().sendKeys("19");Thread.sleep(1000);
+
+
+		//pml.spouseEffectiveDate_year().sendKeys("2020");Thread.sleep(1000);
+
+
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+
+
+
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		String status = driver.findElement(By.xpath("//label[text()='Approval Status']//following::label[1]")).getText();
+		System.out.println("status = "+status);
+
+		if(!status.equals("Approved"))
+		{
+			System.out.println("entered into loop");
+			pml.isDeterminationResponse_no().click();Thread.sleep(1000);
+			driver.findElement(By.xpath("//textarea[@name='remarks']")).sendKeys("please approve");Thread.sleep(1000);
+			wcl.clickNext().click();
+			Thread.sleep(3000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		wcl.clickNext().click();
+		Thread.sleep(6000);
+
+		pml.addAnyDependent().click(); Thread.sleep(1000);
+		pml.dependent_two().click(); Thread.sleep(1000);
+		pml.dependent_child().click(); Thread.sleep(1000);
+
+		wcl.clickNext().click(); Thread.sleep(5000);
+
+
+		pml.child_first_name().sendKeys("roshe");Thread.sleep(1000);
+		pml.child_last_name().sendKeys("tailer");Thread.sleep(1000);
+		pml.childSSN_ssn1().sendKeys(prop.getProperty("ssn_depedentchild"));Thread.sleep(2000);
+		pml.childDateOfBirth_month().click();Thread.sleep(1000);
+		pml.childDateOfBirth_month().sendKeys("02");Thread.sleep(1000);
+		pml.childDateOfBirth_day().sendKeys("02");Thread.sleep(1000);
+		pml.childDateOfBirth_year().sendKeys("2010");Thread.sleep(1000);
+
+
+		pml.householdCount().sendKeys("4");
+		pml.isChildSameHousehold().click();Thread.sleep(1000);
+		pml.hasDisability().click();Thread.sleep(1000);
+		pml.claimantWeeklyIncome().sendKeys("01");Thread.sleep(1000);
+		pml.householdCount().click();Thread.sleep(1000);
+		pml.spouseWeeklyIncome().sendKeys("01");Thread.sleep(1000);
+		pml.isReceivingChildSupport().click();Thread.sleep(1000);
+
+		pml.child_effectiveDate_month().click();Thread.sleep(2000);
+		pml.child_effectiveDate_month().sendKeys(f.Sunday(CWE));Thread.sleep(1000);
+
+
+		//pml.child_effectiveDate_day().sendKeys("19");Thread.sleep(1000);
+
+
+		//pml.child_effectiveDate_year().sendKeys("2020");Thread.sleep(1000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.clickNext().click(); Thread.sleep(10000);
+
+		String status_child = driver.findElement(By.xpath("//label[text()='Approval Status']//following::label[1]")).getText();
+		System.out.println("status_child = "+status_child);
+
+		if(!status_child.equals("Approved"))
+		{
+			pml.isDeterminationResponse_no().click();Thread.sleep(1000);
+			driver.findElement(By.xpath("//textarea[@name='remarks']")).sendKeys("please approve");Thread.sleep(1000);
+			wcl.clickNext().click();
+			Thread.sleep(3000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		System.out.println("dependent added successfully");Thread.sleep(2000);
+		wcl.clickNext().click(); Thread.sleep(15000);
+
+		pml.addAnyDependent_aftertwo().click();  Thread.sleep(2000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		System.out.println("Dependent(s) update completed."); Thread.sleep(3000);
+		pml.Home().click();
+
+		if(!status_child.equals("Approved"))
+		{
+			Thread.sleep(2000);
+			Reassign_WorkItem.resolveWI( driver,  snapshotPath,  SimpleClassname,  SSN, "Approve/Disapprove Dependents");
+			Reassign_WorkItem.resolve_dependentWI( driver,  snapshotPath,  SimpleClassname);
+
+		}
+
+
+
+
+
+
+	}
+	public static void dependent_add_56673(WebDriver driver ,String snapshotPath, String SimpleClassname ,String SSN) throws InterruptedException
+	{
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl = new Wc_locators();
+		pml=new Payments_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		Thread.sleep(2000);
+		pml.Benefit_Maintenance().click();
+		Thread.sleep(1000);
+		pml.Benefit_Maintenance().click();
+		Thread.sleep(2000);
+		pml.update_depenent().click();
+		Thread.sleep(5000);
+		pml.enter_ssn_adddependent().sendKeys(SSN);
+		Thread.sleep(2000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		pml.select_dependency().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		pml.add_any_additional_dependen_yes().click();
+		Thread.sleep(1000);
+		pml.additional_dependents().click();
+		Thread.sleep(1000);
+		pml.additional_dependents_op2().click();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		pml.spouce_first_name().sendKeys("anjolia");
+		Thread.sleep(1000);
+		pml.spouce_last_name().sendKeys("tangie");
+		Thread.sleep(1000);
+		pml.spouce_ssn().sendKeys(prop.getProperty("56673_ssn_spouse"));
+		Thread.sleep(1000);
+		pml.spouce_dob_mm().click();Thread.sleep(1000);
+		pml.spouce_dob_mm().sendKeys("02");Thread.sleep(1000);
+
+
+		pml.spouce_dob_dd().sendKeys("02");Thread.sleep(1000);
+
+
+		pml.spouce_dob_yy().sendKeys("1985");Thread.sleep(1000);
+
+		pml.Is_your_spouse_6().click();Thread.sleep(2000);
+		pml.Does_your_spouse_7().click();Thread.sleep(1000);
+		pml.is_Spouse_Unemployed8().click();Thread.sleep(1000);
+		pml.is_Spouse_Pregnant9().click();Thread.sleep(1000);
+		pml.Spouse_has_Disability10().click();Thread.sleep(1000);
+
+		pml.marriageDate_month().click();Thread.sleep(1000);
+		pml.marriageDate_month().sendKeys("02");Thread.sleep(1000);
+		pml.marriageDate_day().sendKeys("02");Thread.sleep(1000);
+		pml.marriageDate_year().sendKeys("2015");Thread.sleep(1000);
+
+		pml.spouseEffectiveDate_month().click();Thread.sleep(2000);
+		pml.spouseEffectiveDate_month().sendKeys("06142020");Thread.sleep(1000);
+
+
+		//pml.spouseEffectiveDate_day().sendKeys("14");Thread.sleep(1000);
+
+
+		//pml.spouseEffectiveDate_year().sendKeys("2020");Thread.sleep(1000);
+
+
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+
+		Thread.sleep(15000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+
+
+		// pml.Clicknexttoadd_dep().click();
+		wcl.clickNext().click();
+
+		Thread.sleep(6000);
+
+
+
+
+		pml.addAnyDependent().click(); Thread.sleep(1000);
+		pml.dependent_two().click(); Thread.sleep(1000);
+		pml.dependent_child().click(); Thread.sleep(1000);
+
+		wcl.clickNext().click(); Thread.sleep(5000);
+
+
+		pml.child_first_name().sendKeys("roshe");Thread.sleep(1000);
+		pml.child_last_name().sendKeys("tailer");Thread.sleep(1000);
+		pml.childSSN_ssn1().sendKeys(prop.getProperty("56673_ssn_child"));Thread.sleep(2000);
+		pml.childDateOfBirth_month().click();Thread.sleep(1000);
+		pml.childDateOfBirth_month().sendKeys("02");Thread.sleep(1000);
+		pml.childDateOfBirth_day().sendKeys("02");Thread.sleep(1000);
+		pml.childDateOfBirth_year().sendKeys("2010");Thread.sleep(1000);
+
+
+		pml.householdCount().sendKeys("4");
+		pml.isChildSameHousehold().click();Thread.sleep(1000);
+		pml.hasDisability().click();Thread.sleep(1000);
+		pml.claimantWeeklyIncome().sendKeys("01");Thread.sleep(1000);
+		pml.householdCount().click();Thread.sleep(1000);
+		pml.spouseWeeklyIncome().sendKeys("01");Thread.sleep(1000);
+		pml.isReceivingChildSupport().click();Thread.sleep(1000);
+
+		pml.child_effectiveDate_month().click();Thread.sleep(2000);
+		pml.child_effectiveDate_month().sendKeys("06");Thread.sleep(1000);
+
+
+		pml.child_effectiveDate_day().sendKeys("14");Thread.sleep(1000);
+
+
+		pml.child_effectiveDate_year().sendKeys("2020");Thread.sleep(1000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.clickNext().click(); Thread.sleep(10000);
+
+		pml.isDeterminationResponse_NO().click();
+
+		pml.remarksafter_deter().sendKeys("please approve");
+		Thread.sleep(3000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.clickNext().click(); Thread.sleep(15000);
+
+		String status =driver.findElement(By.xpath("//label[text()='Approval Status']//following::label[1]")).getText();
+
+		//assertEquals("Pending", status);
+
+		System.out.println("dependet status is =" +status);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.clickNext().click(); Thread.sleep(10000);
+		System.out.println("dependent added successfully");Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+
+		pml.addAnyDependent_aftertwo_No().click();  Thread.sleep(2000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click(); Thread.sleep(5000);
+
+		System.out.println("Dependent(s) update completed."); Thread.sleep(3000);
+
+		pml.Home().click();
+
+	}
+
+
+	public static void dependent_add_56673_seconddependent(WebDriver driver ,String snapshotPath, String SimpleClassname ,String SSN) throws InterruptedException
+	{
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl = new Wc_locators();
+		pml=new Payments_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		Thread.sleep(2000);
+		pml.Benefit_Maintenance().click();
+		Thread.sleep(1000);
+		pml.Benefit_Maintenance().click();
+		Thread.sleep(2000);
+		pml.update_depenent().click();
+		Thread.sleep(5000);
+		pml.enter_ssn_adddependent().sendKeys(SSN);
+		Thread.sleep(2000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		pml.select_dependency().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+
+
+
+
+
+
+
+
+
+		pml.addAnyDependent().click(); Thread.sleep(1000);
+		pml.dependent_two().click(); Thread.sleep(1000);
+		pml.dependent_child().click();Thread.sleep(1000);
+		//pml.dependent_child_second().click(); Thread.sleep(1000);
+
+		wcl.clickNext().click(); Thread.sleep(5000);
+
+
+		pml.child_first_name().sendKeys("roshe");Thread.sleep(1000);
+		pml.child_last_name().sendKeys("tailer");Thread.sleep(1000);
+		pml.childSSN_ssn1().sendKeys(prop.getProperty("56673_ssn_child"));Thread.sleep(2000);
+		pml.childDateOfBirth_month().click();Thread.sleep(1000);
+		pml.childDateOfBirth_month().sendKeys("02");Thread.sleep(1000);
+		pml.childDateOfBirth_day().sendKeys("02");Thread.sleep(1000);
+		pml.childDateOfBirth_year().sendKeys("2010");Thread.sleep(1000);
+
+
+		pml.householdCount().sendKeys("4");
+		pml.isChildSameHousehold().click();Thread.sleep(1000);
+		pml.hasDisability().click();Thread.sleep(1000);
+		pml.claimantWeeklyIncome().sendKeys("01");Thread.sleep(1000);
+		pml.householdCount().click();Thread.sleep(1000);
+		pml.spouseWeeklyIncome().sendKeys("01");Thread.sleep(1000);
+		pml.isReceivingChildSupport().click();Thread.sleep(1000);
+
+		pml.child_effectiveDate_month().click();Thread.sleep(2000);
+		pml.child_effectiveDate_month().sendKeys("06");Thread.sleep(1000);
+
+
+		pml.child_effectiveDate_day().sendKeys("14");Thread.sleep(1000);
+
+
+		pml.child_effectiveDate_year().sendKeys("2020");Thread.sleep(1000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.clickNext().click(); Thread.sleep(10000);
+
+		pml.isDeterminationResponse_NO().click();
+
+		pml.remarksafter_deter().sendKeys("please approve");
+		Thread.sleep(3000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.clickNext().click(); Thread.sleep(15000);
+
+		String status =driver.findElement(By.xpath("//label[text()='Approval Status']//following::label[1]")).getText();
+
+		//assertEquals("Pending", status);
+
+		System.out.println("dependet status is =" +status);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.clickNext().click(); Thread.sleep(10000);
+		System.out.println("dependent added successfully");Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+
+		pml.addAnyDependent_aftertwo_No().click();  Thread.sleep(2000);
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click(); Thread.sleep(5000);
+
+		System.out.println("Dependent(s) update completed."); Thread.sleep(3000);
+
+		pml.Home().click();
+	}
+
+	public static void addspouceasdepedent(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		pml=new Payments_Locators();
+		RandomGenerator rg = new RandomGenerator();
+		Random r = new Random();
+		FutureDatePastDate f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		pml.Benefit_Maintenance().click();
+		Thread.sleep(1000);
+		pml.Benefit_Maintenance().click();
+		Thread.sleep(2000);
+		pml.update_depenent().click();
+		Thread.sleep(5000);
+		pml.enter_ssn_adddependent().sendKeys(SSN);
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		pml.select_dependency().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		pml.add_any_additional_dependen_yes().click();
+		Thread.sleep(1000);
+		pml.additional_dependents().click();
+		Thread.sleep(1000);
+		pml.additional_dependents_op2().click();
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		pml.spouce_first_name().sendKeys(rg.randomStringGenerator(5));
+		Thread.sleep(1000);
+		pml.spouce_last_name().sendKeys(rg.randomStringGenerator(5));
+		Thread.sleep(1000);
+		String arr[] = new String[]{"001364997", "001365096", "001365621", "001365638", "001365840", "001365918", "001366921", "001367112", "001329110", "001329611"};
+		pml.spouce_ssn().sendKeys((arr[r.nextInt(10)]));
+		Thread.sleep(1000);
+		pml.spouce_dob_mm().click();Thread.sleep(1000);
+		pml.spouce_dob_mm().sendKeys(f.d(-10950));Thread.sleep(1000);
+		/*pml.spouce_dob_dd().click();Thread.sleep(1000);
+		pml.spouce_dob_dd().sendKeys(String.valueOf(r.nextInt(28)+1));Thread.sleep(1000);
+		pml.spouce_dob_yy().click();Thread.sleep(1000);
+		pml.spouce_dob_yy().sendKeys(String.valueOf(r.nextInt(10)+1980));Thread.sleep(1000);*/
+		pml.Is_your_spouse_6().click();Thread.sleep(2000);
+		pml.Does_your_spouse_7().click();Thread.sleep(1000);
+		pml.is_Spouse_Unemployed8().click();Thread.sleep(1000);
+		pml.is_Spouse_Pregnant9().click();Thread.sleep(1000);
+		pml.Spouse_has_Disability10().click();Thread.sleep(1000);
+		pml.marriageDate_month().click();Thread.sleep(1000);
+		pml.marriageDate_month().sendKeys(f.d(-1500));Thread.sleep(1000);
+		/*pml.marriageDate_day().click();Thread.sleep(1000);
+		pml.marriageDate_day().sendKeys(String.valueOf(r.nextInt(28)+1));Thread.sleep(1000);
+		pml.marriageDate_year().click();Thread.sleep(1000);
+		pml.marriageDate_year().sendKeys(String.valueOf(r.nextInt(10)+2005));Thread.sleep(1000);*/
+		pml.spouseEffectiveDate_month().click();Thread.sleep(2000);
+		pml.spouseEffectiveDate_month().sendKeys(String.valueOf(f.Sunday(-7)));Thread.sleep(1000);
+		/*pml.spouseEffectiveDate_day().sendKeys(String.valueOf(r.nextInt(28)+1));Thread.sleep(1000);
+		pml.spouseEffectiveDate_year().sendKeys("2019");Thread.sleep(1000);*/
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(15000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(15000);
+		//pml.addAnyDependent_aftertwo().click();Thread.sleep(3000);
+		//wcl.clickNext().click();
+		//Thread.sleep(8000);
+		wcl.clickHome();
+	}
+}

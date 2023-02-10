@@ -1,0 +1,58 @@
+package com.ui.utilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.io.FileUtils;
+import org.testng.annotations.Test;
+
+public class CreateDirectory {
+
+	@Test
+	public String artifactsPath(String className)
+	{
+		Date date =new Date();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
+		String time=sdf.format(date);
+		String dirname="..//UI_Project//Screenshots//"+className+"_"+time;
+		File file =new File(dirname);
+		if(!file.exists())
+		{
+			if(file.mkdir())
+			{
+				System.out.println("Directory is created");
+			}
+			else
+			{
+				System.out.println("Failed to create Directory");
+			}
+		}
+		return dirname;
+	}
+	
+	public String createFolder(String className) throws IOException
+	{
+		String dirname="..//UI_Project//Screenshots//"+className;
+		File file =new File(dirname);
+		if(!file.exists())
+		{
+			file.mkdir();
+		}
+		else
+		{
+			FileUtils.forceDelete(new File(dirname));
+			if(!file.exists())
+			{
+				file.mkdir();
+			}
+			
+			
+		}
+		return dirname;
+	}
+		
+	
+}

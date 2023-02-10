@@ -1,0 +1,21 @@
+
+applicationUrl=http://reemployctst.mdes.ms.gov:9082/accessct/faces/login/login_local.xhtml
+quickAccessLink=http://reemployctst.mdes.ms.gov:9082/accessct/faces/nmon/employerquicklaunch.xhtml
+username=nvnegi
+ReportedEarningsSpecialist=opreportearnsp
+password=Automation@@1
+superuser=sttestingcsr
+superuserpassword=Msui@#12345
+ssn1=123457310
+ssn2=56
+ssn3=7019
+tc55737ssn=7112
+tc55832ssn=001012115
+tc54518ssn=001012115
+tc55707ssn=047883436
+tc55707pn=81356
+paymentssn =040962482
+
+paymentdate =06042020
+DUASSN=581858903
+DUAdate=01012020

@@ -1,0 +1,177 @@
+/* @author vsingh  */
+
+package com.Payments;
+
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+
+import com.ui.pages.Add_Child_support;
+
+import com.ui.pages.ClaimSummary;
+
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.SearchWorkItem;
+import com.ui.pages.UpdateClaimBalance;
+import com.ui.pages.weekly_cert_pension;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+
+
+public class TC_56575 extends TestBase
+{
+
+	static LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_56575 ClassObject;
+
+
+	FutureDatePastDate f;
+	QuerySearch q;
+	static  CreateDirectory CD;
+	static ClaimSummary cs;
+	static UpdateClaimBalance ucb;
+	static Payments_Locators pml;
+	String SSN = "123458222", ed;
+	int CWE = -7;
+	String courtamount ="120";
+
+
+	String query = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'REG' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+
+	//Properties prop;
+	public TC_56575()
+	{
+		super();
+	}
+
+
+
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException, ClassNotFoundException, SQLException
+
+	{
+		f = new FutureDatePastDate();
+		ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') and c.effective_date = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+
+
+		ClassObject =new TC_56575();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username_report"), prop.getProperty("password_report"));
+		System.out.println("login logout completed");
+
+	}
+	@Test(description ="TC_56575" )
+	public void TC_56575_PAYMENT() throws InterruptedException, ParseException
+	{
+		System.out.println("@test initiated");
+		cs= new ClaimSummary();
+		pml= new Payments_Locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		Thread.sleep(2000);
+		String SSN1= SSN.substring(5);
+
+
+		Add_Child_support.Add_child_support_courtOrder(driver, snapshotPath, SimpleClassname,SSN,courtamount);
+		Thread.sleep(2000);
+		System.out.println("child support added successfully and court order has been created");
+		System.out.println("Ready to file weekly certification");
+
+		weekly_cert_pension.SubmitWeeklyCertification_SSN(driver,snapshotPath,SimpleClassname,SSN,SSN1);
+		weekly_cert_pension.WCF_DeatilsForNonPartialEmpolyment(driver, snapshotPath, SimpleClassname,SSN1);
+		System.out.println("wc filed successfully");
+
+		Thread.sleep(2000);
+		System.out.println("Successfully filled-  weekly certification");
+
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob Pay010DetermineWeeklyCertType benefits_daily_515pm;"
+				+ "./qclient.sh runJob Pay040ProcessedWeeklyCert benefits_daily_515pm;./qclient.sh runJob Pay050ProvidePayment benefits_daily_515pm");
+		Thread.sleep(10000);
+
+		String ID = "";
+		for	(int i=0;i<10;i++)
+		{
+			if (ID.isEmpty())
+			{
+				q = new QuerySearch();
+				System.out.println("i= "+i+" Waiting for Pay010DetermineWeeklyCertType, Pay040ProcessedWeeklyCert, Pay050ProvidePayment to run...");
+				Thread.sleep(1000*30);
+				try
+				{
+					ID = q.getClaimantPaymentID("SELECT CLAIMANT_PAYMENT_ID FROM T_CLAIMANT_PAYMENT WHERE "
+							+ "CREATED_BY = 'Pay050ProvidePayment' AND DATE(CREATED_TS) = CURRENT_DATE AND CLAIMANT_ID IN (SELECT "
+							+ "CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+					System.out.println("CLAIMANT_PAYMENT_ID : "+ID);
+				}
+				catch(Exception e)
+				{
+					System.out.println("Record not found...");
+				}		
+			}
+			else {
+				System.out.println("Pay010DetermineWeeklyCertType, Pay040ProcessedWeeklyCert, Pay050ProvidePayment Successful...");
+			}	
+		}
+		System.out.println("exit from loop..................");
+		Assert.assertFalse(ID.isEmpty(), "Payment ID is null......");
+
+
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+	}
+
+	@AfterTest
+	public void close_browser()
+	{
+		driver.close();
+		driver.quit();
+		System.out.println("Testcase executed and browser closed");
+	}
+}

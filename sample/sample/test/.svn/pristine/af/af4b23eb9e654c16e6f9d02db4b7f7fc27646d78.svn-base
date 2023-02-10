@@ -1,0 +1,90 @@
+package com.ui.pages;
+
+/** @author mjape */
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+public class ManageWorkSearchWaiver extends TestBase
+{
+	static Wc_locators wcl;
+	static screenShot screen=new screenShot();
+	static FutureDatePastDate date;
+	
+	public void manageWorkSearchWaiver(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String selection, int CWE) throws InterruptedException
+	{
+		date = new FutureDatePastDate();
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		wcl.homeTabs("Weekly Certification").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Manage Work Search Waiver')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.addWaiver().click();
+		Thread.sleep(1000);
+		wcl.enterStartDate().sendKeys(date.Sunday(CWE));
+		wcl.enterEndDate().sendKeys(date.Saturday(CWE+7));
+		wcl.addReasonForWaiver(selection);
+		Thread.sleep(1000);
+		if(selection.equalsIgnoreCase("Work Search Waived - Other"))
+			wcl.freeTextBox();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		wcl.HomeButton().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	public void updateWorkSearchWaiver(WebDriver driver, String snapshotPath, String SimpleClassname, 
+			String SSN, String currentwaiver, String newwaiver) throws InterruptedException
+	{
+		date = new FutureDatePastDate();
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		wcl.homeTabs("Weekly Certification").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Manage Work Search Waiver')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		wcl.checkWaiver(currentwaiver).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		wcl.enterStartDate().sendKeys(date.Sunday(-21));
+		wcl.enterEndDate().sendKeys(date.Saturday(21));
+		wcl.addReasonForWaiver(newwaiver);
+		Thread.sleep(1000);
+		if(newwaiver.equalsIgnoreCase("Work Search Waived - Other"))
+			wcl.freeTextBox();
+		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		wcl.HomeButton().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

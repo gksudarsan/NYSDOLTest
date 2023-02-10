@@ -1,0 +1,282 @@
+package com.ClaimsIntake;
+
+/** @author nnegi 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.locators.claimsIntake;
+import com.ui.pages.AddUpdateTRATraining;
+import com.ui.pages.AddUpdateTRAWaiver;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.EnterTAATimesheet;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.Reassign_WorkItem;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.RandomGenerator;
+import com.ui.utilities.screenShot;
+
+public class TC_49646 extends TestBase
+{
+	//int CWE = -35;
+	
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	Wc_locators wcl = new Wc_locators();
+	ClaimSummary c;
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN, ed;
+	TC_49646 ClassObject;
+	AddUpdateTRAWaiver tw;
+	PageHeading ph;
+	CreateDirectory CD;
+	String query = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'REG' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+	int CWE=-7;
+
+	//Properties prop;
+	public TC_49646()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		f = new FutureDatePastDate();
+		ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') AND c.EFFECTIVE_DATE = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN); 
+
+		ClassObject =new TC_49646();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Benefits Maintenance Payment Options Change Two Changes Same Day")
+	public void Test_TC_49250() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		c=new ClaimSummary();
+		claimsIntake ci=new claimsIntake();
+		lp=new LoginLogoutPage();
+		ph=new PageHeading();
+		Highlighter h=new Highlighter();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Claimant SSN");
+		Thread.sleep(1500);
+		ci.ClaimantDetailsLink().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		h.highlight(driver, "//td[text()='Payment Mode']");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2500);
+		wcl.clickHome();
+		
+		String PaymentMode1=q.PaymentMode("select PAYMENT_MODE from T_CLAIMANT A, T_CLAIMANT_PAYMENT_OPTION B where "
+				+ "A.CLAIMANT_ID=B.CLAIMANT_ID AND SSN='"+SSN+"'");
+		System.out.println(PaymentMode1);
+		
+		
+		
+		Thread.sleep(1000);
+		wcl.homeTabs("Benefit Maintenance").click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Update Claimant Profile").click();
+		Thread.sleep(2000);
+		wcl.homeTabs("Payment Options").click();
+		Thread.sleep(2000);
+		ci.SearchSSN().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		ph.SSN_Screen();
+		Thread.sleep(1000);
+		ci.ClickRecord().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ph.PaymentInfo_screen();
+		Thread.sleep(1500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		if(PaymentMode1.equals("D"))
+		{
+			System.out.println("Payment mode is Direct Deposit" );
+		ci.checkMainQuestion("Select your preferred", "Debit Card").click();
+		Thread.sleep(3000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		ci.InputSSN().sendKeys(SSN.substring(5));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		else if(PaymentMode1.equals("C"))
+		{
+			System.out.println("Payment mode is Debit Card" );
+			ci.checkMainQuestion("Select your preferred", "Direct Deposit").click();
+			Thread.sleep(3000);
+			ci.NameonAccount().sendKeys("john Ma");Thread.sleep(500);
+			ci.SelectOption().click();Thread.sleep(500);
+			ci.SelectValue().click();Thread.sleep(500);
+			ci.BankAccNo().sendKeys("1122334455");Thread.sleep(500);
+			ci.ConBankAccNo().sendKeys("1122334455");Thread.sleep(500);
+			Thread.sleep(500);
+			ci.BankRoutingNo().sendKeys("011000015");Thread.sleep(500);
+			ci.bankRoutingNumberConfirm().sendKeys("011000015");Thread.sleep(500);
+			ci.financialInstitution().click();Thread.sleep(5000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.submit().click();
+			Thread.sleep(5000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		
+		
+		wcl.clickHome();
+		Thread.sleep(2500);
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Claimant SSN");
+		Thread.sleep(1500);
+		ci.ClaimantDetailsLink().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		h.highlight(driver, "//td[text()='Payment Mode']");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2500);
+		wcl.clickHome();
+		
+		String PaymentMode2=q.PaymentMode("select PAYMENT_MODE from T_CLAIMANT A, T_CLAIMANT_PAYMENT_OPTION B where "
+				+ "A.CLAIMANT_ID=B.CLAIMANT_ID AND SSN='"+SSN+"'");
+		System.out.println(PaymentMode2);
+		Thread.sleep(3000);
+		wcl.homeTabs("Benefit Maintenance").click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Update Claimant Profile").click();
+		Thread.sleep(2000);
+		wcl.homeTabs("Payment Options").click();
+		Thread.sleep(2000);
+		ci.SearchSSN().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		ph.SSN_Screen();
+		Thread.sleep(1000);
+		ci.ClickRecord().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ph.PaymentInfo_screen();
+		Thread.sleep(1500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		if(PaymentMode2.equals("D"))
+		{
+		ci.checkMainQuestion("Select your preferred", "Debit Card").click();
+		Thread.sleep(3000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		ci.InputSSN().sendKeys(SSN.substring(5));
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		else if (PaymentMode2.equals("C"))
+		{
+		ci.checkMainQuestion("Select your preferred", "Direct Deposit").click();
+		Thread.sleep(3000);
+		ci.NameonAccount().sendKeys("john Ma");Thread.sleep(500);
+		ci.SelectOption().click();Thread.sleep(500);
+		ci.SelectValue().click();Thread.sleep(500);
+		ci.BankAccNo().sendKeys("1122334455");Thread.sleep(500);
+		ci.ConBankAccNo().sendKeys("1122334455");Thread.sleep(500);
+		Thread.sleep(500);
+		ci.BankRoutingNo().sendKeys("011000015");Thread.sleep(500);
+		ci.bankRoutingNumberConfirm().sendKeys("011000015");Thread.sleep(500);
+		ci.financialInstitution().click();Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		
+		Thread.sleep(1500);
+		wcl.clickHome();
+		Thread.sleep(1500);
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Claimant SSN");
+		Thread.sleep(1500);
+		ci.ClaimantDetailsLink().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		h.highlight(driver, "//td[text()='Payment Mode']");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2500);
+
+
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

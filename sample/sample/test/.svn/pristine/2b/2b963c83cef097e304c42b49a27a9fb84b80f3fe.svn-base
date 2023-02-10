@@ -1,0 +1,673 @@
+/**
+ * 
+ */
+package com.ui.locators;
+
+
+import java.time.Duration;
+import java.util.NoSuchElementException;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+
+import com.ui.base.TestBase;
+
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+
+
+/**
+ * @author nnegi
+ *
+ */
+
+public class OverPayment_Locators  extends TestBase {
+
+	public WebElement SelectOvrPymntIssue(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(),'"+selection+"')]/preceding-sibling::td"))).click();
+		return driver.findElement(By.xpath("//td[contains(text(),'"+selection+"')]/preceding-sibling::td"));
+	} //td[text()='Pre-determination Letter Not Generated']/preceding-sibling::td[2]
+	
+	public void selectOverpaymentIssueInvestigation(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Employer Response Pending')]//preceding::td[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public void selectOverpaymentIssuePreDetResponse(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Pre-determination Letter Response Pending')]//preceding::td[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+	
+	public WebElement SelectOvrPymntIssueStatus(String issueStatus)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '"+issueStatus+"')]//preceding::span[1]"))).click();
+		return driver.findElement(By.xpath("//td[contains(text(), '"+issueStatus+"')]//preceding::span[1]"));
+	}
+
+	public WebElement ClickEmplyrResponse()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Enter Employer Response']")));
+		return driver.findElement(By.xpath("//a[text()='Enter Employer Response']"));
+	}
+
+	public WebElement HireDate()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='mostRecentHireDate_-month']"))).click();
+		return driver.findElement(By.xpath("//input[@name='mostRecentHireDate_-month']"));
+	}
+
+	public WebElement SelectOption()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(),'-Select-')]/following::div[1]/span")));
+		return driver.findElement(By.xpath("//label[contains(text(),'-Select-')]/following::div[1]/span"));
+	} 
+
+	public WebElement SelectOption_Yes()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains (text(), 'Clear this issue?')]//following::span[1]")));
+		return driver.findElement(By.xpath("//td[contains (text(), 'Clear this issue?')]//following::span[1]"));
+	}
+
+	public WebElement checkMainQuestion(String question, String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//child::label[contains(text(), '"+selection+"')]/../div/div/span")));
+		return driver.findElement(By.xpath("//td[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//child::label[contains(text(), '"+selection+"')]/../div/div/span"));  	
+	}
+	public WebElement CsrRemark()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@name='csrRemarks__1']")));
+		return driver.findElement(By.xpath("//textarea[@name='csrRemarks__1']"));
+	}
+
+	public WebElement Click_SaveAndClose()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[text()='Save and Close']")));
+		return driver.findElement(By.xpath("//button/span[text()='Save and Close']"));
+	}
+
+
+
+
+
+
+
+
+	public void issueSource(String selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Issue Source')]//following::label[1]"))).click(); Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '"+selection+"')]"))).click();
+	}
+
+	public void Date(String xpath, String date)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-month')]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-month')]"))).sendKeys(date);
+	}
+	
+	public void Date1(String xpath)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-month')]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-month')]")));
+	}
+
+
+	public void clickAddEmployer()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), 'Add Employer')]"))).click();
+	}
+
+	public void employerName(String name)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Employer Name')]//following::input[1]"))).sendKeys(name);
+	}
+
+	public void address(String xpath, String add)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '"+xpath+"')]//following::input[1]"))).sendKeys(add);
+	}
+
+	public void selectState(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'State')]//following::label[1]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '"+selection+"')]"))).click();
+	}
+
+	public void selectCountry(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Country')]//following::label[1]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '"+selection+"')]"))).click();
+	}
+
+	public void generateWageLetterRequest(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Generate Wage Request Letter')]//following::label[contains(text(), '"+selection+"')]//preceding::span[1]"))).click();
+	}
+
+
+	public WebElement EnterEarning()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='investigateOpIssueCalculatedWeeklyWages:0:investigateOpIssueCalculatedWeeklyWages_-employerActualWages']"))).clear();
+		return driver.findElement(By.xpath("//input[@name='investigateOpIssueCalculatedWeeklyWages:0:investigateOpIssueCalculatedWeeklyWages_-employerActualWages']"));
+	}
+
+	public WebElement EnterHours()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@name='investigateOpIssueCalculatedWeeklyWages:0:investigateOpIssueCalculatedWeeklyWages_-finalHoursWorkedThisEmp']"))).clear();
+		return driver.findElement(By.xpath("//*[@name='investigateOpIssueCalculatedWeeklyWages:0:investigateOpIssueCalculatedWeeklyWages_-finalHoursWorkedThisEmp']"));
+	}
+	public WebElement EnterHourMainScreen()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("	//*[@name='j_id_6x_1:0:investigateOpIssueCalculatedWeeklyWages:0:investigateOpIssueCalculatedWeeklyWages_-finalHoursWorkedThisEmp']"))).clear();
+		return driver.findElement(By.xpath("//*[@name='j_id_6x_1:0:investigateOpIssueCalculatedWeeklyWages:0:investigateOpIssueCalculatedWeeklyWages_-finalHoursWorkedThisEmp']"));
+	}
+	public WebElement ReportedEarningCheck()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Use Reported Earnings')]/following::td[11]/div/div[2]/span"))).clear();
+		return driver.findElement(By.xpath("//*[contains(text(),'Use Reported Earnings')]/following::td[11]/div/div[2]/span"));
+	}  //a[text()='Add Employer']
+
+
+
+
+
+
+	public void useReportedEarnings()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='j_id_6x_1:0:investigateOpIssueCalculatedWeeklyWages:0:investigateOpIssueCalculatedWeeklyWages_-useReportedEarnings']/div[2]/span"))).click();
+	}
+
+	public void useReportedEarnings_018()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='investigateOpIssueCalculatedWeeklyWages:0:investigateOpIssueCalculatedWeeklyWages_-useReportedEarnings']/div[2]/span"))).click();
+	}
+
+	public void clickGenerateWageRequestLetter()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), 'Generate Wage Request Letter')]"))).click();
+	}
+
+	public void claimant_response()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains (text(), 'Pre-determination Letter Response')]"))).click();
+	}
+
+
+	public void claimant_reported_earning()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains (text(), 'Use Reported Earnings')]//following::div[1]"))).click();
+	}
+	public void overpaymentFactFindingQuestion(String question, String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), '"+question+"')]//following::label[contains(text(), '"+selection+"')][1]//preceding::span[1]"))).click();
+	}
+
+
+	public void overpaymentFactFindingExplaination(String question)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), '"+question+"')]//following::textarea[1]"))).sendKeys("Testing Purpose");
+	}
+
+
+	public WebElement issueSourceOver()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Issue Source')]//following::label[1]"))).click();
+		return driver.findElement(By.xpath("//label[contains(text(), 'Issue Source')]//following::label[1]"));
+	}
+
+	public WebElement VerifycheckMainQuestion(String question)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), '"+question+"')]")));
+		return driver.findElement(By.xpath("//label[contains(text(), '"+question+"')]"));  	
+	}
+
+
+	public void clickHyperlink(String hyperlink)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(text(), '"+hyperlink+"')]"))).click();
+	}
+
+	public  WebElement addweeks_start_dt()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='firstAffectedWeekEndingDate_-month']")));
+		return driver.findElement(By.xpath("//input[@name='firstAffectedWeekEndingDate_-month']"));
+	}
+
+	public  WebElement addweeks_end_dt()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='lastAffectedWeekEndingDate_-month']")));
+		return driver.findElement(By.xpath("//input[@name='lastAffectedWeekEndingDate_-month']"));
+	}  
+
+	public  WebElement save_bt()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Save']")));
+		return driver.findElement(By.xpath("//span[text()='Save']"));
+	}  
+
+	public WebElement enterStartDate() 
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'startDate_-month')]"))).click();
+		return driver.findElement(By.xpath("//input[contains(@id, 'startDate_-month')]"));
+	}
+	public WebElement enterendDate() 
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@id, 'endDate_-month')]"))).click();
+		return driver.findElement(By.xpath("//input[contains(@id, 'endDate_-month')]"));
+	}
+
+	public  WebElement final_earning()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //input[@name='j_id_3i:0:investigateOpIssueWeeklyWages_-finalEarnings']")));
+		return driver.findElement(By.xpath(" //input[@name='j_id_3i:0:investigateOpIssueWeeklyWages_-finalEarnings']"));
+	} 
+
+	public  WebElement op_inves()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Overpayment Investigation']")));
+		return driver.findElement(By.xpath(" //a[text()='Overpayment Investigation']"));
+	}
+
+	public  WebElement CorrospnDate()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='dateOvpReceived_-month']"))).click();
+		return driver.findElement(By.xpath("//input[@name='dateOvpReceived_-month']"));
+	}
+
+	public  WebElement SelectIssue()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(),'Benefit Payment Nonmonetary Decision')]/preceding-sibling::td[2]"))).click();
+		return driver.findElement(By.xpath("//td[contains(text(),'Benefit Payment Nonmonetary Decision')]/preceding-sibling::td[2]"));
+	}
+	public  WebElement SelectMainQueAns(String ques, String ans)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), '"+ques+"')]//ancestor::tr/td//child::td//child::label[text()='"+ans+"']"))).click();
+		return driver.findElement(By.xpath("//label[contains(text(), '"+ques+"')]//ancestor::tr/td//child::td//child::label[text()='"+ans+"']"));
+	}
+
+
+	public WebElement checkMainQuestion11(String question, String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//label[text()='"+selection+" ']"))).click();
+		return driver.findElement(By.xpath("//td[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//label[text()='"+selection+" ']"));  	
+	} 
+	public WebElement checkMainQuestion12(String question, String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//label[text()='"+selection+"']"))).click();
+		return driver.findElement(By.xpath("//td[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//label[text()='"+selection+"']"));  	
+	} 
+	public WebElement Modifyparameter()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Modify Parameters']")));
+		return driver.findElement(By.xpath("//span[text()='Modify Parameters']"));  	
+	}  
+	public WebElement modifyweeks()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='numberOfWeeks']")));
+		return driver.findElement(By.xpath("//input[@name='numberOfWeeks']"));  	
+	} 
+
+	public WebElement Confirm_hits()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='confirmedFlag']/tbody/tr/td[2]/div/div[2]/span"))).click();
+		return driver.findElement(By.xpath("//*[@id='confirmedFlag']/tbody/tr/td[2]/div/div[2]/span"));  	
+	} 
+
+	public WebElement Confirm_hits_select(String option)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[text()='Confirm hits']//following::label[text()='"+option+"']//preceding::span[1]")));
+		return driver.findElement(By.xpath("//td[text()='Confirm hits']//following::label[text()='"+option+"']//preceding::span[1]"));  	
+	}
+
+	public WebElement enterSSN(String xpath)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-ssn1')]")));
+		return driver.findElement(By.xpath("//input[contains(@name, '"+xpath+"_-ssn1')]"));
+	}
+
+
+	public void enterPhoneNumber(String xpath, String primaryNumber)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-areacode')]"))).clear();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-areacode')]"))).sendKeys(primaryNumber);
+	}
+
+	public void enterEmailID(String emailID)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, 'email')]"))).clear();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, 'email')]"))).sendKeys(emailID);
+	}
+
+	public void confirmEmailID(String emailID)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, 'confEmail')]"))).clear();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, 'confEmail')]"))).sendKeys(emailID);
+	}
+
+	public WebElement SelectOvrPymntIssue1(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(),'Employer Response Pending')]/preceding-sibling::td[contains(text(),'"+selection+"')]/preceding-sibling::td"))).click();
+		return driver.findElement(By.xpath("//td[contains(text(),'Employer Response Pending')]/preceding-sibling::td[contains(text(),'"+selection+"')]/preceding-sibling::td"));
+	}
+	public WebElement SelectOvrPymntIssue2(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(),'Pre-determination Letter Response Pending')]/preceding-sibling::td[contains(text(),'"+selection+"')]/preceding-sibling::td"))).click();
+		return driver.findElement(By.xpath("//td[contains(text(),'Pre-determination Letter Response Pending')]/preceding-sibling::td[contains(text(),'"+selection+"')]/preceding-sibling::td"));
+	}
+
+
+	public void NoOfRecords()
+	{
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(60*5)).pollingEvery(Duration.ofSeconds(5)).ignoring(org.openqa.selenium.NoSuchElementException.class);
+		WebElement NoOfRecords = wait.until(new Function<WebDriver, WebElement>()
+		{
+			public WebElement apply(WebDriver driver)
+			{
+				return driver.findElement(By.xpath("//span[contains(text(), 'Search')]//following::span[contains(text(), 'Page: ')][2]"));
+			}
+		}
+
+
+
+
+				);
+
+
+
+	}
+
+	//over payments
+
+	public WebElement overpaymentslink(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[3]/td[2]/a/span[text()='Overpayments']")));
+		return driver.findElement(By.xpath("//tr[3]/td[2]/a/span[text()='Overpayments']"));
+
+	}
+
+	//Add Over payments
+
+	public WebElement AddOverpayments(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[3]/td[2]/a/span[text()='Add Overpayment']")));
+		return driver.findElement(By.xpath("//tr[3]/td[2]/a/span[text()='Add Overpayment']"));
+
+	}
+
+	//List of Claims for Over payments
+	public WebElement List_of_claims_overpayment(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[2]/td/div/div[2]/span")));
+		return driver.findElement(By.xpath("//tr[2]/td/div/div[2]/span"));
+
+	}
+
+	//	Over payment Source
+	public WebElement 	Overpayment_Source(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[2]/td/div/div[3]/span")));
+		return driver.findElement(By.xpath("//tr[2]/td/div/div[3]/span"));
+
+	}
+
+
+
+	//				Over payment Source dropdown
+	public void Overpayment_Source_Appeal(String selection2){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div/ul[@id='overpaymentSource_items']/li[text()='"+selection2+"']"))).click();
+		//return driver.findElement(By.xpath("//div/ul[@id='overpaymentSource_items']/li[text()='Appeal']"));
+
+	}
+
+
+
+
+
+
+	//	Over payment cause 
+	public WebElement 	Overpayment_Cause(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[3]/td/div/div[3]/span")));
+		return driver.findElement(By.xpath("//tr[3]/td/div/div[3]/span"));
+
+	}
+
+	//	Over payment cause dropdown
+	public void	Overpayment_Cause_others(String selection1){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='"+selection1+"']"))).click();
+
+
+	}
+
+
+
+
+	//				Over payment class
+	public WebElement 	Overpayment_Class(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[4]/td/div/div[3]/span")));
+		return driver.findElement(By.xpath("//tr[4]/td/div/div[3]/span"));
+
+	}
+
+	//				Over payment class dropdown
+	public void 	Overpayment_Class_Admin_Error(String selection){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='overpaymentClass_items']/li[text()='"+selection+"']"))).click();
+		//driver.findElement(By.xpath("//ul[@id='overpaymentClass_items']/li[text()='"+selection+"']"));
+
+	}
+
+
+
+
+
+
+	//				Notice for over payment determination No
+	public WebElement 	Overpayment_determination_No(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@for='generateOvpNotice:1']")));
+		return driver.findElement(By.xpath("//*[@for='generateOvpNotice:1']"));
+
+	}
+
+	//				over payment Status Dropdown
+	public WebElement 	Overpayment_status_dropdown(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/div[@id='overpaymentStatus']/div[3]/span")));
+		return driver.findElement(By.xpath("//td/div[@id='overpaymentStatus']/div[3]/span"));
+
+	}	
+
+	//				over payment Status selection
+	public void Overpayment_status_selection(String selection5){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='overpaymentStatus_items']/li[text()='"+selection5+"']"))).click();
+
+
+	}		
+
+
+	//				Add Weeks
+	public WebElement 	Add_Weeks(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@id = 'method__1']/span[text()='Add Weeks']")));
+		return driver.findElement(By.xpath("//button[@id = 'method__1']/span[text()='Add Weeks']"));
+
+	}
+
+
+
+	//				CWE start Date
+	public WebElement 	CWE_start_date(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr/td[3]/div/input[1]")));
+		return driver.findElement(By.xpath("//tr/td[3]/div/input[1]"));
+
+	}	
+
+
+
+	//				CWE end Date
+	public WebElement 	CWE_end_date(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr/td[6]/div/input[1]")));
+		return driver.findElement(By.xpath("//tr/td[6]/div/input[1]"));
+
+	}	
+
+	//				Select week record
+	public WebElement 	Select_week_record(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr/td/div/div[2]/span")));
+		return driver.findElement(By.xpath("//tr/td/div/div[2]/span"));
+
+	}	
+
+	//				Overpaid Amount
+	public WebElement 	overpaid_amount(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr/td[4]/input")));
+		return driver.findElement(By.xpath("//tr/td[4]/input"));
+
+	}		
+
+	//				Overpaid DA
+	public WebElement 	overpaid_da(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@id='j_id_5t']/tbody/tr[1]/td[5]/input")));
+		return driver.findElement(By.xpath("//table[@id='j_id_5t']/tbody/tr[1]/td[5]/input"));
+
+	}	
+
+	//				Submit button
+	public WebElement 	Submit_button(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[2]/button[2]/span")));
+		return driver.findElement(By.xpath("//td[2]/button[2]/span"));
+
+	}
+
+	//		      Overpayment maintenance
+	public WebElement 	Overpayment_Maintenance(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[3]/td[5]/a/span")));
+		return driver.findElement(By.xpath("//tr[3]/td[5]/a/span"));
+
+	}
+
+	//			    Modify  Overpayment
+	public WebElement 	Modify_Overpayment(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[1]/td[2]/a/span")));
+		return driver.findElement(By.xpath("//tr[1]/td[2]/a/span"));
+
+	}
+
+	//			    Select  Modify  Overpayment record
+	public WebElement 	Select_Modify_Overpayment_record(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[1]/td[1]/div/div[2]/span")));
+		return driver.findElement(By.xpath("//tr[1]/td[1]/div/div[2]/span"));
+
+	}
+
+
+
+
+	//			    Interest Amount
+	public WebElement 	Interest_Amount(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='interestAmount']")));
+		return driver.findElement(By.xpath("//input[@id='interestAmount']"));
+
+	}	
+
+	//			    Legal Status 
+	public WebElement 	Legal_Status_dropdown(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[11]/td/div/div[3]/span")));
+		return driver.findElement(By.xpath("//tr[11]/td/div/div[3]/span"));
+
+	}	
+
+	//			    Legal Status option
+	public WebElement Legal_Status_option(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul/li[2][text()='Not in legal stage']")));
+		return driver.findElement(By.xpath("//ul/li[2][text()='Not in legal stage']"));
+
+	}	
+
+	//			   CWE details in the Total Overpayment 
+	public WebElement CWE_Details_radio(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='modifyCwe']/tbody/tr/td[2]/div/div[2]/span")));
+		return driver.findElement(By.xpath("//*[@id='modifyCwe']/tbody/tr/td[2]/div/div[2]/span"));
+
+	}
+
+	//				Generate  Overpayment notice
+	public WebElement Generate_overpayment_notice(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='generateOvpNotice']/tbody/tr/td[2]/div/div[2]/span")));
+		return driver.findElement(By.xpath("//*[@id='generateOvpNotice']/tbody/tr/td[2]/div/div[2]/span"));
+
+	}
+
+	//				Legal Status Date
+	public WebElement Legal_Status_Date(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='legalStatusDate_-month']")));
+		return driver.findElement(By.xpath("//input[@id='legalStatusDate_-month']"));
+
+	}
+
+	//				Reason for change in status
+	public WebElement reason_for_change(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@id='statusReason']")));
+		return driver.findElement(By.xpath("//textarea[@id='statusReason']"));
+
+	}
+
+	//				Delete Weeks
+	public WebElement Delete_Weeks(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr/td[3]/a")));
+		return driver.findElement(By.xpath("//tr/td[3]/a"));
+
+	}
+
+	public WebElement  Overpaymentstatusreason()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='statusReason']")));
+		return driver.findElement(By.xpath("//*[@id='statusReason']"));
+	}
+
+	public void requestingState(int selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='requestingState_label']"))).click(); Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[@id='requestingState_"+selection+"']"))).click();
+	}
+
+	public void overpaymentClass(int selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(@for, 'overpaymentClass:"+selection+"')]//preceding::span[1]"))).click();
+	}
+
+	public void selectEntitlementType(int selection) throws InterruptedException
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='selectEntitlementType_label']"))).click(); Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[@id='selectEntitlementType_"+selection+"']"))).click();
+	}
+	public WebElement  AuthCode()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(),'Authorization Code')]/following::input[@name='authCode']")));
+		return driver.findElement(By.xpath("//label[contains(text(),'Authorization Code')]/following::input[@name='authCode']"));
+	}
+	
+	public WebElement addemp()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Add Employer']")));
+		return driver.findElement(By.xpath("//a[text()='Add Employer']"));
+	}  
+	
+	public WebElement RepayStDate()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='repaymentStartDate_-month']"))).click();
+		return driver.findElement(By.xpath("//input[@name='repaymentStartDate_-month']"));
+	}
+	
+	public WebElement RepayEndDate()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='repaymentEndDate_-month']"))).click();
+		return driver.findElement(By.xpath("//input[@name='repaymentEndDate_-month']"));
+	}
+	public WebElement SelectOvrPymntIssue_pred(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[text()='"+selection+"']//following-sibling::td[text()='Employer Response Pending']//preceding-sibling::td[2]"))).click();
+		return driver.findElement(By.xpath("//td[text()='"+selection+"']//following-sibling::td[text()='Employer Response Pending']//preceding-sibling::td[2]"));
+	} 
+	
+}

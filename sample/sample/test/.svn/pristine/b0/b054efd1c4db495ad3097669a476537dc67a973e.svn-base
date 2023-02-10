@@ -1,0 +1,476 @@
+/**
+ * 
+ */
+package com.ui.pages;
+
+import java.sql.SQLException;
+
+import org.testng.Assert;
+
+import com.ui.utilities.QuerySearch;
+
+/**
+ * @author nnegi
+ *
+ */
+public class TotalPaidAmountCalculation {
+	static QuerySearch q=new QuerySearch();
+	
+	public static void PaidAmount(String SSN) throws ClassNotFoundException, SQLException
+	{
+		
+		 String TotalEarning1 =q.getTotalEarning("select b.TOTAL_EARNINGS from T_CLAIMANT a, "
+					+ "t_weekly_certification b where a.SSN= '" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID");
+		 double TotalEarning = (Integer.parseInt(TotalEarning1.substring(0, TotalEarning1.lastIndexOf('.'))));
+			
+			 
+			 
+			 String WBA1 = q.getGrossEarning("SELECT WBA FROM T_CLAIM WHERE STATUS = 'ACTV' AND BYE_DATE > CURRENT_DATE AND "
+						+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE  SSN = '" + SSN + "')");
+			 double WBA= (Integer.parseInt(WBA1.substring(0, WBA1.lastIndexOf('.'))));
+			 
+			 System.out.println(WBA);
+			 String FIT1 = q.getFIT_DEDUCTION("Select d.FIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+			 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+			 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double FIT= (Integer.parseInt(FIT1.substring(0, FIT1.lastIndexOf('.'))));
+			 
+			 String SIT1=q.getSIT_DEDUCTION("Select d.SIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+				 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+				 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double SIT= (Integer.parseInt(SIT1.substring(0, SIT1.lastIndexOf('.'))));
+					 
+			String DeductedAmt1=q.getDEDUCTIBLE_AMOUNT("Select e.DEDUCTIBLE_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d,T_CT_WEEKLY_CERT_PMNT_DEDUCTION_DETAIL e"
+					+ " where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+					+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and d.WEEKLY_CERT_PMNT_DEDUCTION_ID=e.WEEKLY_CERT_PMNT_DEDUCTION_ID");	 
+			double DeductedAmt= (Integer.parseInt(DeductedAmt1.substring(0, DeductedAmt1.lastIndexOf('.'))));
+			
+			String PaidAmount1=q.getTotalPaidAmount("Select c.TOTAL_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_CLAIMANT_PAYMENT c "
+					+ "where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID and a.CLAIMANT_ID=c.CLAIMANT_ID "
+					+ " and a.CLAIMANT_ID=c.CLAIMANT_ID");
+			double PaidAmount= (Integer.parseInt(PaidAmount1.substring(0, PaidAmount1.lastIndexOf('.'))));
+			System.out.println("Claimant total Paid Amount" +PaidAmount);
+			
+			
+			System.out.println("WBA "+WBA);
+			System.out.println("Total earnings "+TotalEarning);
+			System.out.println("Federal Tax " +FIT);
+			System.out.println("State Tax " +SIT);
+			System.out.println("Deducted Amount " +DeductedAmt);
+			
+			double calculation =WBA-((Math.round(TotalEarning*2/3+DeductedAmt)));
+			double TotalPaidAmount =calculation-(FIT+SIT);
+			System.out.println(TotalPaidAmount);
+			
+			
+			
+			if(TotalPaidAmount==PaidAmount)
+			{
+				System.out.println("Verified! Total paid amount $ " +TotalPaidAmount+ " is correct");
+			}
+			else
+			{
+				System.out.println("Paid amount is incorrect");
+			}
+		
+	}
+	public static void DissmisalPaidAmount(String SSN,String amt) throws ClassNotFoundException, SQLException
+	{
+		
+		 
+			double DismissalAmount=(Integer.parseInt(amt.substring(0, amt.lastIndexOf('.'))));
+			 
+			 
+			 String WBA1 = q.getGrossEarning("SELECT WBA FROM T_CLAIM WHERE STATUS = 'ACTV' AND BYE_DATE > CURRENT_DATE AND "
+						+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE  SSN = '" + SSN + "')");
+			 double WBA= (Integer.parseInt(WBA1.substring(0, WBA1.lastIndexOf('.'))));
+			 
+			 System.out.println(WBA);
+			 String FIT1 = q.getFIT_DEDUCTION("Select d.FIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+			 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+			 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double FIT= (Integer.parseInt(FIT1.substring(0, FIT1.lastIndexOf('.'))));
+			 
+			 String SIT1=q.getSIT_DEDUCTION("Select d.SIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+				 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+				 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double SIT= (Integer.parseInt(SIT1.substring(0, SIT1.lastIndexOf('.'))));
+					 
+			String DeductedAmt1=q.getDEDUCTIBLE_AMOUNT("Select e.DEDUCTIBLE_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d,T_CT_WEEKLY_CERT_PMNT_DEDUCTION_DETAIL e"
+					+ " where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+					+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and d.WEEKLY_CERT_PMNT_DEDUCTION_ID=e.WEEKLY_CERT_PMNT_DEDUCTION_ID");	 
+			double DeductedAmt= (Integer.parseInt(DeductedAmt1.substring(0, DeductedAmt1.lastIndexOf('.'))));
+			
+			String PaidAmount1=q.getTotalPaidAmount("Select c.TOTAL_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_CLAIMANT_PAYMENT c "
+					+ "where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID "
+					+ " and a.CLAIMANT_ID=c.CLAIMANT_ID");
+			double PaidAmount= (Integer.parseInt(PaidAmount1.substring(0, PaidAmount1.lastIndexOf('.'))));
+			System.out.println("Claimant total Paid Amount" +PaidAmount);
+			
+			
+			System.out.println("WBA "+WBA);
+			//System.out.println("Total earnings "+TotalEarning);
+			System.out.println("Federal Tax " +FIT);
+			System.out.println("State Tax " +SIT);
+			System.out.println("Deducted Amount " +DeductedAmt);
+			
+			double calculation =WBA-Math.round(DismissalAmount*2/3);
+			
+			double TotalPaidAmount =calculation-(FIT+SIT);
+			System.out.println(TotalPaidAmount);
+			
+			
+			
+			if(TotalPaidAmount==PaidAmount)
+			{
+				System.out.println("Verified! Total paid amount $ " +TotalPaidAmount+ " is correct");
+			}
+			else
+			{
+				System.out.println("Paid amount is incorrect");
+			}
+		
+	}
+	
+	
+	public static void DissmisalPaidAmount_TRA(String SSN,String amt) throws ClassNotFoundException, SQLException
+	{
+		
+		 
+			double DismissalAmount=(Integer.parseInt(amt.substring(0, amt.lastIndexOf('.'))));
+			 
+			 
+			 String WBA1 = q.getGrossEarning("SELECT WBA FROM T_CLAIM WHERE STATUS = 'ACTV' AND BYE_DATE > CURRENT_DATE AND "
+						+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE  SSN = '" + SSN + "')");
+			 double WBA= (Integer.parseInt(WBA1.substring(0, WBA1.lastIndexOf('.'))));
+			 
+			 System.out.println(WBA);
+			 String FIT1 = q.getFIT_DEDUCTION("Select d.FIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+			 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+			 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double FIT= (Integer.parseInt(FIT1.substring(0, FIT1.lastIndexOf('.'))));
+			 
+			 String SIT1=q.getSIT_DEDUCTION("Select d.SIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+				 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+				 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double SIT= (Integer.parseInt(SIT1.substring(0, SIT1.lastIndexOf('.'))));
+					 
+			String DeductedAmt1=q.getDEDUCTIBLE_AMOUNT("Select e.DEDUCTIBLE_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d,T_CT_WEEKLY_CERT_PMNT_DEDUCTION_DETAIL e"
+					+ " where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+					+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and d.WEEKLY_CERT_PMNT_DEDUCTION_ID=e.WEEKLY_CERT_PMNT_DEDUCTION_ID");	 
+			double DeductedAmt= (Integer.parseInt(DeductedAmt1.substring(0, DeductedAmt1.lastIndexOf('.'))));
+			
+			String PaidAmount1=q.getTotalPaidAmount("Select c.TOTAL_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_CLAIMANT_PAYMENT c "
+					+ "where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID "
+					+ " and a.CLAIMANT_ID=c.CLAIMANT_ID");
+			double PaidAmount= (Integer.parseInt(PaidAmount1.substring(0, PaidAmount1.lastIndexOf('.'))));
+			System.out.println("Claimant total Paid Amount" +PaidAmount);
+			
+			
+			System.out.println("WBA "+WBA);
+			//System.out.println("Total earnings "+TotalEarning);
+			System.out.println("Federal Tax " +FIT);
+			System.out.println("State Tax " +SIT);
+			System.out.println("Deducted Amount " +DeductedAmt);
+			
+			double calculation =WBA-DismissalAmount;
+			
+			double TotalPaidAmount =calculation-(FIT+SIT);
+			System.out.println("Total Calculated paid amount= " +TotalPaidAmount);
+			System.out.println("Total  Actual paid amount= " +PaidAmount);
+			
+			
+			
+			if(TotalPaidAmount==PaidAmount)
+			{
+				System.out.println("Verified! Total paid amount $ " +TotalPaidAmount+ " is correct");
+			}
+			else
+			{
+				System.out.println("Paid amount is incorrect");
+			}
+		
+	}
+	
+	public static void DissmisalPaidAmount_TRA_59049(String SSN,String amt) throws ClassNotFoundException, SQLException
+	{
+		
+		 
+			double DismissalAmount=(Integer.parseInt(amt.substring(0, amt.lastIndexOf('.'))));
+			 
+			 
+			 String WBA1 = q.getGrossEarning("SELECT WBA FROM T_CLAIM WHERE STATUS = 'ACTV' AND BYE_DATE > CURRENT_DATE AND "
+						+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE  SSN = '" + SSN + "')");
+			 double WBA= (Integer.parseInt(WBA1.substring(0, WBA1.lastIndexOf('.'))));
+			 
+			 System.out.println(WBA);
+			 String FIT1 = q.getFIT_DEDUCTION("Select d.FIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+			 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+			 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and d.FIT_DEDUCTION <> 0");
+			 double FIT= (Integer.parseInt(FIT1.substring(0, FIT1.lastIndexOf('.'))));
+			 
+			 String SIT1=q.getSIT_DEDUCTION("Select d.SIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+				 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+				 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and d.SIT_DEDUCTION <> 0");
+			 double SIT= (Integer.parseInt(SIT1.substring(0, SIT1.lastIndexOf('.'))));
+					 
+			//
+			//String DeductedAmt1=q.getDEDUCTIBLE_AMOUNT("Select e.DEDUCTIBLE_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d,T_CT_WEEKLY_CERT_PMNT_DEDUCTION_DETAIL e"
+					//+ " where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+					//+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and d.WEEKLY_CERT_PMNT_DEDUCTION_ID=e.WEEKLY_CERT_PMNT_DEDUCTION_ID");	 
+			//double DeductedAmt= (Integer.parseInt(DeductedAmt1.substring(0, DeductedAmt1.lastIndexOf('.'))));
+			
+			String PaidAmount1=q.getTotalPaidAmount("Select c.TOTAL_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_CLAIMANT_PAYMENT c "
+					+ "where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID "
+					+ " and a.CLAIMANT_ID=c.CLAIMANT_ID");
+			double PaidAmount= (Integer.parseInt(PaidAmount1.substring(0, PaidAmount1.lastIndexOf('.'))));
+			System.out.println("Claimant total Paid Amount" +PaidAmount);
+			
+			
+			System.out.println("WBA "+WBA);
+			//System.out.println("Total earnings "+TotalEarning);
+			System.out.println("Federal Tax " +FIT);
+			System.out.println("State Tax " +SIT);
+			//System.out.println("Deducted Amount " +DeductedAmt);
+			
+			
+			Double d2 = DismissalAmount;
+			Double d1 = WBA ;
+					
+			
+			if (Double.compare(d2,d1) <  0) 
+
+			{	System.out.println("wba =" +d1+ "is  greater than Dimissal amount=" +d2 );
+
+			
+			}
+
+			else
+			{
+				System.out.println("Data is not correct");
+				Assert.assertFalse(Double.compare(d2,d1) >  0, "WBA IS < DIS. AMT");
+
+			}
+			
+			double TotalPaidAmount =WBA-(FIT+SIT);
+			System.out.println("Total Calculated paid amount= " +TotalPaidAmount);
+			System.out.println("Total  Actual paid amount= " +PaidAmount);
+			
+			
+			
+			if(TotalPaidAmount==PaidAmount)
+			{
+				System.out.println("Verified! Total paid amount $ " +TotalPaidAmount+ " is correct");
+			}
+			else
+			{
+				System.out.println("Paid amount is incorrect");
+			}
+		
+	}
+	
+	
+	
+	public static void paidamount_59040(String SSN,String amt) throws ClassNotFoundException, SQLException
+	{
+		
+		 
+			
+			 
+			 
+			 String WBA1 = q.getGrossEarning("SELECT WBA FROM T_CLAIM WHERE STATUS = 'ACTV' AND BYE_DATE > CURRENT_DATE AND "
+						+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE  SSN = '" + SSN + "')");
+			 double WBA= (Integer.parseInt(WBA1.substring(0, WBA1.lastIndexOf('.'))));
+			 
+			 System.out.println("WBA="+WBA);
+			
+			 String FIT1 = q.getFIT_DEDUCTION("Select d.FIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+			 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+			 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and "
+			 		+ " d.UPDATED_BY ='Pay040ProcessedWeeklyCert'");
+			 System.out.println("query1="+FIT1);
+			 double FIT= (Integer.parseInt(FIT1.substring(0, FIT1.lastIndexOf('.'))));
+			
+			 
+			 System.out.println("query="+FIT1);
+			 
+			 String SIT1=q.getSIT_DEDUCTION("Select d.SIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+				 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+				 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and " 
+				 		+ " d.UPDATED_BY = 'Pay040ProcessedWeeklyCert'");
+			 double SIT= (Integer.parseInt(SIT1.substring(0, SIT1.lastIndexOf('.'))));
+			 System.out.println("query2="+SIT1);
+					 
+			
+
+			
+			String PaidAmount12=q.getTotalPaidAmount("Select c.TOTAL_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_CLAIMANT_PAYMENT c "
+					+ "where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID "
+					+ " and a.CLAIMANT_ID=c.CLAIMANT_ID and "
+					+ " c.UPDATED_BY = 'Pay075DaProvidePayment'");
+			
+			
+			
+			
+			 System.out.println("query3="+PaidAmount12);
+
+			double PaidAmount= (Integer.parseInt(PaidAmount12.substring(0, PaidAmount12.lastIndexOf('.'))));
+			System.out.println("Claimant total Paid Amount" +PaidAmount);
+			
+			
+			System.out.println("WBA "+WBA);
+			
+			System.out.println("Federal Tax " +FIT);
+			System.out.println("State Tax " +SIT);
+			
+			
+			double cal =(.60 * WBA);
+			System.out.println("CAL VALUE "+cal); 
+			 int b= (int) (00.60 * WBA);
+			 
+			
+		      System.out.println("b VALUE "+b); 
+			double TotalPaidAmount =b-(FIT+SIT)+8;
+			System.out.println("Total Calculated paid amount= " +TotalPaidAmount);
+			System.out.println("Total  Actual paid amount= " +PaidAmount);
+			
+			
+			
+			if(TotalPaidAmount==PaidAmount)
+			{
+				System.out.println("Verified! Total paid amount $ " +TotalPaidAmount+ " is correct");
+			}
+			else
+			{
+				System.out.println("Paid amount is incorrect");
+			}
+	
+	
+	
+}
+	
+	public static void PaidAmount_59021_tra(String SSN,String amt) throws ClassNotFoundException, SQLException
+	{
+		
+		 
+			
+			 
+			 
+			 String WBA1 = q.getGrossEarning("SELECT WBA FROM T_CLAIM WHERE STATUS = 'ACTV' AND BYE_DATE > CURRENT_DATE AND "
+						+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE  SSN = '" + SSN + "')");
+			 double WBA= (Integer.parseInt(WBA1.substring(0, WBA1.lastIndexOf('.'))));
+			 
+			 System.out.println(WBA);
+			 String FIT1 = q.getFIT_DEDUCTION("Select d.FIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+			 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+			 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double FIT= (Integer.parseInt(FIT1.substring(0, FIT1.lastIndexOf('.'))));
+			 
+			 String SIT1=q.getSIT_DEDUCTION("Select d.SIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+				 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+				 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID");
+			 double SIT= (Integer.parseInt(SIT1.substring(0, SIT1.lastIndexOf('.'))));
+					 
+			
+			
+			String PaidAmount1=q.getTotalPaidAmount("Select c.TOTAL_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_CLAIMANT_PAYMENT c "
+					+ "where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID "
+					+ " and a.CLAIMANT_ID=c.CLAIMANT_ID");
+			double PaidAmount= (Integer.parseInt(PaidAmount1.substring(0, PaidAmount1.lastIndexOf('.'))));
+			System.out.println("Claimant total Paid Amount" +PaidAmount);
+			
+			
+			System.out.println("WBA "+WBA);
+			//System.out.println("Total earnings "+TotalEarning);
+			System.out.println("Federal Tax " +FIT);
+			System.out.println("State Tax " +SIT);
+			
+			
+			
+			
+			double TotalPaidAmount =WBA-(FIT+SIT);
+			System.out.println("Total Calculated paid amount= " +TotalPaidAmount);
+			//System.out.println("Total  Actual paid amount= " +PaidAmount);
+			
+			
+			
+			/*if(TotalPaidAmount==PaidAmount)
+			{
+				System.out.println("Verified! Total paid amount $ " +TotalPaidAmount+ " is correct");
+			}
+			else
+			{
+				System.out.println("Paid amount is incorrect");
+			}*/
+		
+	}	
+	
+	
+	public static void DissmisalPaidAmount_55839(String SSN,String amt) throws ClassNotFoundException, SQLException
+	{
+		
+		 
+			double DismissalAmount=(Integer.parseInt(amt.substring(0, amt.lastIndexOf('.'))));
+			
+			System.out.println("DismissalAmount=" +DismissalAmount);
+			 
+			 
+			 String WBA1 = q.getGrossEarning("SELECT WBA FROM T_CLAIM WHERE STATUS = 'ACTV' AND BYE_DATE > CURRENT_DATE AND "
+						+ "CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE  SSN = '" + SSN + "')");
+			 double WBA= (Integer.parseInt(WBA1.substring(0, WBA1.lastIndexOf('.'))));
+			 
+			 System.out.println(WBA);
+			 String FIT1 = q.getFIT_DEDUCTION("Select d.FIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+				 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+				 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and "
+				 		+ " d.UPDATED_BY ='Pay040ProcessedWeeklyCert'");
+				 System.out.println("query1="+FIT1);
+			 double FIT= (Integer.parseInt(FIT1.substring(0, FIT1.lastIndexOf('.'))));
+			 System.out.println("fit="+FIT);
+			 String SIT1=q.getSIT_DEDUCTION("Select d.SIT_DEDUCTION from T_CLAIMANT a,T_CLAIM b,"
+				 		+ "T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+				 		+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and d.UPDATED_BY ='Pay040ProcessedWeeklyCert'");
+			 double SIT= (Integer.parseInt(SIT1.substring(0, SIT1.lastIndexOf('.'))));
+			 System.out.println("sit=" +SIT);
+			String DeductedAmt1=q.getDEDUCTIBLE_AMOUNT("Select e.DEDUCTIBLE_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_PROCESSED_WEEKLY_CERT c,T_WEEKLY_CERT_PMNT_DEDUCTION d,T_CT_WEEKLY_CERT_PMNT_DEDUCTION_DETAIL e"
+					+ " where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID"
+					+ " and b.CLAIM_ID =c.CLAIM_ID and c.PROCESSED_WEEKLY_CERT_ID=d.PROCESSED_WEEKLY_CERT_ID and d.WEEKLY_CERT_PMNT_DEDUCTION_ID=e.WEEKLY_CERT_PMNT_DEDUCTION_ID");	 
+			double DeductedAmt= (Integer.parseInt(DeductedAmt1.substring(0, DeductedAmt1.lastIndexOf('.'))));
+			
+			String PaidAmount1=q.getTotalPaidAmount("Select c.TOTAL_AMOUNT from T_CLAIMANT a,T_CLAIM b,T_CLAIMANT_PAYMENT c "
+					+ "where a.SSN='" + SSN + "' and a.CLAIMANT_ID=b.CLAIMANT_ID "
+					+ " and a.CLAIMANT_ID=c.CLAIMANT_ID");
+			double PaidAmount= (Integer.parseInt(PaidAmount1.substring(0, PaidAmount1.lastIndexOf('.'))));
+			System.out.println("Claimant total Paid Amount" +PaidAmount);
+			
+			
+			System.out.println("WBA "+WBA);
+			
+			System.out.println("State Tax " +SIT);
+			System.out.println("Deducted Amount " +DeductedAmt);
+			
+			double calculation1 =WBA-Math.round(DismissalAmount*2/3);
+			double calculation= calculation1 - 60;
+			
+			double TotalPaidAmount =calculation-(FIT+SIT);
+			System.out.println(TotalPaidAmount);
+			
+			
+			
+			if(TotalPaidAmount==PaidAmount)
+			{
+				System.out.println("Verified! Total paid amount $ " +TotalPaidAmount+ " is correct");
+			}
+			else
+			{
+				System.out.println("Paid amount is incorrect");
+			}
+		
+	}
+	
+	 
+	
+	
+	
+	
+}

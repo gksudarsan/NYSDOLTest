@@ -1,0 +1,135 @@
+package com.Overpayments;
+
+/** @author mjape 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ISAInquiry;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.UpdateClaimantProfile;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_58256 extends TestBase
+{
+	QuerySearch q;
+	LoginLogoutPage lp;
+	UpdateClaimantProfile ucp;
+	ISAInquiry i;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "441441019";
+	TC_58256 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIM WHERE STATUS = 'ACTV' AND "
+			+ "CLAIM_APPLICATION_ID IN (SELECT CLAIM_APPLICATION_ID FROM T_CLAIM_APPLICATION_EMPLOYER WHERE EMPLOYER_ID IN "
+			+ "(SELECT UNIQUE(EMPLOYER_ID) FROM T_EMPLOYER_CONTACT WHERE CHAR_LENGTH(PHONE) < '11' AND PHONE IS NOT NULL AND "
+			+ "PHONE <> ''))) AND CLAIMANT_ID NOT IN (SELECT CLAIMANT_ID FROM T_ISA_FRAUDULENT_PAYMENT)";
+
+	//Properties prop;
+	public TC_58256()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.Data(query, "SSN");
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_58256();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "RI/CT_7317_OP_Batch_Detect Fraudulent Payment Batch Claimant Phone is the Same as the "
+			+ "Employer's Phone Number...  ")
+	public void Testing58256() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		query = "SELECT (D.PHONE) NUMBER FROM T_CLAIMANT A, T_CLAIM B, T_CLAIM_APPLICATION_EMPLOYER C, T_EMPLOYER_CONTACT D WHERE "
+				+ "A.CLAIMANT_ID = B.CLAIMANT_ID AND B.CLAIM_APPLICATION_ID = C.CLAIM_APPLICATION_ID AND "
+				+ "C.EMPLOYER_ID = D.EMPLOYER_ID AND PHONE IS NOT NULL AND PHONE <> '' AND A.SSN = '"+SSN+"' ORDER BY D.UPDATED_TS DESC";
+		String employerPrimaryNumber = q.Data(query, "NUMBER");
+
+		//Update Claimant Contact Details...
+		ucp = new UpdateClaimantProfile();
+		ucp.updatePrimaryContactNumber(driver, snapshotPath, SimpleClassname, SSN, employerPrimaryNumber);
+
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchDetectFraudulentPayments benefits_weekly_tuesday_6am");
+		String ID = "";
+		do
+		{
+			System.out.println("Waiting for BatchDetectFraudulentPayments to run...");
+			Thread.sleep(1000*60);
+			try
+			{
+				ID = q.Data("SELECT ISA_FRADULENT_PAYMENT_ID FROM T_ISA_FRAUDULENT_PAYMENT WHERE CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC", "ISA_FRADULENT_PAYMENT_ID");
+				System.out.println("ISA_FRADULENT_PAYMENT_ID : "+ID);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(ID.isEmpty());
+		System.out.println("BatchDetectFraudulentPayments Successful...");
+		
+		//Navigating to Fradulent Claimant Inquiry Screen...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		i = new ISAInquiry();
+		i.fradulentClaimant(driver, snapshotPath, SimpleClassname, SSN);		
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

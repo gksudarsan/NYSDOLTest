@@ -1,0 +1,150 @@
+package com.Payments;
+
+/** @author nnegi 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.AddUpdateTRATraining;
+import com.ui.pages.AddUpdateTRAWaiver;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.EnterTAATimesheet;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_59038 extends TestBase
+{
+	//int CWE = -35;
+
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	UpdateIssueDates uid;
+	Wc_locators wcl = new Wc_locators();
+	AddUpdateTRATraining autt;
+	EnterTAATimesheet ett;
+	WeeklyCert w;
+	ClaimSummary c;
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath;
+	TC_59038 ClassObject;
+	AddUpdateTRAWaiver tw;
+	CreateDirectory CD;
+	/*String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B WHERE A.CLAIMANT_ID = B.CLAIMANT_ID  AND B.ENTITLEMENT_TYPE = 'TRA'  "
+			+ "AND B.STATUS = 'ACTV' AND B.BYE_DATE > CURRENT_DATE AND (B.CLAIM_ID NOT IN (SELECT D.CLAIM_ID FROM T_ISSUE D "
+			+ "WHERE B.CLAIM_ID = D.CLAIM_ID) OR B.CLAIM_ID IN (SELECT D.CLAIM_ID FROM T_ISSUE D WHERE B.CLAIM_ID = D.CLAIM_ID "
+			+ "AND D.ISSUE_STATUS = 'DECD')) AND A.CLAIMANT_ID NOT IN (SELECT C.CLAIMANT_ID FROM T_WEEKLY_CERTIFICATION C "
+			+ "WHERE A.CLAIMANT_ID = C.CLAIMANT_ID AND C.CERTIFICATION_DATE > '";*/
+
+	//Properties prop;
+	public TC_59038()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		/*ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') AND B.EFFECTIVE_DATE = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);*/
+
+		ClassObject =new TC_59038();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Common Processing TRA NonPayable Week Prior to Petition Certification")
+	public void Testing59038() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login("sttestingcsr", "Msui@#12345");
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		c = new ClaimSummary();
+		c.claimsummary(prop.getProperty("ssn1"), snapshotPath, SimpleClassname, "Certification Date");
+		String CWEDate= driver.findElement(By.xpath("//*[contains(text(),'Certification Date')]/../../tr[6]/td[5]")).getText();
+		String ConvertDate=FutureDatePastDate.ConvertDate(CWEDate);
+		String CWE=FutureDatePastDate.addDaysToDate(ConvertDate, -1);
+		System.out.println("CWE date is " +CWE);
+
+
+
+		//Enter TAA Timesheet...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		ett = new EnterTAATimesheet();
+		ett.enterTaaTimesheet59038(driver, snapshotPath, SimpleClassname, prop.getProperty("ssn1"), CWE);
+
+		//Weekly Cert By SSN/CWE Process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		w = new WeeklyCert();
+		w.fileWeeklyCertification59038(driver, snapshotPath, SimpleClassname, prop.getProperty("ssn1"), CWE);
+		
+		Thread.sleep(2000);
+		System.out.println("Waiting for batch run");
+		SSHConnection ssh=new SSHConnection();
+	 	ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), BatchProp.getProperty("PaymentBatches"));
+	 	Thread.sleep(5000);
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(prop.getProperty("ssn1"), snapshotPath, SimpleClassname, "Pending Weekly Certification(s)");
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

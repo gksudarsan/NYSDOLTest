@@ -1,0 +1,10 @@
+username=
+password=
+Benefits_Batch_Path=cd /opt/app/accessms/bin/benefits/batch;
+Tax_Batch_Path=cd /opt/app/accessms/bin/tax/batch;
+
+#Benifts_Batches_Name
+WorkShareWC=BatchCTProcessWorkShareWeeklyCert on_demand
+
+
+#Tax_Batches_Name

@@ -1,0 +1,120 @@
+/**
+ * 
+ */
+package com.ui.locators;
+
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+
+
+/**
+ * @author nnegi
+ *
+ */
+
+public class OverPayment_Locators  extends TestBase {
+	
+	public WebElement SelectOvrPymntIssue(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(),'"+selection+"')]/preceding-sibling::td"))).click();
+		return driver.findElement(By.xpath("//td[contains(text(),'"+selection+"')]/preceding-sibling::td"));
+	}
+	
+	public WebElement ClickEmplyrResponse()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Enter Employer Response']")));
+		return driver.findElement(By.xpath("//a[text()='Enter Employer Response']"));
+	}
+	
+	public WebElement HireDate()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='mostRecentHireDate_-month']")));
+		return driver.findElement(By.xpath("//input[@name='mostRecentHireDate_-month']"));
+	}
+	
+	public WebElement SelectOption()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(),'-Select-')]/following::div[1]/span")));
+		return driver.findElement(By.xpath("//label[contains(text(),'-Select-')]/following::div[1]/span"));
+	}
+	public WebElement checkMainQuestion(String question, String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//child::label[contains(text(), '"+selection+"')]/../div/div/span")));
+		return driver.findElement(By.xpath("//td[contains(text(), '"+question+"')]//ancestor::tr[1]/td//child::td//child::label[contains(text(), '"+selection+"')]/../div/div/span"));  	
+	}
+	public WebElement CsrRemark()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//textarea[@name='csrRemarks__1']")));
+		return driver.findElement(By.xpath("//textarea[@name='csrRemarks__1']"));
+	}
+	
+	public WebElement Click_SaveAndClose()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[text()='Save and Close']")));
+		return driver.findElement(By.xpath("//button/span[text()='Save and Close']"));
+	}
+	
+	
+	
+	
+
+
+	public void issueSource(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Issue Source')]//following::label[1]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '"+selection+"')]"))).click();
+	}
+
+	public void Date(String xpath, String date)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-month')]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name, '"+xpath+"_-month')]"))).sendKeys(date);
+	}
+
+	public void clickAddEmployer()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), 'Add Employer')]"))).click();
+	}
+
+	public void employerName(String name)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Employer Name')]//following::input[1]"))).sendKeys(name);
+	}
+
+	public void address(String xpath, String add)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '"+xpath+"')]//following::input[1]"))).sendKeys(add);
+	}
+
+	public void selectState(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'State')]//following::label[1]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '"+selection+"')]"))).click();
+	}
+
+	public void selectCountry(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Country')]//following::label[1]"))).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '"+selection+"')]"))).click();
+	}
+
+	public void generateWageLetterRequest(String selection)
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Generate Wage Request Letter')]//following::label[contains(text(), '"+selection+"')]//preceding::span[1]"))).click();
+	}
+
+	public void clickGenerateWageRequestLetter()
+	{
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), 'Generate Wage Request Letter')]"))).click();
+	}
+}

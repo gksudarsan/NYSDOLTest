@@ -1,0 +1,202 @@
+package com.Repayments;
+
+/** @author mjape 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.sun.media.sound.InvalidFormatException;
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.OverpaymentMaintenance;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_56924 extends TestBase
+{
+	QuerySearch q;
+	LoginLogoutPage lp;
+	OverpaymentMaintenance om;
+	ClaimSummary c;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "";
+	TC_56924 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B, T_OVERPAYMENT C WHERE A.CLAIMANT_ID = B.CLAIMANT_ID AND "
+			+ "B.CLAIM_ID = C.CLAIM_ID AND C.STATUS = 'ACTV' AND C.OVERPAYMENT_ISSUE_ID IS NOT NULL AND "
+			+ "C.ESTABLISHMENT_DATE < CURRENT_DATE AND C.OVERPAYMENT_BALANCE > '1' ORDER BY C.ESTABLISHMENT_DATE DESC";
+
+	//Properties prop;
+	public TC_56924()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_56924();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "B2_7311_Batch-Overpayment-Batch Write Off Overpayments: process write off overpayment that "
+			+ "have overpayment balance less than one dollar")
+	public void Testing56924() throws InterruptedException, ClassNotFoundException, SQLException, InvalidFormatException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		String amount = "";
+		q = new QuerySearch();
+		String countACTV = q.Data("SELECT COUNT(OVERPAYMENT_BALANCE) COUNTACTV FROM T_OVERPAYMENT WHERE STATUS = 'ACTV' AND CLAIM_ID IN "
+				+ "(SELECT CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"'))",
+				"COUNTACTV");
+		int count = Integer.parseInt(countACTV);
+		
+		String overpaymentID[] = new String[count];
+		do
+		{
+			count = count - 1;
+			overpaymentID[count] = q.Data("SELECT OVERPAYMENT_ID FROM T_OVERPAYMENT WHERE STATUS = 'ACTV' AND CLAIM_ID IN (SELECT CLAIM_ID FROM "
+					+ "T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"'))", "OVERPAYMENT_ID");
+		}
+		while(count!=0);
+		
+		count = Integer.parseInt(countACTV);
+		String penaltyBalance[] = new String[count];
+		String overpaymentBalance[] = new String[count];
+		String interestBalance[] = new String[count];
+		double d = 0.00;
+		
+		do
+		{
+			count = count - 1;
+			
+			penaltyBalance[count] = q.getPenaltyBalance("SELECT TF_PENALTY_BALANCE FROM T_OVERPAYMENT WHERE "
+					+ "OVERPAYMENT_ID = '"+overpaymentID[count]+"'");
+			d = d + Double.parseDouble(penaltyBalance[count]);
+			
+			overpaymentBalance[count] = q.getOverpaymentBalance("SELECT OVERPAYMENT_BALANCE FROM T_OVERPAYMENT WHERE "
+					+ "OVERPAYMENT_ID = '"+overpaymentID[count]+"'");
+			d = d + Double.parseDouble(overpaymentBalance[count]);
+			
+			interestBalance[count] = q.getInterestBalance("SELECT INTEREST_BALANCE FROM T_OVERPAYMENT WHERE "
+					+ "OVERPAYMENT_ID = '"+overpaymentID[count]+"'");
+			d = d + Double.parseDouble(interestBalance[count]);
+		}
+		while(count!=0);
+		
+		amount = String.valueOf(d - 0.50);
+		System.out.println("Total overpayment amount : "+d);
+		System.out.println("Total repayment amount : "+amount);
+
+		//Enter Repayment Details process...
+		om = new OverpaymentMaintenance();
+		om.enterRepaymentDetails(driver, snapshotPath, SimpleClassname, "Cash", "", amount, "", SSN);
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+
+		driver.findElement(By.xpath("//a[contains(text(), 'Overpayments')]")).click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//a[contains(text(), 'Repayment Details')]//following::a[1]")).click(); Thread.sleep(5000);
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Run BatchWriteOffOverpayments...
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchWriteOffOverpayments benefits_monthly_1st_day_6am");
+		Thread.sleep(3000);
+		
+		String status = "";
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for BatchWriteOffOverpayments to run...");
+			Thread.sleep(1000*60);
+			try
+			{
+				status = q.getStatus("SELECT STATUS FROM T_OVERPAYMENT WHERE DATE(UPDATED_TS) = CURRENT_DATE AND CLAIM_ID IN "
+						+ "(SELECT CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE "
+						+ "SSN = '"+SSN+"')) ORDER BY ESTABLISHMENT_DATE DESC");
+				System.out.println("Current Status : "+status);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(!status.equalsIgnoreCase("WROF"));
+		System.out.println("BatchWriteOffOverpayments Successful...");
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+		
+		driver.findElement(By.xpath("//a[contains(text(), 'Overpayments')]")).click(); Thread.sleep(5000);
+		js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1000);
+		Highlighter h = new Highlighter();
+		h.highlight(driver, "//span[contains(text(), 'History Log')]//following::td[contains(text(), 'has been written off')][1]");  Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

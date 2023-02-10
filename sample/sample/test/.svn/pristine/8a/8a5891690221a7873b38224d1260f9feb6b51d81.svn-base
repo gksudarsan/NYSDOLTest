@@ -1,0 +1,393 @@
+package com.ui.utilities;
+
+/** @author mjape */
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class QuerySearch
+{
+	List<String> ssn;
+	Connection con;
+	Statement stmt;
+	ResultSet rs;
+	Random r = new Random();
+	int i=-1;
+	String ed;
+	FutureDatePastDate f;
+
+	public String queryresult(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			//System.out.println(rs.getString("SSN"));
+			ssn.add(rs.getString("SSN"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		int random = r.nextInt(i);
+		System.out.println("Randomly picking record number "+(random+1));
+		return ssn.get(random);
+	}
+
+	public String getData(String query) throws ClassNotFoundException, SQLException
+	{
+		r = new Random();
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query);
+		while(rs.next())
+		{
+			System.out.println(rs.getString("ED"));
+			ssn.add(rs.getString("ED"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		return ssn.get(r.nextInt(i));
+	}
+
+	public String getPetitionNumber(String query) throws ClassNotFoundException, SQLException
+	{
+		r = new Random();
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query);
+		while(rs.next())
+		{
+			//System.out.println(rs.getString("Petition_Number"));
+			ssn.add(rs.getString("Petition_Number"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		return ssn.get(r.nextInt(i));
+	}
+
+	public String getClaimWeekEndingDate(String query) throws ClassNotFoundException, SQLException
+	{
+		System.out.println(query);
+		r = new Random();
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query);
+		while(rs.next())
+		{
+			System.out.println(rs.getString("CWE"));
+			ssn.add(rs.getString("CWE"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		return ssn.get(r.nextInt(i));
+	}
+	
+	public String getTrainingStartDate(String query) throws ClassNotFoundException, SQLException
+	{
+		System.out.println(query);
+		r = new Random();
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query);
+		while(rs.next())
+		{
+			System.out.println(rs.getString("Training_Start_Date"));
+			ssn.add(rs.getString("Training_Start_Date"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		return ssn.get(r.nextInt(i));
+	}
+	
+	public String SHAREDWORK_PLAN_ID(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			System.out.println(rs.getString("SHAREDWORK_PLAN_ID"));
+			ssn.add(rs.getString("SHAREDWORK_PLAN_ID"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		int random = r.nextInt(i);
+		System.out.println("Randomly picking record number "+(random+1));
+		return ssn.get(random);
+	}
+	
+	public String getExpectancy(String query) throws ClassNotFoundException, SQLException
+	{
+		System.out.println(query);
+		r = new Random();
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query);
+		while(rs.next())
+		{
+			System.out.println(rs.getString("EXPECTANCY"));
+			ssn.add(rs.getString("EXPECTANCY"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		return ssn.get(r.nextInt(i));
+	}
+	
+	public String getEffectiveDate(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			System.out.println(rs.getString("EFFECTIVE_DATE"));
+			ssn.add(rs.getString("EFFECTIVE_DATE"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		int random = r.nextInt(i);
+		System.out.println("Randomly picking record number "+(random+1));
+		return ssn.get(random);
+	}
+	
+	public String getCWEDate(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			System.out.println(rs.getString("CWE"));
+			ssn.add(rs.getString("CWE"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		System.out.println("Picking latest CWE Date...");
+		return ssn.get(0);
+	}
+
+	public String getGrossEarning(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			System.out.println(rs.getString("WBA"));
+			ssn.add(rs.getString("WBA"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		System.out.println("Picking latest WBA...");
+		return ssn.get(0);
+	}
+	public String getTotalEarning(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		//System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			//System.out.println(rs.getString("TOTAL_EARNINGS"));
+			ssn.add(rs.getString("TOTAL_EARNINGS"));
+			i++;
+		}
+		con.close();
+		if(i==0)
+			System.out.println((i+1)+" records found...");
+		else
+			System.out.println(i+" records found...");
+		//System.out.println("Picking latest ADJUSTED_EARNINGS...");
+		return ssn.get(0);
+	}
+	
+	
+	public String getFIT_DEDUCTION(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		//System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			//System.out.println(rs.getString("FIT_DEDUCTION"));
+			ssn.add(rs.getString("FIT_DEDUCTION"));
+			i++;
+		}
+		con.close();
+		if(i==0)
+			System.out.println((i+1)+" records found...");
+		else
+			System.out.println(i+" records found...");
+		//System.out.println("Picking latest FIT_DEDUCTION...");
+		return ssn.get(0);
+	}
+	
+	public String getSIT_DEDUCTION(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		//System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			//System.out.println(rs.getString("SIT_DEDUCTION"));
+			ssn.add(rs.getString("SIT_DEDUCTION"));
+			i++;
+		}
+		con.close();
+		if(i==0)
+			System.out.println((i+1)+" records found...");
+		else
+			System.out.println(i+" records found...");
+		//System.out.println("Picking latest FIT_DEDUCTION...");
+		return ssn.get(0);
+	}
+	
+	public String getDEDUCTIBLE_AMOUNT(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		//System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			//System.out.println(rs.getString("DEDUCTIBLE_AMOUNT"));
+			ssn.add(rs.getString("DEDUCTIBLE_AMOUNT"));
+			i++;
+		}
+		con.close();
+		if(i==0)
+			System.out.println((i+1)+" records found...");
+		else
+			System.out.println(i+" records found...");
+		//System.out.println("Picking latest FIT_DEDUCTION...");
+		return ssn.get(0);
+	}
+	
+	public String getTotalPaidAmount(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		//System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			//System.out.println(rs.getString("TOTAL_AMOUNT"));
+			ssn.add(rs.getString("TOTAL_AMOUNT"));
+			i++;
+		}
+		con.close();
+		if(i==0)
+			System.out.println((i+1)+" records found...");
+		else
+			System.out.println(i+" records found...");
+		//System.out.println("Picking latest FIT_DEDUCTION...");
+		return ssn.get(0);
+	}
+	
+	public String getCertificationDate(String query) throws ClassNotFoundException, SQLException
+	{
+		String query1 = query;
+		System.out.println(query1);
+		ssn = new ArrayList<String>();
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+		con=DriverManager.getConnection("jdbc:db2://10.80.26.78:50000/DBSTCT","db2prd1","db2prd1.ctst");
+		stmt=con.createStatement();
+		rs=stmt.executeQuery(query1);
+		while(rs.next())
+		{
+			//System.out.println(rs.getString("Certification_Date"));
+			ssn.add(rs.getString("Certification_Date"));
+			i++;
+		}
+		con.close();
+		System.out.println((i+1)+" records found...");
+		if(i==0)
+			i++;
+		//System.out.println("Picking latest Certification Date...");
+		return ssn.get(0);
+	}
+}

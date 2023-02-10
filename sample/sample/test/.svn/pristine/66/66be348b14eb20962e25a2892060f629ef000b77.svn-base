@@ -1,0 +1,73 @@
+package com.ui.pages;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+public class MaintainIRORADetails  extends TestBase
+{
+	Wc_locators wcl;
+	OverPayment_Locators opl;
+	screenShot screen = new screenShot();
+	String heading;
+	FutureDatePastDate f;
+
+	public void addIRORAOverpayment(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		opl = new OverPayment_Locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Benefit Maintenance").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Maintain IRORA Details").click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);	Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//List of IRORA Overpayments page...
+		heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("List of IRORA Overpayments"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 5 more seconds for page to load...");
+			Thread.sleep(5000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//button/span[contains(text(), 'Add IRORA Overpayment')]")).click();
+		Thread.sleep(5000);
+
+		//Overpayment Details page...
+		heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("Overpayment Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 5 more seconds for page to load...");
+			Thread.sleep(5000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		opl.requestingState((int)(Math.random() * 53 + 1)); Thread.sleep(1000);
+		opl.overpaymentClass(new Random().nextInt(2)); Thread.sleep(1000);
+		opl.Date("establishmentDate", f.d((int)(Math.random() * 10 + 1) * (-1))); Thread.sleep(500);
+		driver.findElement(By.xpath("//*[@name='amount']")).sendKeys(String.valueOf((int)(Math.random() * 150 + 101))); Thread.sleep(500);
+		opl.selectEntitlementType((int)(Math.random() * 4 + 1)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

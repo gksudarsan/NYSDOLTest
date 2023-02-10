@@ -1,0 +1,153 @@
+package com.ui.utilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.google.common.io.Files;
+import com.ui.base.TestBase;
+import com.ui.pages.ReportPage;
+import com.ui.pages.TotalPaidAmountCalculation;
+
+import freemarker.template.SimpleDate;
+import javafx.scene.paint.Color;
+import sun.util.resources.cldr.aa.CalendarData_aa_ER;
+
+public class Test extends TestBase{
+	
+	   
+	//static Properties prop;
+		// TODO
+		
+		static String ot;
+		
+		
+	 public static String dat(String inputText) throws ParseException
+	 {
+
+		//String inputText = "Saturday, May 16, 2020";
+		DateFormat outputFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+		DateFormat inputFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.US);
+		Date date1 = inputFormat.parse(inputText);
+		Calendar calender= Calendar.getInstance();
+		calender.add(Calendar.DATE, -6);
+		Date date=calender.getTime();
+		DateFormat df=new SimpleDateFormat("MMddyyyy");
+		//need to check
+		ot= outputFormat.format(date1);
+		return ot;
+		
+		
+		
+		
+		
+		  
+		  //We will verify...
+		
+		 
+	}
+	 public static void main(String args[]) throws ParseException, ClassNotFoundException, SQLException, InterruptedException, IOException
+	 {
+		
+		 /*Test.dat("Saturday, May 16, 2020");
+		 
+		 System.out.println(ot);
+		 
+		 String WBA="$ 200.00";
+		
+		 String St=WBA.replaceAll("[\\s{$}]", "");
+		 System.out.println(St);
+		 
+		double WBAmount= Double.parseDouble(St)+100;
+		System.out.println(WBAmount);*/
+		 
+		
+		/* String amt="Dismissal Pay: $40";
+		
+		 String st="Dismissal Pay: $";
+		 String s=amt.replace(st,"");
+		 System.out.println(s);
+		 double PaidAmount= Double.parseDouble(s);
+		 System.out.println(PaidAmount);*/
+		 
+		 
+		//String inputText = "05162020";
+		/*String rep=inputText.replace("/", "");
+		System.out.println(rep);
+			SimpleDateFormat sdf=new SimpleDateFormat("MMddyyyy");
+			Calendar c=Calendar.getInstance();
+			c.setTime(sdf.parse(rep));
+			c.add(Calendar.DAY_OF_MONTH, -3);
+			String newDate =sdf.format(c.getTime());
+			System.out.println(newDate);*/
+			//String outputText= outputFormat.format(date1);
+		// int cwe =Integer.parseInt(inputText);
+	//System.out.print(date1);
+		// System.out.println(Integer.parseInt(inputText));
+//		 String query1="Select b.* from T_CLAIMANT A,T_CORRESPONDENCE B where A.SSN='123457216' and A.CLAIMANT_ID=B.CLAIMANT_ID";
+//			
+//		 QuerySearch q = new QuerySearch();	
+//			q.Printqueryresult(query1);
+		//123456899
+		  String GREEN = "\033[0;32m";
+		
+	       // System.out.print(Color.RESET);
+		  //  System.out.println("\033[31mRed\033[32m, Green\033[33m, Yellow\033[34m, Blue\033[0m");
+		 	SSHConnection ssh=new SSHConnection();
+		 	
+
+			ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), " runJob BatchUpdateBarcodeOnCorrespondenceNonMon corr_nonmon;"
+					+ "./qclient.sh runJob BatchUpdateBarcodeOnCorrespondenceBulkBPC corr_bpc_tra ;"
+					+ "./qclient.sh runJob BatchUpdateBarcodeOnCorrespondenceBulkBenefits corr_benefits");
+		 	//ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchUpdateBarcodeOnCorrespondenceBulkBenefits benefits_daily_930am");
+		 	//ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"),"runJob BatchEstablishClaim benefits_daily_1230pm");
+			//ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchUpdateBarcodeOnCorrespondenceBulkBPC corr_bpc_tra");
+			//ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJobOnly BatchGenerateBPC99SecondNotice benefits_daily_3pm");
+		 	
+		 /*	Path src=Paths.get("C:\\Users\\nnegi\\Workspace\\UI_Project\\Download\\Document (1).pdf");
+		    Path dest=Paths.get("../UI_Project/Screenshots/TC_58083_2020-07-21_16_45_09//Report.pdf");
+		    Files.copy(src.toFile(),dest.toFile());
+		    System.out.println("PDF file placed in Screenshot folder");*/
+		    
+		    
+		 	/*String ID = "";
+			QuerySearch q = new QuerySearch();
+			do
+			{
+				System.out.println("Waiting for XMATCHWAGE record generate...");
+				Thread.sleep(5000);
+				try
+				{
+					ID = q.getCorrespondenceID("SELECT CORRESPONDENCE_ID FROM T_CORRESPONDENCE WHERE CORRESPONDENCE_CODE = 'XMATCHWAGE' "
+							+ "AND UPDATED_BY = 'anonymous' AND Mail_DATE is null AND DATE(CREATED_TS) = CURRENT_DATE  AND CLAIMANT_ID IN "
+							+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '123457100') ORDER BY CREATED_TS DESC");
+					System.out.println("CORRESPONDENCE_ID : "+ID);
+				}
+				catch(Exception e)
+				{
+					System.out.println("Record not found...");
+				}
+			}
+			while(ID.isEmpty());
+			System.out.println("Predetermination Notice generated successfully...");
+				 
+	 }*/
+	 }
+}
+
+	
+
+

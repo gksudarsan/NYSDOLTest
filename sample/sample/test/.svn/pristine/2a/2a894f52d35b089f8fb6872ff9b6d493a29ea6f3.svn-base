@@ -1,0 +1,500 @@
+package com.ui.pages;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+public class Reassign_WorkItem extends TestBase {
+	static screenShot screen=new screenShot();
+	static Wc_locators wcl;
+	
+	Payments_Locators pl;
+	FutureDatePastDate f;
+	static JavascriptExecutor js = ((JavascriptExecutor)driver);
+	static PageHeading ph=new PageHeading();
+	static OverPayment_Locators opl=new OverPayment_Locators();
+	static String heading;
+	Highlighter h;
+	Random rand = new Random();
+
+	public static void SearchCreatedPensionIssue(WebDriver driver, String snapshotPath, String SimpleClassname) throws InterruptedException
+	{
+		wcl=new Wc_locators();
+		Thread.sleep(5000);
+		wcl.clickHomePagebtn().click();
+		wcl.clickOnSystemAdmin_Link().click();
+		Thread.sleep(1000);
+		wcl.WorkFlow_AdminLink().click();
+		Thread.sleep(1000);
+		wcl.reAssignLink().click();
+	
+		Thread.sleep(5000);
+		
+	    Thread.sleep(2000);
+	    wcl.selectAllbtn().click();
+	   // Thread.sleep(3500);
+	   // wcl.clickNext().click();
+	    Thread.sleep(2000);
+	    wcl.ssn1().sendKeys(prop.getProperty("ssn1"));
+		 driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		    wcl.clickSearch().click();
+		    
+	    
+		   
+	}
+	
+	public static void resolveWI(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN,String selection) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Reassign to current user...
+		wcl.homeTabs("System Administration").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Workflow Administrator')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Reassign/Terminate Workitems')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Units"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//button/span[contains(text(), 'Select All Units')]")).click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Selected User's Work Items"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1500);
+		//String username=driver.findElement(By.xpath("//td/span[contains(text(), 'Claimant Overpayment Predetermination Notice')]//following::td[7]")).getText();
+		Thread.sleep(2500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/span[contains(text(), '"+selection+"')]//ancestor::tr/td//child::div/span"))).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		//driver.findElement(By.xpath("//td/span[contains(text(), 'FYI WorkItem')]//ancestor::tr/td//child::div/span")).click(); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Re-Assign Work Item(s)"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver.findElement(By.xpath("//td/input[1]")).sendKeys(prop.getProperty("username")); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Resolving Work Item...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickMyQ();
+		Thread.sleep(5000);
+		wcl.IAccept(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Individual Work Queue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a/span[contains(text(), '"+selection+"')]"))).click();
+		Thread.sleep(10000);
+
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+	}
+	
+	public static void resolveWICorrospondence(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN,String selection) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Reassign to current user...
+		wcl.homeTabs("System Administration").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Workflow Administrator')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Reassign/Terminate Workitems')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Units"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//button/span[contains(text(), 'Select All Units')]")).click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Selected User's Work Items"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1500);
+		//String username=driver.findElement(By.xpath("//td/span[contains(text(), 'Claimant Overpayment Predetermination Notice')]//following::td[7]")).getText();
+		Thread.sleep(2500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/span[contains(text(), '"+selection+"')]//ancestor::tr/td//child::div/span"))).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		//driver.findElement(By.xpath("//td/span[contains(text(), 'FYI WorkItem')]//ancestor::tr/td//child::div/span")).click(); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Re-Assign Work Item(s)"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver.findElement(By.xpath("//td/input[1]")).sendKeys(prop.getProperty("superuser")); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Resolving Work Item...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickMyQ();
+		Thread.sleep(5000);
+		wcl.IAccept(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Individual Work Queue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a/span[contains(text(), '"+selection+"')]"))).click();
+		Thread.sleep(500);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("FYI WorkItem"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+	}
+	
+	public static void resolveWICorrospondence60349(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN,String selection) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Reassign to current user...
+		wcl.homeTabs("System Administration").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Workflow Administrator')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Reassign/Terminate Workitems')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Units"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//button/span[contains(text(), 'Select All Units')]")).click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Selected User's Work Items"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1500);
+		//String username=driver.findElement(By.xpath("//td/span[contains(text(), 'Claimant Overpayment Predetermination Notice')]//following::td[7]")).getText();
+		Thread.sleep(2500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/span[contains(text(), '"+selection+"')]//ancestor::tr/td//child::div/span"))).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		//driver.findElement(By.xpath("//td/span[contains(text(), 'FYI WorkItem')]//ancestor::tr/td//child::div/span")).click(); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Re-Assign Work Item(s)"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver.findElement(By.xpath("//td/input[1]")).sendKeys(prop.getProperty("superuser")); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Resolving Work Item...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickMyQ();
+		Thread.sleep(5000);
+		wcl.IAccept(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Individual Work Queue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a/span[contains(text(), '"+selection+"')]"))).click();
+		Thread.sleep(1500);
+
+		ph.ClaimantOvpNoticeWorkItem_Screen();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		opl.checkMainQuestion11("Class of Overpayment?", "Fraud");
+		Thread.sleep(1500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		driver.findElement(By.xpath("//textarea[@name='reasonForChangeType']")).sendKeys("Update Non Fraud");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1500);
+
+		opl.SelectMainQueAns("Do you want to establish the overpayment?","Yes");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		wcl.submit().click();
+		Thread.sleep(7000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+	}
+	public static void resolveWICorrospondence60341(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN,String selection) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Reassign to current user...
+		wcl.homeTabs("System Administration").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Workflow Administrator')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Reassign/Terminate Workitems')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Units"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//button/span[contains(text(), 'Select All Units')]")).click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Selected User's Work Items"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1500);
+		//String username=driver.findElement(By.xpath("//td/span[contains(text(), 'Claimant Overpayment Predetermination Notice')]//following::td[7]")).getText();
+		Thread.sleep(2500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/span[contains(text(), '"+selection+"')]//ancestor::tr/td//child::div/span"))).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		//driver.findElement(By.xpath("//td/span[contains(text(), 'FYI WorkItem')]//ancestor::tr/td//child::div/span")).click(); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Re-Assign Work Item(s)"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver.findElement(By.xpath("//td/input[1]")).sendKeys(prop.getProperty("username")); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		//Resolving Work Item...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickMyQ();
+		Thread.sleep(5000);
+		wcl.IAccept(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Individual Work Queue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a/span[contains(text(), '"+selection+"')]"))).click();
+		Thread.sleep(1500);
+
+		ph.ClaimantOvpNoticeWorkItem_Screen();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		opl.checkMainQuestion11("Class of Overpayment?", "Fraud");
+		Thread.sleep(1500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		driver.findElement(By.xpath("//textarea[@name='reasonForChangeType']")).sendKeys("Update Fraud");
+		Thread.sleep(3000);
+		opl.checkMainQuestion12("Do you want to recalculate the overpayment?", "Yes");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1500);
+
+		opl.SelectMainQueAns("Do you want to establish the overpayment?","Yes");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		wcl.submit().click();
+		Thread.sleep(8000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+	}
+	
+	
+}

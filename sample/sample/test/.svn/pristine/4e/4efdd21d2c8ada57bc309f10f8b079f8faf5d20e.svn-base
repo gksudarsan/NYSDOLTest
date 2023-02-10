@@ -1,0 +1,134 @@
+/* @author vsingh  */
+package com.Overpayments;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ChangeReportedEarnings;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_56521 extends TestBase
+{
+	static LoginLogoutPage lp;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_56521 ClassObject;
+	static  CreateDirectory CD;	
+	static ChangeReportedEarnings cre;
+	static Overpayment op;
+	FutureDatePastDate f;
+	QuerySearch q;
+	UpdateIssueDates uid;
+	WeeklyCert w;
+	ClaimSummary c;
+	Overpayment o;
+	Wc_locators wcl = new Wc_locators();
+	String  SSN = "019621424", ed;
+	int CWE = 0;
+
+	String query = "SELECT UNIQUE(A.SSN) FROM T_CLAIMANT A, T_WEEKLY_CERTIFICATION B, T_CLAIMANT_PAYMENT C , T_CLAIM E "
+			+ " WHERE A.CLAIMANT_ID = B.CLAIMANT_ID  AND B.CLAIMANT_ID = C.CLAIMANT_ID AND "
+			+ "A.CLAIMANT_ID = E.CLAIMANT_ID AND E.STATUS = 'ACTV' AND "
+			+ " E.BYE_DATE > CURRENT_DATE  AND C.PAYMENT_DATE IS NOT NULL AND B.CERTIFICATION_DATE > '";
+			
+
+	//Properties prop;
+	public TC_56521()
+	{
+		super();
+	}
+
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+{
+		f = new FutureDatePastDate();
+		ed = f.d(-60);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		query = query + ed + "' AND B.CERTIFICATION_DATE < '";
+		ed = f.Saturday(-7);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		query = query + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+		
+		String lastCWE = q.Data("SELECT CWE FROM T_WEEKLY_CERTIFICATION WHERE CLAIMANT_ID IN (SELECT "
+				+ "CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CWE DESC", "CWE");
+		System.out.println("Last CWE : "+lastCWE);
+		Date date = new Date();
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+		System.out.println("Current Date : "+currentDate);
+		Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(lastCWE);
+		Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(currentDate);
+		CWE = (int)((date1.getTime() - date2.getTime()) / (1000*60*60*24));
+		System.out.println(CWE);
+		
+		ClassObject =new TC_56521();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+
+
+
+	}
+	@Test(description ="TC_56521_MS:7261:OP:Adjust Final Earnings" )
+	public void TC_56521_op() throws InterruptedException, ParseException, ClassNotFoundException, SQLException
+	{
+		System.out.println("@test initiated");
+		cre= new ChangeReportedEarnings();
+		cre.changeEarning_overpayment( driver,  snapshotPath,  SimpleClassname, prop.getProperty("ssn_56521"), CWE);
+		
+		String expected = "The reported earnings were changed successfully.";
+		String Actual = driver.findElement(By.xpath("//td[contains (text(), 'The reported earnings')]")).getText();
+		//assertEquals(Actual, expected);
+		Assert.assertEquals(Actual, expected);
+		System.out.println(Actual+ " test case executed.");
+		
+		
+
+	}
+	@AfterTest
+	public void close_browser()
+	{
+		driver.close();
+		driver.quit();
+		System.out.println("Testcase executed and browser closed");
+	}
+
+}

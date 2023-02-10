@@ -1,0 +1,133 @@
+/**
+ * 
+ */
+package com.WeeklyCertification;
+
+import java.text.ParseException;
+import java.time.Duration;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+/**
+ * @author nnegi
+ *
+ */
+public class TC_59276 extends TestBase {
+	LoginLogoutPage lp;
+	PageHeading ph;
+	ClaimSummary cs;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_59276 ClassObject;
+
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+
+
+	static FutureDatePastDate Pdate;
+	static String date1;
+
+
+	public TC_59276()
+	{
+		super();
+	}
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser)
+
+	{
+		ClassObject =new TC_59276();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+
+
+	}
+	@Test(priority=1,description="Log into CT ACCESS system")
+	public void applicationLogin() throws InterruptedException
+	{
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		//driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+	@Test(priority=2,description ="TC_59276 Weekly Certs. Change Reported Earnings higher earnings special role")
+	public void TC_59276_WKC_CWE() throws InterruptedException, ParseException
+	{
+
+
+		ph=new PageHeading();
+		wcl=new Wc_locators();
+		Thread.sleep(2000);
+		wcl.clickWcLink().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.ChangeReported().click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.ssn1().sendKeys(prop.getProperty("ssn1"));
+
+		wcl.confirmssn1().sendKeys(prop.getProperty("ssn1"));
+		Thread.sleep(1000);
+
+		//Here we need to change cwe date.
+		wcl.claimWeekEndingDate().sendKeys("05162020");
+
+
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		//---------------------------
+		ph.EnterFinalEarningsScreen();
+
+
+		wcl.claimantFinalEarnings().sendKeys("100");
+		wcl.finalHoursOfWork().sendKeys("20");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		ph.EarningVerificationScreen();
+
+
+		Thread.sleep(3000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+
+		PageHeading.EarningConfirmationScreen(snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		wcl.HomeButton().click();
+		Thread.sleep(2000);
+		cs=new ClaimSummary();
+		cs.claimsummary(prop.getProperty("ssn1"), snapshotPath, SimpleClassname, "Pending Weekly Certification(s)");
+
+	}
+	
+	/*@AfterTest
+	public void tearDown()
+	{
+		driver.close();
+	}*/
+}

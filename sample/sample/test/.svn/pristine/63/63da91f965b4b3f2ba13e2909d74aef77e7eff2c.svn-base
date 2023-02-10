@@ -1,0 +1,251 @@
+/** @author vsingh  */
+// SSN and cwe need to enter before execution....
+package com.Overpayments;
+import static org.testng.Assert.assertEquals;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_59484 extends TestBase
+{
+	int CWE = -400;
+	int numberOfWeeks = 1;
+
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	UpdateIssueDates uid;
+	WeeklyCert w;
+	ClaimSummary c;
+	 Highlighter h;
+	Overpayment o;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String CWEDATE ,CWEDATE1,ed,classname, SimpleClassname, snapshotPath, SSN = "731183215" ; //045548042
+	TC_59484 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT UNIQUE(A.SSN) FROM T_CLAIMANT A, T_WEEKLY_CERTIFICATION B, T_CLAIMANT_PAYMENT C , T_CLAIM E, "
+			+ "T_CLAIM_APPLICATION_EMPLOYER F WHERE A.CLAIMANT_ID = B.CLAIMANT_ID  AND B.CLAIMANT_ID = C.CLAIMANT_ID AND "
+			+ "A.CLAIMANT_ID = E.CLAIMANT_ID AND E.CLAIM_APPLICATION_ID = F.CLAIM_APPLICATION_ID AND E.STATUS = 'ACTV' AND "
+			+ "E.ENTITLEMENT_TYPE = 'REG' AND E.BYE_DATE > CURRENT_DATE AND F.EMPLOYER_NAME IS NOT NULL AND C.PAYMENT_DATE IS NOT "
+			+ "NULL AND B.CERTIFICATION_DATE > '";
+	
+	public TC_59484()
+	{
+		super();
+	}
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException, InterruptedException
+	{
+		f = new FutureDatePastDate();
+		ed = f.d(-450);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		query = query + ed + "' AND B.CERTIFICATION_DATE < '";
+		ed = f.Saturday(-370);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		query = query + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		//SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+		CWEDATE = f.d(-450);
+		CWEDATE = CWEDATE.substring(4, 8) + "-" + CWEDATE.substring(0, 2) + "-" + CWEDATE.substring(2, 4);
+		CWEDATE1 = f.d(-370);
+		CWEDATE1 = CWEDATE1.substring(4, 8) + "-" + CWEDATE1.substring(0, 2) + "-" + CWEDATE1.substring(2, 4);
+		System.out.println("CWEDATE1 "+CWEDATE1);
+		
+		
+		String lastCWE = q.Data("SELECT CWE FROM T_WEEKLY_CERTIFICATION WHERE CLAIMANT_ID IN (SELECT "
+				+ "CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') AND CWE > '"+CWEDATE+"' AND  CWE < '"+CWEDATE1+"' ORDER BY CWE DESC", "CWE");
+		System.out.println("Last CWE : "+lastCWE);
+		Date date = new Date();
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+		System.out.println("Current Date : "+currentDate);
+		Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(lastCWE);
+		Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(currentDate);
+		CWE = (int)((date1.getTime() - date2.getTime()) / (1000*60*60*24));
+		System.out.println(CWE);
+		String CWE1= String.valueOf(CWE);
+		System.out.println(CWE1);
+		
+		ClassObject =new TC_59484();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username_report"), prop.getProperty("password_report"));
+		System.out.println("login logout completed");
+	}
+
+	@Test( description ="CT 7232 OP Investigate Overpayment Issue - NF one week paid more than a year ago")
+	public void TC_59484_op() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		
+		c = new ClaimSummary();
+		wcl.clickHome();
+		//Check Claim Summary process...
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+
+		//Creating Overpayment Issue...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		o = new Overpayment();
+		
+		o.createOverpaymentIssueWithSameEmply_59484(driver, snapshotPath, SimpleClassname, SSN, "National New Hire Crossmatch", CWE, numberOfWeeks);
+        wcl.clickHome();
+		Thread.sleep(3000);
+		//Investigating Overpayment Iusse...
+		Overpayment.NationalNewHireInvestigationOverpayment_Issue( driver,  snapshotPath,  SimpleClassname, SSN, CWE, "National New Hire Crossmatch", "Non-Fraud", "120", "12");
+		
+		
+		//Run Predetermination Notice Batch...
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchCTGenerateOvpPredeterminationNotice benefits_daily_515pm");
+
+		
+		String ID = "";
+		for	(int i=0;i<10;i++)
+		{
+		q = new QuerySearch();
+			System.out.println("Waiting for Predetermination Notice batch to run...");
+			Thread.sleep(1000*30);
+			try
+			{
+				ID = q.getCorrespondenceID("SELECT CORRESPONDENCE_ID FROM T_CORRESPONDENCE WHERE (CORRESPONDENCE_CODE = 'OVPPREDEF' OR CORRESPONDENCE_CODE = 'OVPPREDENF') "
+						+ "AND CREATED_BY = 'BatchCTGenerateOvpPredetermina' AND DATE(CREATED_TS) = CURRENT_DATE  AND CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+				System.out.println("CORRESPONDENCE_ID : "+ID);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+			if (ID.isEmpty())
+
+				System.out.println("waiting for letter to be updated");
+
+			else {
+				System.out.println("Predetermination Notice generated successfully...");
+			}
+		}
+		System.out.println("exit from loop..................");
+		Assert.assertFalse(ID.isEmpty(), "CORRESPONDENCE_ID is null......");
+		
+	
+		
+		//Provide Claimant's Responce..................
+		wcl.clickHome();
+		Thread.sleep(5000);
+		
+		//Run Overpayment Batches..............
+		//Run Corrs Batches.....................
+		System.out.println("Waiting for Overpayment and corres batches to run...");
+		
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob Pay010DetermineWeeklyCertType benefits_daily_515pm;"
+				+ "./qclient.sh runJob Pay030EstablishOverpaymentFromJournal benefits_daily_515pm;./qclient.sh runJob Pay050ProvidePayment benefits_daily_515pm;"
+				+ "./qclient.sh runJob BatchUpdateBarcodeOnCorrespondenceBulkBenefits benefits_daily_930am");
+
+
+		
+		String ID1 = "";
+		for	(int i=0;i<10;i++)
+		{
+		q = new QuerySearch();
+			System.out.println("Waiting for OP  batch to run...");
+			Thread.sleep(1000*30);
+			try
+			{
+				ID1 = q.getOverpaymentID("SELECT OVERPAYMENT_ID FROM T_OVERPAYMENT WHERE "
+						+ "CREATED_BY = 'Pay030EstablishOverpaymentFrom' AND DATE(CREATED_TS) = CURRENT_DATE AND CLAIM_ID IN (SELECT "
+						+ "CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"'))");
+				System.out.println("OVERPAYMENT_ID : "+ID1);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+			if (ID1.isEmpty())
+
+				System.out.println("waiting for payment to be updated");
+
+			else {
+				System.out.println(" Overpayment established successfully....");
+			}
+		}
+		System.out.println("exit from loop..................");
+		Assert.assertFalse(ID.isEmpty(), "OVERPAYMENT_ID is null......");
+		
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//a[text()='Overpayments']")).click();
+		Thread.sleep(2000);
+		
+		Highlighter h = new Highlighter();
+		h.highlight(driver, "//td[ contains (text(), 'National New Hire Crossmatch Pre-determination Letter Generated.')]");
+		
+	
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		Thread.sleep(1000);
+		
+		driver.findElement(By.xpath("//span[text()='<Back']")).click();
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//a[text()='View Correspondence']")).click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//label[text()='Outgoing']//preceding::div[1]")).click();
+		wcl.clickSearch().click();Thread.sleep(10000);
+		
+		
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		
+		//driver.close();
+		//driver.quit();
+	}
+}

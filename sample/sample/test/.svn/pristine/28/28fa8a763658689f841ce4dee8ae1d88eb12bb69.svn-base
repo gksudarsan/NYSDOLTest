@@ -1,0 +1,120 @@
+package com.ui.pages;
+
+/** @author mjape */
+
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class AddUpdateTRATraining extends TestBase
+{
+	static Wc_locators wcl;
+	static FutureDatePastDate f;
+	static QuerySearch q = new QuerySearch();
+	static screenShot screen=new screenShot();
+	static String heading;
+
+	public void addTRATraining(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String status, int startDate, int endDate) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		wcl = new Wc_locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("TRA Entitlement").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Add/Update TRA Training Details')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);	Thread.sleep(500);
+		
+		String pn = q.getPetitionNumber("SELECT PETITION_NUMBER FROM T_PETITION A, T_TRA_POTENTIAL_CLAIMANT B "
+				+ "WHERE A.PETITION_ID = B.PETITION_ID AND B.SSN = '"+SSN+"'");
+		
+		wcl.enterpetitionnumner().sendKeys(pn);		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+
+		//Submitting Add/Update TRA Training Details page...
+		wcl.addNewTraining().click();
+		Thread.sleep(2500);
+		wcl.selectTrainingStatus(status).click(); Thread.sleep(500);
+		wcl.enterDate("traTrainingStartDate").sendKeys(f.Sunday(startDate));
+		wcl.enterDate("traTrainingProjectedEndDate").sendKeys(f.Saturday(endDate));
+		wcl.enterDate("traTrainingCompletionDate").sendKeys(f.Saturday(endDate));
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.submit().click();
+		Thread.sleep(5000);
+
+		//TRA Training Details Confirmation page...
+		heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("TRA Waiver Details Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 5 more seconds for page to load...");
+			Thread.sleep(5000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(5000);
+	}
+	
+	public void updateTRATraining(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String currentstatus, String newstatus) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		wcl = new Wc_locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("TRA Entitlement").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Add/Update TRA Training Details')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);	Thread.sleep(500);
+		
+		String pn = q.getPetitionNumber("SELECT PETITION_NUMBER FROM T_PETITION A, T_TRA_POTENTIAL_CLAIMANT B "
+				+ "WHERE A.PETITION_ID = B.PETITION_ID AND B.SSN = '"+SSN+"'");
+		
+		wcl.enterpetitionnumner().sendKeys(pn);		Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+
+		//Submitting Add/Update TRA Training Details page...
+		
+		String date = q.getTrainingStartDate("select training_start_date from t_training where training_status = 'CMPT' "
+				+ "and claimant_id in (select claimant_id from t_claimant where ssn = '"+SSN+"')");
+		
+		wcl.checkTraining(currentstatus, date).click(); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		wcl.selectTrainingStatus(newstatus).click(); Thread.sleep(500);
+		/*if(currentstatus.equalsIgnoreCase("Revoked"))
+			wcl.
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(500);
+		wcl.submit().click();
+		Thread.sleep(5000);
+
+		//TRA Training Details Confirmation page...
+		heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+		if(heading.equalsIgnoreCase("TRA Waiver Details Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 5 more seconds for page to load...");
+			Thread.sleep(5000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(5000);*/
+	}
+}

@@ -1,0 +1,209 @@
+package com.ui.pages;
+
+/** @author mjape */
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.screenShot;
+
+public class CreateIssue extends TestBase
+{
+	Wc_locators wcl;
+	Payments_Locators pl;
+	FutureDatePastDate f;
+	JavascriptExecutor js = ((JavascriptExecutor)driver);
+	screenShot screen=new screenShot();
+	String heading;
+	int counter = 0;
+	Random rand = new Random();
+
+	public void createIssuePentionOther(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, String lumpsumpaid, String claimantcontri) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		pl = new Payments_Locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.homeTabs("Nonmonetary").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Create Issue')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		/*List<WebElement> elements = driver.findElements(By.xpath("//td[contains(text(), 'Active')]//preceding::span[1]"));
+		System.out.println(elements.size());*/
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Active')]//preceding::span[1]"))).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Create Issue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		pl.issueDescriptionCategory("Pension"); Thread.sleep(5000);
+		pl.issueDescriptionSubCategory("Other"); Thread.sleep(500);
+		pl.Date("issueStartDateBean").sendKeys(f.d(-7)); Thread.sleep(500);
+		pl.informationProvidedBy("Employer"); Thread.sleep(500);
+		pl.informationProvidedHow("Email"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(2500);
+		wcl.enterEmployerName().sendKeys("LIBRARY"); Thread.sleep(500);
+		wcl.clickSearch().click();
+		Thread.sleep(10000);
+		int i = rand.nextInt(24);
+		i = i+1;
+		System.out.println("Selecting record no. "+i);
+		do
+		{
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr["+i+"]//child::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(500);
+			counter++;
+		}
+		while(counter<=10);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(10000);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		pl.remarksForCreatingIssue(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Create Issue Verification"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Issue Investigation Ownership"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Yes')]//preceding::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+	}
+	
+	public void createIssueAbleAndAvailable(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		pl = new Payments_Locators();
+		f = new FutureDatePastDate();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		wcl.homeTabs("Nonmonetary").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Create Issue')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.ssn1().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		/*List<WebElement> elements = driver.findElements(By.xpath("//td[contains(text(), 'Active')]//preceding::span[1]"));
+		System.out.println(elements.size());*/
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), 'Active')]//preceding::span[1]"))).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Create Issue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		pl.issueDescriptionCategory("Able and Available"); Thread.sleep(5000);
+		pl.issueDescriptionSubCategory("Alien Status"); Thread.sleep(500);
+		pl.Date("issueStartDateBean").sendKeys(f.d(-7)); Thread.sleep(500);
+		pl.informationProvidedBy("Employer"); Thread.sleep(500);
+		pl.informationProvidedHow("Email"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(2500);
+		wcl.enterEmployerName().sendKeys("LIBRARY"); Thread.sleep(500);
+		wcl.clickSearch().click();
+		Thread.sleep(10000);
+		int i = rand.nextInt(24);
+		i = i+1;
+		System.out.println("Selecting record no. "+i);
+		do
+		{
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr["+i+"]//child::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(500);
+			counter++;
+		}
+		while(counter<=10);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(10000);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		pl.remarksForCreatingIssue(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Create Issue Verification"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Issue Investigation Ownership"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Yes')]//preceding::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+	}
+}

@@ -1,0 +1,65 @@
+package com.ui.pages;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+public class Duadecesion extends TestBase
+{
+	Wc_locators wcl;
+	Payments_Locators pl;
+	FutureDatePastDate f;
+	screenShot screen = new screenShot();
+	Connection con;
+	Statement stmt;
+	ResultSet rs;
+
+	public void duadecesion(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, int CWE) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		pl = new Payments_Locators();
+		
+		
+		
+		
+		
+
+		driver.findElement(By.xpath("//ul[1]/li[2]/a[text()='My Q']")).click();
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//div[2]/span")).click();
+		
+		driver.findElement(By.xpath("//span[text()='Next>']")).click();
+		driver.findElement(By.id("ssnBean_-ssn1")).sendKeys(prop.getProperty("DUASSN"));
+		driver.findElement(By.xpath("//*[text()='Search']")).click();
+		
+		Thread.sleep(3000);
+		driver.findElement(By.linkText("Make Dua Decision")).click();
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//tr[1]/td[7]/div/div[3]")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.xpath("//li[text()='W2']")).click();
+		driver.findElement(By.xpath("//tr[3]/td[2]/div/div[2]/span")).click();
+		driver.findElement(By.id("allowEffectiveDate_-month")).clear();
+		driver.findElement(By.id("allowEffectiveDate_-month")).sendKeys(prop.getProperty("DUAdate"));
+		
+		driver.findElement(By.xpath("//*[@id='statusOfProofOfWages']/div[3]/span")).click();
+		driver.findElement(By.xpath("//li[text()='Proof Submitted']")).click();
+		driver.findElement(By.xpath("//span[text()='Submit']")).click();
+	}
+}

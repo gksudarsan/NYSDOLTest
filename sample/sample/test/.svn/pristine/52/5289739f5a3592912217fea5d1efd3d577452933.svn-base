@@ -1,0 +1,213 @@
+package com.ClaimsIntake;
+
+/** @author nnegi 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.locators.claimsIntake;
+import com.ui.pages.AddUpdateTRATraining;
+import com.ui.pages.AddUpdateTRAWaiver;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.EnterTAATimesheet;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.Reassign_WorkItem;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.RandomGenerator;
+import com.ui.utilities.screenShot;
+
+public class TC_53550 extends TestBase
+{
+	//int CWE = -35;
+	
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	Wc_locators wcl = new Wc_locators();
+	ClaimSummary c;
+	screenShot screen=new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN="151267730", ed;
+	TC_53550 ClassObject;
+	AddUpdateTRAWaiver tw;
+	PageHeading ph;
+	CreateDirectory CD;
+	String query = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'REG' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+	int CWE=-7;
+
+	//Properties prop;
+	public TC_53550()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		f = new FutureDatePastDate();
+		ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') AND c.EFFECTIVE_DATE = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN); 
+
+		ClassObject =new TC_53550();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Contact Details - update contact-Address information with Role Address Detail "
+			+ "Specialist and new question on CFM-002 and correspondence is generated")
+	public void Test_TC_49250() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		c=new ClaimSummary();
+		claimsIntake ci=new claimsIntake();
+		lp=new LoginLogoutPage();
+		ph=new PageHeading();
+		Highlighter h=new Highlighter();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		
+		
+		
+		
+		
+		Thread.sleep(1000);
+		wcl.homeTabs("Benefit Maintenance").click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Update Claimant Profile").click();
+		Thread.sleep(2000);
+		wcl.homeTabs("Contact Details").click();
+		Thread.sleep(2000);
+		ci.SearchSSN().sendKeys(SSN);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		ph.SSN_Screen();
+		Thread.sleep(1000);
+		ci.ClickRecord().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		ph.ContactInfo_Screen();
+		Thread.sleep(1500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1500);
+		ci.DOB().sendKeys("10121991");Thread.sleep(300);
+		ci.Address1().sendKeys("61 Hop");Thread.sleep(300);
+		ci.Address2().sendKeys("Brook Rd,");Thread.sleep(300);
+		ci.City().sendKeys("Brookfield");Thread.sleep(300);
+		ci.ZipCode().sendKeys("06804");Thread.sleep(300);
+		Thread.sleep(1500);
+		ci.SelectAdd().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1500);
+		wcl.submit().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1500);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		
+		String ID = "";
+		Thread.sleep(3000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for Correspondence Generate");
+			Thread.sleep(5000);
+			try
+			{
+				ID = q.getCorrespondenceID("SELECT CORRESPONDENCE_ID FROM T_CORRESPONDENCE WHERE CORRESPONDENCE_CODE = 'UC-51' "
+						+ "AND DATE(CREATED_TS) = CURRENT_DATE  AND CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+				System.out.println("CORRESPONDENCE_ID : "+ID);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(ID.isEmpty());
+		System.out.println("Correspondence generated successfully...");
+		
+		
+		
+		wcl.clickHome();
+		Thread.sleep(1500);
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+		Thread.sleep(1000);
+		h.highlight(driver, "//td[text()='Residential Address']");
+		Thread.sleep(1500);
+		ci.ClaimantDetailsLink().click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1000);
+		h.highlight(driver, "//td[text()='Address Details']");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2500);
+
+
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

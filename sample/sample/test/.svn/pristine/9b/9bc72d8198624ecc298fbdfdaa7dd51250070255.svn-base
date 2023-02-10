@@ -1,0 +1,385 @@
+package com.ui.pages;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.screenShot;
+
+public class ResolveWorkItem extends TestBase
+{
+	Wc_locators wcl;
+	screenShot screen=new screenShot();
+	String heading;
+	Highlighter h;
+	
+	public void resolveWIWeeklyCertificationReject59280(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Reassign to current user...
+		wcl.homeTabs("System Administration").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Workflow Administrator')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Reassign/Terminate Workitems')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Units"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//button/span[contains(text(), 'Select All Units')]")).click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Selected User's Work Items"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/span[contains(text(), 'Weekly Certification Reject')]//ancestor::tr/td//child::div/span"))).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/span[contains(text(), 'Weekly Certification Reject')]//ancestor::tr/td//child::div/span")).click(); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Re-Assign Work Item(s)"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver.findElement(By.xpath("//td/input[1]")).sendKeys(prop.getProperty("username")); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Resolving Work Item...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickMyQ();
+		Thread.sleep(5000);
+		wcl.IAccept(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Individual Work Queue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a/span[contains(text(), 'Weekly Certification Reject')]"))).click();
+		Thread.sleep(500);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Resolve SharedWork - Weekly Certification Reject"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//label[contains(text(), 'Process as Shared work claim?')]//ancestor::tr/td//child::td//child::label[contains(text(), 'No')]/../div/div[2]")).click(); Thread.sleep(500);
+		driver.findElement(By.xpath("//label[contains(text(), 'If No, do you want to waive the work search for the week?')]//ancestor::tr/td//child::td//child::label[contains(text(), 'No')]/../div/div[2]")).click(); Thread.sleep(500);
+		wcl.freeTextBox(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Shared Work - Weekly Certification Reject Work Item Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+	
+	public void resolveWIWeeklyCertificationReject59298(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Reassign to current user...
+		wcl.homeTabs("System Administration").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Workflow Administrator')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Reassign/Terminate Workitems')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Units"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//button/span[contains(text(), 'Select All Units')]")).click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Selected User's Work Items"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/span[contains(text(), 'Weekly Certification Reject')]//ancestor::tr/td//child::div/span"))).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/span[contains(text(), 'Weekly Certification Reject')]//ancestor::tr/td//child::div/span")).click(); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Re-Assign Work Item(s)"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver.findElement(By.xpath("//td/input[1]")).sendKeys(prop.getProperty("username")); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Resolving Work Item...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickMyQ();
+		Thread.sleep(5000);
+		wcl.IAccept(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Individual Work Queue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a/span[contains(text(), 'Weekly Certification Reject')]"))).click();
+		Thread.sleep(500);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Resolve SharedWork - Weekly Certification Reject"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//label[contains(text(), 'Process as Shared work claim?')]//ancestor::tr/td//child::td//child::label[contains(text(), 'No')]/../div/div[2]")).click(); Thread.sleep(500);
+		driver.findElement(By.xpath("//label[contains(text(), 'If No, do you want to waive the work search for the week?')]//ancestor::tr/td//child::td//child::label[contains(text(), 'Yes')]/../div/div[2]")).click(); Thread.sleep(500);
+		wcl.freeTextBox(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Shared Work - Weekly Certification Reject Work Item Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+	
+	public void resolveWIWeeklyCertificationReject59271(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Reassign to current user...
+		wcl.homeTabs("System Administration").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Workflow Administrator')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Reassign/Terminate Workitems')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("List of Units"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//button/span[contains(text(), 'Select All Units')]")).click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Selected User's Work Items"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		JavascriptExecutor js = ((JavascriptExecutor)driver);
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/span[contains(text(), 'Weekly Certification Reject')]//ancestor::tr/td//child::div/span"))).click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/span[contains(text(), 'Weekly Certification Reject')]//ancestor::tr/td//child::div/span")).click(); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Re-Assign Work Item(s)"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver.findElement(By.xpath("//td/input[1]")).sendKeys(prop.getProperty("username")); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		//Resolving Work Item...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickMyQ();
+		Thread.sleep(5000);
+		wcl.IAccept(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Individual Work Queue"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		wcl.ssn1().sendKeys(SSN);Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		wcl.WorkItemDescription().getText();
+		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a/span[contains(text(), 'Weekly Certification Reject')]"))).click();
+		Thread.sleep(500);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Resolve SharedWork - Weekly Certification Reject"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'Process as Shared work claim?')]//ancestor::tr/td//child::td//child::label[contains(text(), 'Yes')]/../div/div[2]"))).click(); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), 'If Yes, do you want to adjust the % reduction')]//ancestor::tr/td//child::td//child::label[contains(text(), 'Yes')]/../div/div[2]"))).click(); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='finalReductionPercentage']"))).sendKeys("10"); Thread.sleep(500);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='csrRemarks']"))).sendKeys("Testing Purpose"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Shared Work - Weekly Certification Reject Work Item Confirmation"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+}

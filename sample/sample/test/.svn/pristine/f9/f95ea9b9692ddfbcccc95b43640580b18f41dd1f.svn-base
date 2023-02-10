@@ -1,0 +1,280 @@
+package com.Overpayments;
+
+/** @author nnegi 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.sun.media.sound.InvalidFormatException;
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.Add_dependent;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.QuickAccess;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.CreateExcel;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_59438 extends TestBase
+{
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	UpdateIssueDates uid;
+	WeeklyCert w;
+	ClaimSummary c;
+	Overpayment o;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "", ed;
+	TC_59438 ClassObject;
+	CreateDirectory CD;
+	int CWE = 0;
+
+	String query = "SELECT UNIQUE(A.SSN) FROM T_CLAIMANT A, T_WEEKLY_CERTIFICATION B, T_CLAIMANT_PAYMENT C , T_CLAIM E, "
+			+ "T_CLAIM_APPLICATION_EMPLOYER F WHERE A.CLAIMANT_ID = B.CLAIMANT_ID  AND B.CLAIMANT_ID = C.CLAIMANT_ID AND "
+			+ "A.CLAIMANT_ID = E.CLAIMANT_ID AND E.CLAIM_APPLICATION_ID = F.CLAIM_APPLICATION_ID AND E.STATUS = 'ACTV' AND "
+			+ "E.ENTITLEMENT_TYPE = 'REG' AND E.BYE_DATE > CURRENT_DATE AND F.EMPLOYER_NAME IS NOT NULL AND C.PAYMENT_DATE IS NOT "
+			+ "NULL AND B.CERTIFICATION_DATE > '";
+
+	//Properties prop;
+	public TC_59438()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		ed = f.d(-29);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		query = query + ed + "' AND B.CERTIFICATION_DATE < '";
+		ed = f.Saturday(-7);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		query = query + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+		
+		CWE = Integer.parseInt(q.getDateDifference("SELECT (CWE - CURRENT_DATE) DIFF FROM T_WEEKLY_CERTIFICATION WHERE CLAIMANT_ID IN (SELECT "
+				+ "CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY DIFF DESC"));
+		System.out.println("Difference between current date and CWE date : "+CWE);  
+
+		ClassObject =new TC_59438();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl")); 
+	}
+
+	@Test(priority=1, description = "OP Create Overpayment Issue - One CT employer 1st and 2nd notice")
+	public void Testing59438() throws InterruptedException, ClassNotFoundException, SQLException, ParseException, InvalidFormatException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		String EndDate=null;
+		for(int i=1;i<100;i++)
+		   {
+			   if(i>0)
+			   {
+			   
+			   String st = driver.findElement(By.xpath("//td[contains(text(),'Processed Weekly Certification(s)')]//following::table[1]/tbody/tr["+i+"]/td[4]")).getText();
+			   System.out.println("Element Text is " +st);
+			   if (st.equalsIgnoreCase("Payment"))
+			   {
+				   
+				   EndDate = driver.findElement(By.xpath("//td[contains(text(),'Processed Weekly Certification(s)')]//following::table[1]/tbody/tr["+i+"]/td[1]")).getText();
+				   System.out.println("Found Paid Week End Date " +EndDate);
+				   break;
+			   }
+			   else
+			   {
+				   System.out.println("Finding Paid Week...." );
+				   
+			   }
+			   }   
+		    }
+		Thread.sleep(5000);
+		
+
+		//Creating Overpayment Issue...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		o = new Overpayment();
+		o.createOverpaymentIssue55815(driver, snapshotPath, SimpleClassname, SSN, "Quality Control", EndDate, 1, 1); 
+		
+
+		//Investigating Overpayment Iusse...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		o = new Overpayment();
+		o.InvestigationOverpayment55818(driver, snapshotPath, SimpleClassname, SSN, CWE, "Quality Control", "Non-Fraud");	
+	 	
+		//Get Auth Code
+		String ID = "";
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for XMATCHWAGE record generate...");
+			Thread.sleep(5000);
+			try
+			{
+				ID = q.getCorrespondenceID("SELECT CORRESPONDENCE_ID FROM T_CORRESPONDENCE WHERE CORRESPONDENCE_CODE = 'XMATCHWAGE' "
+						+ "AND Mail_DATE is null AND DATE(CREATED_TS) = CURRENT_DATE  AND CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+				System.out.println("CORRESPONDENCE_ID : "+ID);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(ID.isEmpty());
+		System.out.println("XMATCHWAGE is generated  successfully...");
+		
+		
+		String MailDate = "";
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for XMATCHWAGE record generate...");
+			SSHConnection ssh=new SSHConnection();
+			ssh.runSudoCommand(BatchProp.getProperty(""), "runJob BatchUpdateBarcodeOnCorrespondenceBulkBenefits corr_benefits");
+			Thread.sleep(5000);
+			try
+			{
+				MailDate = q.MailDate("SELECT MAIL_DATE FROM T_CORRESPONDENCE WHERE CORRESPONDENCE_CODE = 'XMATCHWAGE' "
+						+ "AND Mail_DATE is not null AND DATE(CREATED_TS) = CURRENT_DATE  AND CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+				System.out.println("MailDate is : "+MailDate);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(MailDate.isEmpty());
+		System.out.println("MailDate Updated successfully...");
+		
+		//Update DB XMATCHWAGE Record Mail Date current date -30
+		
+		String MailDate1 = "";
+		 
+		q = new QuerySearch();
+		do
+		{
+			System.out.println("Waiting for MailDate update");
+			
+			Thread.sleep(3000);
+			try
+			{
+				MailDate1 = q.MailDate("SELECT MAIL_DATE FROM T_CORRESPONDENCE WHERE CORRESPONDENCE_CODE = 'XMATCHWAGE' "
+						+ "AND Mail_DATE is not null AND DATE(CREATED_TS) = CURRENT_DATE  AND CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+				System.out.println("MailDate is : "+MailDate1);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(Integer.parseInt(MailDate1)==Integer.parseInt(MailDate));
+		System.out.println("MailDate Updated successfully... " +MailDate1);
+		
+	checkPredterminationNoticeDB(SSN);
+		
+		
+	}
+	private void checkPredterminationNoticeDB(String SSN) throws ClassNotFoundException, SQLException, InvalidFormatException
+	{
+		QuerySearch qs = new QuerySearch();
+
+		String CorrespondenceID = qs.getCorrespondenceID("SELECT Correspondence_ID FROM T_CORRESPONDENCE WHERE "
+				+ "CORRESPONDENCE_CODE =  'XMATCHWAGE' AND CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') "
+				+ "ORDER BY CREATED_TS DESC");
+		
+
+		String CorrespondenceCode = qs.getCorrespondenceCode("SELECT CORRESPONDENCE_CODE FROM T_CORRESPONDENCE WHERE "
+				+ "CORRESPONDENCE_CODE =  'XMATCHWAGE' AND CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') "
+				+ "ORDER BY CREATED_TS DESC");
+		CorrespondenceCode = qs.getCorrespondenceCode("SELECT CORRESPONDENCE_CODE FROM T_CORRESPONDENCE WHERE "
+				+ "CORRESPONDENCE_CODE =  'BRI-WS' AND CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') "
+				+ "ORDER BY CREATED_TS DESC");
+
+		String ClaimantID = qs.getClaimantID("SELECT CLAIMANT_ID FROM T_CORRESPONDENCE WHERE "
+				+ "CORRESPONDENCE_CODE =  'XMATCHWAGE' AND CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') "
+				+ "ORDER BY CREATED_TS DESC");
+
+		String CreatedTS = qs.getCreatedTS("SELECT CREATED_TS FROM T_CORRESPONDENCE WHERE "
+				+ "CORRESPONDENCE_CODE =  'XMATCHWAGE' AND CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') "
+				+ "ORDER BY CREATED_TS DESC");
+
+		String CreatedBy = qs.getCreatedBy("SELECT CREATED_BY FROM T_CORRESPONDENCE WHERE "
+				+ "CORRESPONDENCE_CODE =  'XMATCHWAGE' AND CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') "
+				+ "ORDER BY CREATED_TS DESC");
+		
+		String UpdateTS = qs.getUpdatedTs("SELECT UPDATED_TS FROM T_CORRESPONDENCE WHERE "
+				+ "CORRESPONDENCE_CODE =  'XMATCHWAGE' AND CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') "
+				+ "ORDER BY CREATED_TS DESC");
+		String UpdateBy = qs.getUpdatedBy("SELECT UPDATED_BY FROM T_CORRESPONDENCE WHERE "
+				+ "CORRESPONDENCE_CODE =  'XMATCHWAGE' AND CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') "
+				+ "ORDER BY CREATED_TS DESC");
+
+		CreateExcel ce = new CreateExcel();
+		ce.create_t_correspondence59438(CorrespondenceID, CorrespondenceCode, ClaimantID, CreatedTS, CreatedBy,UpdateTS,UpdateBy);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{/*
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();*/
+	}
+}

@@ -1,0 +1,194 @@
+package com.Repayments;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.sun.media.sound.InvalidFormatException;
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.OverpaymentMaintenance;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_58054 extends TestBase
+{
+	QuerySearch q;
+	LoginLogoutPage lp;
+	Overpayment o;
+	OverpaymentMaintenance om;
+	ClaimSummary c;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "", claimID = "4990759", count = "";
+	int CWE;
+	TC_58054 ClassObject;
+	CreateDirectory CD;
+	String query1 = "SELECT CLAIM_ID FROM T_OVERPAYMENT WHERE CLASS = 'NFRD' AND STATUS = 'ACTV' AND INTEREST_BALANCE <> '0'";
+	String query2 = "SELECT COUNT(*) RECORDS FROM T_OVERPAYMENT WHERE CLAIM_ID = '"+claimID+"' AND STATUS = 'ACTV'";
+	String query3 = "SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIM WHERE CLAIM_ID = '"+claimID+"')";
+
+	//Properties prop;
+	public TC_58054()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		q = new QuerySearch();
+		System.out.println("Query being hit to fetch SSN from database :");
+		/*List<String> claim = q.allData(query1, "CLAIM_ID");
+		int counter = 0;
+		do
+		{
+			claimID = claim.get(counter);
+			query2 = "SELECT COUNT(*) RECORDS FROM T_OVERPAYMENT WHERE CLAIM_ID = '"+claimID+"' AND STATUS = 'ACTV'";
+			count = q.Data(query2, "RECORDS");
+			counter++;
+		}
+		while(!count.equals("1"));*/
+		query3 = "SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIM WHERE CLAIM_ID = '"+claimID+"')";
+		SSN = q.Data(query3, "SSN");
+		System.out.println("SSN to be use : "+SSN);
+
+		String lastCWE = q.Data("SELECT CWE FROM T_WEEKLY_CERTIFICATION WHERE CLAIMANT_ID IN (SELECT "
+				+ "CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CWE DESC", "CWE");
+		System.out.println("Last CWE : "+lastCWE);
+		Date date = new Date();
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+		System.out.println("Current Date : "+currentDate);
+		Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(lastCWE);
+		Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(currentDate);
+		CWE = (int)((date1.getTime() - date2.getTime()) / (1000*60*60*24));
+		System.out.println(CWE);
+
+		ClassObject =new TC_58054();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Verify that the System should apply repayment as per the Repayment Apply Hierarchy for "
+			+ "Multiple Overpayments_2 NFRD")
+	public void Testing58054() throws InterruptedException, ClassNotFoundException, SQLException, InvalidFormatException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		/*//Creating Overpayment Issue...
+		String [] issueSource = new String[]{"Overpayment Issue -  Reemployed", "Overpayment Issue - Work While Rec", "Voluntary Disclosure", "Quality Control", "Back Pay Award"};
+		String selection = issueSource[new Random().nextInt(5)];
+		wcl.clickHome();
+		Thread.sleep(5000);
+		o = new Overpayment();
+		o.createOverpaymentIssue(driver, snapshotPath, SimpleClassname, SSN, selection, CWE, 1, 1);
+
+		//Investigating Overpayment Iusse...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		o = new Overpayment();
+		o.InvestigationOverpaymentIssueQualityControl(driver, snapshotPath, SimpleClassname, SSN, CWE, selection, "Non-Fraud");
+
+		//Provide Claimant's Response...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		o = new Overpayment();
+		o.preDeterminationLetterResponse(driver, snapshotPath, SimpleClassname, SSN, selection, "Non-Fraud");
+
+		//Check Claim Summary process...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+
+		driver.findElement(By.xpath("//a[contains(text(), 'Overpayments')]")).click(); Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);*/
+		
+		//Calculating balance...
+		Double ovpBal1 = Double.parseDouble(q.Data("SELECT OVERPAYMENT_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT CLAIM_ID FROM T_CLAIM "
+				+ "WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER BY "
+				+ "ESTABLISHMENT_DATE ASC", "OVERPAYMENT_BALANCE"));
+		Double intBal1 = Double.parseDouble(q.Data("SELECT INTEREST_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT CLAIM_ID FROM T_CLAIM "
+				+ "WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER BY "
+				+ "ESTABLISHMENT_DATE ASC", "INTEREST_BALANCE"));
+		Double ovpBal2 = Double.parseDouble(q.Data("SELECT OVERPAYMENT_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT CLAIM_ID FROM T_CLAIM "
+				+ "WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER BY "
+				+ "ESTABLISHMENT_DATE DESC", "OVERPAYMENT_BALANCE"));
+		Double intBal2 = Double.parseDouble(q.Data("SELECT INTEREST_BALANCE FROM T_OVERPAYMENT WHERE CLAIM_ID IN (SELECT CLAIM_ID FROM T_CLAIM "
+				+ "WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"')) ORDER BY "
+				+ "ESTABLISHMENT_DATE DESC", "INTEREST_BALANCE"));
+		
+		String[] amount = new String[4];
+		amount[0] = String.valueOf(intBal1 + (intBal2 * 0.50));
+		amount[1] = String.valueOf((intBal2 * 0.50) + (ovpBal1 * 0.50));
+		amount[2] = String.valueOf((ovpBal1 * 0.50) + (ovpBal2 * 0.50));
+		amount[3] = String.valueOf(ovpBal2 * 0.50);
+		
+		for(int a = 0 ; a < 4 ; a++)
+		{
+			//Enter Repayment Details process...
+			wcl.clickHome();
+			Thread.sleep(5000);
+			om = new OverpaymentMaintenance();
+			System.out.println("Repayment amount : "+amount[a]);
+			om.enterRepaymentDetails(driver, snapshotPath, SimpleClassname, "Cash", "", amount[a], "", SSN);
+
+			//Check Claim Summary process...
+			wcl.clickHome();
+			Thread.sleep(5000);
+			c = new ClaimSummary();
+			c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+
+			driver.findElement(By.xpath("//a[contains(text(), 'Overpayments')]")).click(); Thread.sleep(5000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			driver.findElement(By.xpath("//a[contains(text(), 'Repayment Details')]//following::a[1]")).click(); Thread.sleep(5000);
+			JavascriptExecutor js = ((JavascriptExecutor)driver);
+			js.executeScript("window.scrollTo(0, document.body.scrollHeight)"); Thread.sleep(1000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		/*wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();*/
+	}
+}

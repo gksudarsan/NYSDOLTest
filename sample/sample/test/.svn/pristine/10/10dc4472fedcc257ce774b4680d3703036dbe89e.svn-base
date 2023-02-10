@@ -1,0 +1,162 @@
+package com.ui.pages;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class BackdateClaimRequest extends TestBase
+{
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	FutureDatePastDate f = new FutureDatePastDate();
+	ClaimSummary c = new ClaimSummary();
+	QuerySearch q = new QuerySearch();
+	int counter=0;
+	String heading, ed;
+
+	public void backDateClaimRequest(String snapshotPath, String SimpleClassname, String SSN, String type) throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Benefit Maintenance").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Backdate Claim Request')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);
+		wcl.confirmssn1().sendKeys(SSN); Thread.sleep(500);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		wcl.checkClaim(type).click(); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		
+		if(type=="Additional")
+			ed = q.getData("SELECT ADD_DAYS(EFFECTIVE_DATE,-21)ED FROM T_AIC_REOPEN WHERE CLAIM_ID IN "
+				+ "(SELECT CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN "
+				+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"'))");
+		
+		else if (type=="Initial")
+			ed = q.getData("SELECT ADD_DAYS(EFFECTIVE_DATE,-21)ED FROM T_CLAIM WHERE CLAIM_ID IN "
+					+ "(SELECT CLAIM_ID FROM T_CLAIM WHERE CLAIMANT_ID IN "
+					+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"'))");
+		
+		ed = ed.substring(5, 7) + ed.substring(8, 10) + ed.substring(0, 4);
+		wcl.reqEffDate().sendKeys(ed); Thread.sleep(500);
+		wcl.clickSelect().click(); Thread.sleep(500);
+		wcl.selectReasonForBacdating("Working Part Time").click(); Thread.sleep(500);
+		wcl.selectadjudication("No").click(); Thread.sleep(500);
+		wcl.enterCSRRemearks().sendKeys("Testing Purpose"); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(2500);
+
+		List<WebElement> times = driver.findElements(By.xpath("//td[contains(text(), 'Not Filed')]"));
+		for(WebElement element:times)
+		{
+			System.out.println(element);
+			counter++;
+		}
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		while(counter>0)
+		{
+			wcl.clickNext().click();
+			Thread.sleep(2500);
+
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.checkMainQuestion("physically able to work full time", "Yes").click(); Thread.sleep(500);
+			wcl.checkMainQuestion("available for full time work", "Yes").click(); Thread.sleep(500);
+			wcl.checkMainQuestion("start school, college or training", "No").click(); Thread.sleep(500);
+			wcl.checkMainQuestion("any self-employment not previously reported", "No").click(); Thread.sleep(500);
+			wcl.checkMainQuestion("perform any work", "No").click(); Thread.sleep(500);
+			wcl.checkMainQuestion("definite date to return to full time employment", "No").click(); Thread.sleep(500);
+			wcl.checkMainQuestion("refuse any offer or work or rehire", "No").click(); Thread.sleep(500);
+			wcl.checkMainQuestion("receive your first payment from a pension", "No").click(); Thread.sleep(500);
+			wcl.checkMainQuestion("receive dismissal pay", "No").click(); Thread.sleep(500);
+			Thread.sleep(2500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(20000);
+
+			//Submission of Verify Weekly Certification Responses page...
+			heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+			if(heading.equalsIgnoreCase("Verify Weekly Certification Responses"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 20 more seconds for page to load...");
+				Thread.sleep(20000);
+			}
+
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			try
+			{
+				wcl.clickNext().click();
+			}
+			catch(Exception e)
+			{
+				wcl.clickNext().click();
+			}
+			Thread.sleep(15000);
+
+			//Submission of Weekly Certification and Work Search Record Acknowledgement page...
+			heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+			if(heading.equalsIgnoreCase("Weekly Certification and Work Search Record Acknowledgement"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			wcl.ssnnum().sendKeys(SSN.substring(5));	Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.submit().click();
+			Thread.sleep(15000);
+
+			//Final Confirmation page...
+			heading = driver.findElement(By.xpath("//div[@role='heading']")).getText();
+			if(heading.equalsIgnoreCase("Weekly Certification Confirmation"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			
+			counter=0;
+			try
+			{
+				wcl.clickCertifyNextBackWeek().click(); Thread.sleep(2500);
+				times = driver.findElements(By.xpath("//td[contains(text(), 'Not Filed')]"));
+				for(WebElement element:times)
+				{
+					System.out.println(element);
+					counter++;
+				}
+			}
+			catch(Exception e)
+			{
+				wcl.clickHome(); Thread.sleep(2500);
+				Thread.sleep(2500);
+			}
+		}
+		System.out.println("All weeks filed...");
+		Thread.sleep(2500);
+		wcl.clickHomePagebtn().click();
+		Thread.sleep(2500);
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Pending Weekly Certification(s)");
+	}
+}

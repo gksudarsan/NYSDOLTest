@@ -1,0 +1,192 @@
+package com.Payments;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.ClickAction;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.AddUpdateTRATraining;
+import com.ui.pages.Add_Child_support;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.CreateIssue;
+import com.ui.pages.EnterTAATimesheet;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.ReportPage;
+import com.ui.pages.ResolveWorkItem;
+import com.ui.pages.Resolve_TRA_issue;
+import com.ui.pages.SearchWorkItem;
+import com.ui.pages.TotalPaidAmountCalculation;
+import com.ui.pages.UpdateClaimBalance;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.pages.weekly_cert_pension;
+import com.ui.utilities.CreateDirectory;
+
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+
+import com.ui.utilities.screenShot;
+
+
+
+public class TC_59035 extends TestBase
+{
+
+
+	static LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static PageHeading ph;
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_59035 ClassObject;
+	 static AddUpdateTRATraining tratr;
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+	static Payments_Locators pml;
+	static FileWeeklyCertification fwc;
+	static String date1;
+	static ClaimSummary cs;
+	static UpdateIssueDates uid;
+	static WeeklyCert  w;
+	static ResolveWorkItem rwi;
+	
+	static UpdateClaimBalance ucb;
+	static Highlighter hl;
+	static CreateIssue cri;
+	static EnterTAATimesheet trat;
+	 
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException
+
+	{
+		ClassObject =new TC_59035();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+
+
+
+	}
+	@Test(description ="TC_59035 ....CT 10542 Common Processing TRA NonPayable Week No Timesheet" )
+	public void TC_59035_WC( ) throws InterruptedException, ParseException, ClassNotFoundException, SQLException
+	{
+		System.out.println("@test initiated");
+		wcl=new Wc_locators();
+		fwc=new FileWeeklyCertification();
+		
+		uid= new UpdateIssueDates();
+		ucb= new UpdateClaimBalance();
+		cs= new ClaimSummary();
+		hl = new Highlighter();
+		cri = new CreateIssue();
+       trat = new EnterTAATimesheet();
+       tratr = new AddUpdateTRATraining();
+       pml=new Payments_Locators();
+       int CWE=-7;
+       int startDate= -21;
+		int endDate= -7;
+		String status= "Approved";
+       String LWD= prop.getProperty("lastworking_date");
+		
+		
+		
+		
+		Thread.sleep(3000);
+
+		
+
+
+		System.out.println("Ready to resolvre future issue-if any");
+
+	uid.updateFutureIssueStartDate(driver, snapshotPath, SimpleClassname,prop.getProperty("ssn_59035"),-7);
+
+		System.out.println("future issue resolved -if any");
+	    wcl.clickHome();
+		System.out.println("moving to claim summary screen");
+
+		tratr.addTRATraining( driver,  snapshotPath,  SimpleClassname,prop.getProperty("ssn_59035") , status, startDate, endDate);
+		Thread.sleep(5000);
+		wcl.clickHome();
+		
+		
+
+	    trat.enterTaaTimesheet_no_fill( driver,  snapshotPath,  SimpleClassname, prop.getProperty("ssn_59035") , CWE);
+		wcl.clickHome();
+		w = new WeeklyCert();
+		weekly_cert_pension.fileWeeklyCertification_TRAbycwe( driver,  snapshotPath,  SimpleClassname,  prop.getProperty("ssn_59035"), CWE, LWD);
+		
+		
+		wcl.clickHome();
+		
+		
+
+		cs.claimsummary(prop.getProperty("ssn_59035"), snapshotPath, SimpleClassname, "Weekly Amount ");
+		pml.claimsummry_home().click();
+       Thread.sleep(3000);
+		Thread.sleep(10000);
+		System.out.println("Waiting to run batch ");
+		
+		
+		Thread.sleep(3000);
+		
+		
+		
+		
+		
+		
+
+	
+			
+		
+
+		
+
+		
+
+
+
+
+
+
+
+
+
+	}
+	@AfterTest
+	public void close_browser()
+	{
+		//driver.close();
+		//driver.quit();
+		System.out.println("Testcase executed and browser closed");
+	}
+
+}

@@ -1,0 +1,90 @@
+package com.WeeklyCertification;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+
+public class TC_55741 extends TestBase{
+	LoginLogoutPage lp;
+	FileWeeklyCertification fwc;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_55741 ClassObject;
+	static  CreateDirectory CD;
+	
+	String SSN;
+	String ed;
+	FutureDatePastDate f;
+	static String query = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'AIC' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+	
+
+	int CWE=-7;
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException, ClassNotFoundException, SQLException
+	
+	{
+		f = new FutureDatePastDate();
+		ed = f.Sunday(CWE);
+		QuerySearch q;
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') and c.effective_date = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);
+		System.out.println("SSN to be use : "+SSN);
+		
+		ClassObject =new TC_55741();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		//wait=new WebDriverWait(driver, Duration.ofSeconds(50));
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		
+	}
+	
+	@Test(description ="TC_55741 WKC_File Weekly certification with Partial employment for an  AIC claim")
+	public void TC_55741_WKC() throws InterruptedException, ParseException
+	{
+		FileWeeklyCertification.SubmitWeeklyCertification(driver, snapshotPath, SimpleClassname,SSN);
+		
+		FileWeeklyCertification.WCF_DeatilsForPartialEmpolyment(driver, snapshotPath, SimpleClassname,SSN);
+		
+	}
+	@AfterTest
+	public void tearDown()
+	{
+		driver.close();
+	}
+
+}

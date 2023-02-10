@@ -1,0 +1,175 @@
+/* @author vsingh  */
+
+package com.Payments;
+
+import java.sql.SQLException;
+
+
+
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+
+import com.ui.pages.Add_dependent;
+import com.ui.pages.Add_dependent_spouse;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.EB_claim;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.SearchWorkItem;
+import com.ui.pages.UpdateClaimBalance;
+import com.ui.pages.weekly_cert_pension;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+
+
+public class TC_58893 extends TestBase
+{
+
+	static LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_58893 ClassObject;
+	FutureDatePastDate f;
+	QuerySearch q;
+	static  CreateDirectory CD;
+	static ClaimSummary cs;
+	static UpdateClaimBalance ucb;
+	static Payments_Locators pml;
+	static Wc_locators wcl;
+	
+	
+	String SSN = "123457771", ed;
+	int CWE = -14;
+	
+	
+	String query = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'REG' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+
+	//Properties prop;
+	public TC_58893()
+	{
+		super();
+	}
+
+
+
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException, ClassNotFoundException, SQLException
+
+	{
+		f = new FutureDatePastDate();
+	ed = f.Sunday(CWE);
+	ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+	System.out.println("Effective date : "+ed);
+	query = query + ed + "') and c.effective_date = '" + ed + "'";
+	System.out.println("Query being hit to fetch SSN from database :");
+	System.out.println(query);
+	q = new QuerySearch();	
+	//SSN = q.queryresult(query);
+	System.out.println("SSN to be use : "+SSN);
+	
+		
+		
+		ClassObject =new TC_58893();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username_report"), prop.getProperty("password_report"));
+		System.out.println("login logout completed");
+
+	}
+	@Test(description ="TC_58893" )
+	public void TC_58893_payment() throws InterruptedException, ParseException
+	{
+		System.out.println("@test initiated");
+		cs= new ClaimSummary();
+		ucb= new UpdateClaimBalance();
+		pml= new Payments_Locators();
+		wcl = new Wc_locators();
+        String SSN1= SSN.substring(5);
+
+		System.out.println(" moving to update mba.");
+		//ucb.updateMBAToZero(driver,snapshotPath, SimpleClassname,SSN);
+
+		System.out.println("balance updated ,value=0 ");
+		System.out.println("ready for adding dependent");
+		//Add_dependent_spouse.dependent_add (driver,snapshotPath,SimpleClassname,SSN,CWE);
+		 Thread.sleep(3000);
+		  wcl.clickHome(); Thread.sleep(3000);
+			
+		System.out.println("dependet added successfully.");
+
+	    cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Balance ");
+		Thread.sleep(5000);
+
+		pml.claimsummry_home().click();
+
+
+		EB_claim.EB_claim_submittion(driver,snapshotPath, SimpleClassname,SSN);
+
+
+		weekly_cert_pension.SubmitWeeklyCertification_SSN(driver,snapshotPath,SimpleClassname,SSN,SSN1);
+		weekly_cert_pension.WCF_DeatilsForNonPartialEmpolyment(driver, snapshotPath, SimpleClassname,SSN1);
+		System.out.println("wc filed successfully");
+
+		// Batch need to be run--------------------------------------
+		
+		Thread.sleep(5000);
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob Pay010DetermineWeeklyCertType benefits_daily_515pm;./qclient.sh runJobOnly Pay040ProcessedWeeklyCert benefits_daily_515pm;./qclient.sh runJobOnly Pay050ProvidePayment benefits_daily_515pm");
+		Thread.sleep(30000);
+		
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Balance ");
+
+
+
+	}
+
+	@AfterTest
+	public void close_browser()
+	{
+		driver.close();
+		driver.quit();
+		System.out.println("Testcase executed and browser closed");
+	}
+}
+
+

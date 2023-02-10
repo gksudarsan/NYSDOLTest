@@ -1,0 +1,137 @@
+package com.Overpayments;
+
+/** @author mjape 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ISAInquiry;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.UpdateClaimantProfile;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.RandomGenerator;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_58257 extends TestBase
+{
+	FutureDatePastDate f;
+	QuerySearch q;
+	LoginLogoutPage lp;
+	UpdateClaimantProfile ucp;
+	ISAInquiry i;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN1 = "001023652", SSN2 = "001620113", ed;
+	TC_58257 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT A.SSN FROM T_CLAIMANT A, T_CLAIM B WHERE A.CLAIMANT_ID = B.CLAIMANT_ID AND A.CLAIMANT_ID NOT IN "
+			+ "(SELECT C.CLAIMANT_ID FROM T_ISA_FRAUDULENT_PAYMENT C WHERE A.CLAIMANT_ID = C.CLAIMANT_ID) AND B.STATUS = 'ACTV' "
+			+ "AND B.EFFECTIVE_DATE > '";
+
+	//Properties prop;
+	public TC_58257()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		f = new FutureDatePastDate();
+		ed = f.d(-60);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		List<String> SSN = q.multipleSSN(query, "SSN");
+		int selection = new Random().nextInt(SSN.size()-1);
+		SSN1 = SSN.get(selection);
+		SSN2 = SSN.get(selection+1);
+		System.out.println("SSNs to be used : "+SSN1+ " and "+SSN2);
+
+		ClassObject =new TC_58257();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "RI/CT_7317_OP_Batch_Detect Fraudulent Payment Batch Multiple Claimants Having the Same Email "
+			+ "Address - System detects email addresses that have more than two active claimants attributed to them.")
+	public void Testing58257() throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		RandomGenerator rg = new RandomGenerator();		
+		String emailID = rg.randomStringGenerator(10) + "@GMAIL.COM";
+
+		//Update 1st Claimant Contact Details...
+		ucp = new UpdateClaimantProfile();
+		ucp.updatePrimaryEmailID(driver, snapshotPath, SimpleClassname, SSN1, emailID);
+
+		//Update 2nd Claimant Contact Details...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		ucp = new UpdateClaimantProfile();
+		ucp.updatePrimaryEmailID(driver, snapshotPath, SimpleClassname, SSN2, emailID);
+
+		//Run Predetermination Notice Batch...
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob BatchDetectFraudulentPayments benefits_weekly_tuesday_6am");
+		String ID = "";
+		do
+		{
+			System.out.println("Waiting for BatchDetectFraudulentPayments to run...");
+			Thread.sleep(1000*60);
+			try
+			{
+				ID = q.Data("SELECT ISA_FRADULENT_PAYMENT_ID FROM T_ISA_FRAUDULENT_PAYMENT WHERE CLAIMANT_ID IN "
+						+ "(SELECT CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN1+"') ORDER BY CREATED_TS DESC", "ISA_FRADULENT_PAYMENT_ID");
+				System.out.println("ISA_FRADULENT_PAYMENT_ID : "+ID);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Record not found...");
+			}
+		}
+		while(ID.isEmpty());
+		System.out.println("BatchDetectFraudulentPayments Successful...");
+
+		//Navigating to Fradulent Claimant Inquiry Screen...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		i = new ISAInquiry();
+		i.fradulentClaimant(driver, snapshotPath, SimpleClassname, SSN1);
+	}
+}

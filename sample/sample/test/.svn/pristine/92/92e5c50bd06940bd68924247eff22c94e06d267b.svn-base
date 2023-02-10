@@ -1,0 +1,64 @@
+/**
+ * 
+ */
+package com.ui.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverpaymentMaintenance_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.screenShot;
+
+/**
+ * @author nnegi
+ *
+ */
+public class ProcessRepayment extends TestBase{
+	
+	
+	static Wc_locators wcl=new Wc_locators();
+	static OverpaymentMaintenance_Locators oml=new OverpaymentMaintenance_Locators();
+	static screenShot screen=new screenShot();
+	
+	public static void ProcessRepaymentScreen(WebDriver driver,String snapshotPath, String SimpleClassname,String SSN) throws InterruptedException
+	{
+		Thread.sleep(3000);
+		wcl.clickHome();
+		Thread.sleep(2000);
+		wcl.homeTabs("Overpayment Maintenance").click();
+		Thread.sleep(2000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Enter Repayment Details").click();
+		Thread.sleep(5000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[text()='-Select-']/following-sibling::div/span"))).click();
+		Thread.sleep(1000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[text()='Credit Card']"))).click();
+		Thread.sleep(1000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@name='paymentAmount']"))).sendKeys("20");
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name,'claimantSsn_-ssn1')]"))).sendKeys(SSN);
+		Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button/span[contains(text(), 'search')]"))).click();
+		Thread.sleep(3000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@name,'-repaymentAmount')]"))).sendKeys("20");
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(3500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		
+		
+
+		
+
+		
+	}
+			
+	
+
+}

@@ -1,0 +1,58 @@
+package com.ui.pages;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+public class DuaReassignWorkItem extends TestBase
+{
+	Wc_locators wcl;
+	Payments_Locators pl;
+	FutureDatePastDate f;
+	screenShot screen = new screenShot();
+	Connection con;
+	Statement stmt;
+	ResultSet rs;
+
+	public void duaReassignWorkItem(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN, int CWE) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		pl = new Payments_Locators();
+		
+		
+		
+		
+		
+		driver.findElement(By.xpath("//td[2]/a[1]/span[text()='System Administration']")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//td[5]/a[1]/span[text()='Workflow Administrator']")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//tr/td/a[1]/span[text()='Reassign/Terminate Workitems']")).click();
+        
+		
+		driver.findElement(By.xpath("//*[text()='Select All Units']")).click();
+		driver.findElement(By.id("ssnBean_-ssn1")).sendKeys(prop.getProperty("DUASSN"));
+		driver.findElement(By.xpath("//*[text()='Search']")).click();
+		driver.findElement(By.xpath("//*[@id='j_id_6m_data']/tr/td[1]")).click();
+		driver.findElement(By.xpath("//*[text()='Next>']")).click();
+		driver.findElement(By.id("j_id_2p:0:j_id_3o")).sendKeys("sttestingcsr");
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//*[text()='Next>']")).click();
+	}
+}

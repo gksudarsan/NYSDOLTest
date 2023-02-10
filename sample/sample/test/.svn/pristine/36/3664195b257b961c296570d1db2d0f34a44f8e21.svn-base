@@ -1,0 +1,49 @@
+package com.ui.utilities;
+
+/** @author mjape*/
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class CreateTextFile
+{
+	public void createWriteFile(String path, String content[])
+	{
+		//Create File...
+		File f = new File(path);
+		boolean result;
+		
+		try
+		{
+			result = f.createNewFile();
+			if(result)
+				System.out.println("File created at "+f.getCanonicalPath());
+			else
+				System.out.println("File already exist at "+f.getCanonicalPath());
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		//Write data to file...
+		try
+		{
+			String s = "";
+			for(int i = 0 ; i < 18; i++)
+			{
+				s = s + content[i];
+			}
+			
+			FileWriter fw = new FileWriter(path);
+			fw.write(s);
+			fw.close();
+			System.out.println("File saved...");
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+}

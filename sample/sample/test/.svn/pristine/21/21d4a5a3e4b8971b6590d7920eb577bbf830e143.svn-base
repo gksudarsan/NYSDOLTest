@@ -1,0 +1,239 @@
+package com.Payments;
+
+import static org.testng.Assert.assertEquals;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+
+import javax.xml.bind.ParseConversionEvent;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.ClickAction;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.AddUpdateTRATraining;
+import com.ui.pages.Add_Child_support;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.CreateIssue;
+import com.ui.pages.EnterTAATimesheet;
+import com.ui.pages.EnterTRABreakPeriods;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.ReportPage;
+import com.ui.pages.ResolveWorkItem;
+import com.ui.pages.Resolve_TRA_issue;
+import com.ui.pages.SearchWorkItem;
+import com.ui.pages.TotalPaidAmountCalculation;
+import com.ui.pages.UpdateClaimBalance;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.pages.weekly_cert_pension;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+
+
+public class TC_59043 extends TestBase
+{
+	static LoginLogoutPage lp;
+	static SearchWorkItem sw;
+	static screenShot screen=new screenShot();
+	static PageHeading ph;
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static TC_59043 ClassObject;
+	static AddUpdateTRATraining tratr;
+	static  CreateDirectory CD;
+	static Wc_locators wcl;
+	static Payments_Locators pml;
+	static FileWeeklyCertification fwc;
+	static String date1;
+	static ClaimSummary cs;
+	static UpdateIssueDates uid;
+	static WeeklyCert  w;
+	static ResolveWorkItem rwi;
+	static UpdateClaimBalance ucb;
+	static Highlighter hl;
+	static CreateIssue cri;
+	static EnterTAATimesheet trat;
+	static EnterTRABreakPeriods trab;
+	FutureDatePastDate f;
+	QuerySearch q;
+	String cwedate ="";
+	String SSN = "123457336", ed;
+	int CWE=-28;
+	int startDate= CWE-42;
+	int endDate= CWE;
+	String status= "Approved";
+
+	String query = "select a.ssn from t_claimant a, t_claim c where c.status = 'ACTV' "
+			+ "and c.entitlement_type = 'TRA' and a.claimant_id = c.claimant_id and "
+			+ "a.claimant_id not in (select b.claimant_id from t_weekly_certification b where a.claimant_id = b.claimant_id "
+			+ "and certification_date > '";
+	public TC_59043()
+	{
+		super();
+	}
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		f = new FutureDatePastDate();
+		ed = f.Sunday((CWE));
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "') and c.effective_date = '" + ed + "'";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query); 
+		q = new QuerySearch();	
+		SSN = q.queryresult(query); 
+		System.out.println("SSN to be use : "+SSN); 
+
+		ClassObject =new TC_59043();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+
+		driver.get(prop.getProperty("applicationUrl"));
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		System.out.println("login logout completed");
+
+
+
+	}
+	@Test(description ="TC_59043 ....CT 10542 Common Processing TRA NonPayable Training Break > 30 days." )
+	public void TC_59043_WC( ) throws InterruptedException, ParseException, ClassNotFoundException, SQLException
+	{
+		System.out.println("@test initiated");
+		wcl=new Wc_locators();
+		fwc=new FileWeeklyCertification();
+		trab= new EnterTRABreakPeriods();
+		tratr = new AddUpdateTRATraining();
+		uid= new UpdateIssueDates();
+		ucb= new UpdateClaimBalance();
+		cs= new ClaimSummary();
+		hl = new Highlighter();
+		cri = new CreateIssue();
+		trat = new EnterTAATimesheet();
+		pml=new Payments_Locators();
+		w = new WeeklyCert();
+
+		String status= "Approved";
+		cwedate = f.Saturday(CWE);
+		System.out.println("cwedate=" +cwedate);
+		String cwedate1 = cwedate.substring(0, 2) + "/" + cwedate.substring(2, 4) + "/" + cwedate.substring(4, 8);
+		System.out.println("CWE Date on claimsummry screen = "+cwedate1);
+
+			Thread.sleep(3000);
+
+		System.out.println("Ready to resolvre future issue-if any");
+
+		uid.updateFutureIssueStartDate(driver, snapshotPath, SimpleClassname, SSN,-7);
+
+		System.out.println("future issue resolved -if any");
+		wcl.clickHome();
+		System.out.println("moving to claim summary screen");
+
+
+		tratr.addTRATraining( driver,  snapshotPath,  SimpleClassname, SSN , status, startDate, endDate);
+		Thread.sleep(2000);
+		wcl.clickHome();
+
+		trab.enterTRABreak_months( driver,  snapshotPath,  SimpleClassname, SSN,CWE);
+		Thread.sleep(2000);
+		wcl.clickHome();
+
+		trat.enterTaaTimesheet( driver,  snapshotPath,  SimpleClassname, SSN , CWE);
+		Thread.sleep(2000);
+		wcl.clickHome();
+
+
+		w.fileWeeklyCertification59025(driver, snapshotPath, SimpleClassname, SSN, (CWE));
+		wcl.clickHome();
+		System.out.println("Waiting to run batch ");
+
+		SSHConnection ssh=new SSHConnection();
+		ssh.runSudoCommand(BatchProp.getProperty("Benefits_Batch_Path"), "runJob Pay010DetermineWeeklyCertType benefits_daily_515pm;"
+				+ "./qclient.sh runJob Pay040ProcessedWeeklyCert benefits_daily_515pm;./qclient.sh runJob Pay050ProvidePayment benefits_daily_515pm");
+		Thread.sleep(10000);
+
+		String ID = "";
+		System.out.println("waiting for payment to be updated");
+		for	(int i=0;i<10;i++)
+		{
+			if (ID.isEmpty())
+			{
+				q = new QuerySearch();
+				System.out.println(""+i+" Waiting for Pay010DetermineWeeklyCertType, Pay040ProcessedWeeklyCert, Pay050ProvidePayment to run...");
+				Thread.sleep(1000*30);
+				try
+				{
+					ID = q.getClaimantPaymentID("SELECT CLAIMANT_PAYMENT_ID FROM T_CLAIMANT_PAYMENT WHERE "
+							+ "CREATED_BY = 'Pay050ProvidePayment' AND DATE(CREATED_TS) = CURRENT_DATE AND CLAIMANT_ID IN (SELECT "
+							+ "CLAIMANT_ID FROM T_CLAIMANT WHERE SSN = '"+SSN+"') ORDER BY CREATED_TS DESC");
+					System.out.println("CLAIMANT_PAYMENT_ID : "+ID);
+				}
+				catch(Exception e)
+				{
+					System.out.println("Record not found...");
+				}
+				
+			}
+			else {
+				System.out.println("Payment Successful...");
+			}
+		}
+		System.out.println("Batches executed......exit from loop..................");	
+		
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");Thread.sleep(3000);
+
+		Thread.sleep(3000);
+		pml.processed_weekly_certifications().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		String actual_amount =pml.cwe_date(cwedate1).getText();
+		System.out.println("actual_amount=" +actual_amount);
+		assertEquals(actual_amount, "0.00");
+
+		pml.cwe_date(cwedate1).click();Thread.sleep(3000);
+		Thread.sleep(3000);
+		Highlighter h = new Highlighter();
+		h.highlight(driver, "//td[text() =  'Paid Amount']");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+
+	}
+	@AfterTest
+	public void close_browser()
+	{
+		driver.close();
+		driver.quit();
+		System.out.println("Testcase executed and browser closed");
+	}
+
+}

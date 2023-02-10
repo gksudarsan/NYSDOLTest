@@ -1,0 +1,120 @@
+package com.Overpayments;
+
+import java.awt.AWTException;
+import java.awt.HeadlessException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class TC_55903 extends TestBase
+{
+	QuerySearch q;
+	LoginLogoutPage lp;
+	Overpayment o;
+	ClaimSummary c;
+	FutureDatePastDate f;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "001024786", ed;
+	TC_55903 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID IN (SELECT CLAIMANT_ID FROM T_CORRESPONDENCE WHERE "
+			+ "CORRESPONDENCE_CODE = 'OVPPREDEF' AND CREATED_TS < (CURRENT_DATE - 10))";
+
+	//Properties prop;
+	public TC_55903()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		//SSN = q.Data(query, "SSN");
+		System.out.println("SSN to be use : "+SSN);
+
+		ClassObject =new TC_55903();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl"));
+	}
+
+	@Test(priority=1, description = "Whenever a Fraud or Non-Fraud overpayment is established by the system, the system will add "
+			+ "the overpayment amount to the claim balance-the claimant does not respond to the Pre-determination letter within "
+			+ "the given time frame of 10 days then over payment is established by batch 33430-Batch Establish Overpayment")
+	public void Testing55903() throws InterruptedException, ClassNotFoundException, SQLException, HeadlessException, AWTException, IOException
+	{
+		//Logging in to application...
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+		o = new Overpayment();
+		o.preDeterminationLetterResponse55903(driver, snapshotPath, SimpleClassname, SSN, "Pre-determination Letter Response Pending", "Fraud");
+		
+		wcl.clickHome();
+		Thread.sleep(5000);
+		c = new ClaimSummary();
+		c.claimsummary(SSN, snapshotPath, SimpleClassname, "Comment");
+		
+		driver.findElement(By.xpath("//a[contains(text(), 'Overpayments')]")).click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		f = new FutureDatePastDate();
+		ed = f.d(0);
+		ed = ed.substring(0, 2) + "/" + ed.substring(2, 4) + "/" + ed.substring(4);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(), 'History Log')]//following::td[contains(text(), '"+ed+"')][1]"))).click();
+		Thread.sleep(5000);
+		new Highlighter().highlight(driver, "//span[contains(text(), 'History Log')]//following::td[contains(text(), '"+ed+"')][1]");
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname); Thread.sleep(500);
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

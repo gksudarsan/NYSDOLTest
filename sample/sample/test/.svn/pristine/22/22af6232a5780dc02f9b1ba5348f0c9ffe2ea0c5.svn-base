@@ -1,0 +1,278 @@
+package com.Overpayments;
+
+/** @author nnegi 
+
+Payment batches pending */
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.ui.base.TestBase;
+import com.ui.locators.OverPayment_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.Add_dependent;
+import com.ui.pages.ClaimSummary;
+import com.ui.pages.CreateIssue;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.pages.Overpayment;
+import com.ui.pages.Reassign_WorkItem;
+import com.ui.pages.ResolveWorkItem;
+import com.ui.pages.UpdateIssueDates;
+import com.ui.pages.WeeklyCert;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.RandomGenerator;
+import com.ui.utilities.SSHConnection;
+import com.ui.utilities.screenShot;
+
+public class TC_56651 extends TestBase
+{
+	String lumpsumpaid = "2000", claimantcontri = "1000";
+
+	FutureDatePastDate f = new FutureDatePastDate();
+	QuerySearch q;
+	LoginLogoutPage lp;
+	CreateIssue ci;
+	ResolveWorkItem rwi;
+	ClaimSummary cs;
+	Wc_locators wcl = new Wc_locators();
+	screenShot screen = new screenShot();
+	String classname, SimpleClassname, snapshotPath, SSN = "043724997", ed;
+	int a=0,  CWE = -14;
+	TC_56651 ClassObject;
+	CreateDirectory CD;
+	String query = "SELECT SSN FROM T_CLAIMANT WHERE CLAIMANT_ID IN (SELECT A.CLAIMANT_ID FROM (SELECT A.CLAIM_ID,A.CLAIMANT_ID,A.WBA,A.MBA FROM "
+			+ "(SELECT * FROM DB2PRD1.t_claim where BYE_DATE > current date and effective_date > '2020-05-01') A "
+			+ "INNER JOIN DB2PRD1.T_CLAIMANT_PAYMENT B "
+			+ "ON A.CLAIMANT_ID = B.CLAIMANT_ID) A "
+			+ "INNER JOIN DB2PRD1.T_CLAIM_EMPLOYMENT C "
+			+ "ON A.CLAIM_ID = C.CLAIM_ID and A.CLAIM_ID not in (Select A.CLAIM_ID from T_OVERPAYMENT X where A.CLAIM_ID=X.CLAIM_ID ) ) "
+			+ "AND CLAIMANT_ID NOT IN (select CLAIMANT_ID from T_WEEKLY_CERTIFICATION where certification_date > '";
+
+	//Properties prop;
+	public TC_56651()
+	{
+		super();
+	}
+
+	//Opening browser... Hitting URL...
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser) throws ClassNotFoundException, SQLException, ParseException
+	{
+		//Searching for the SSN in the database...
+		ed = f.Sunday(CWE);
+		ed = ed.substring(4, 8) + "-" + ed.substring(0, 2) + "-" + ed.substring(2, 4);
+		System.out.println("Effective date : "+ed);
+		query = query + ed + "')";
+		System.out.println("Query being hit to fetch SSN from database :");
+		System.out.println(query);
+		q = new QuerySearch();	
+		SSN = q.queryresult(query);		
+		System.out.println("SSN to be use : "+SSN); 
+
+		ClassObject =new TC_56651();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(prop.getProperty("applicationUrl")); 
+	}
+
+	@Test(priority=1, description = "Create Overpayment: Needs the Federal address search added with the BPC-99 Overpayment Issue_search using SEIN or EAN")
+	public void TestingTC_56651() throws InterruptedException, ClassNotFoundException, SQLException, ParseException
+	{
+		//Logging in to application...
+		f=new FutureDatePastDate();
+		lp=new LoginLogoutPage();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		//cs=new ClaimSummary();
+		//cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certifications");
+		wcl.clickHome();
+		Thread.sleep(3000);
+		cs=new ClaimSummary();
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Processed Weekly Certification(s)");
+		Thread.sleep(500);
+
+		String EndDate=null;
+
+		for(int i=1;i<100;i++)
+		{
+			if(i>0)
+			{
+
+				String st = driver.findElement(By.xpath("//td[contains(text(),'Processed Weekly Certification(s)')]//following::table[1]/tbody/tr["+i+"]/td[4]")).getText();
+				System.out.println("Element Text is " +st);
+				if (st.equalsIgnoreCase("Payment"))
+				{
+
+					EndDate = driver.findElement(By.xpath("//td[contains(text(),'Processed Weekly Certification(s)')]//following::table[1]/tbody/tr["+i+"]/td[1]")).getText();
+					System.out.println("Found Paid Week End Date " +EndDate);
+					break;
+				}
+				else
+				{
+					System.out.println("Finding Paid Week...." );
+
+				}
+			}   
+		}
+		//Creating Overpayment Issue...
+		wcl.clickHome();
+		Thread.sleep(5000);
+		OverPayment_Locators opl=new OverPayment_Locators();
+
+		f = new FutureDatePastDate();
+		RandomGenerator rg = new RandomGenerator();
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Overpayments").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeSubTabs("Create Overpayment Issue").click();
+		Thread.sleep(2500);
+		wcl.clickNext().click();
+		Thread.sleep(3500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(1500);
+		wcl.ssn1().sendKeys(SSN); Thread.sleep(500);
+		wcl.clickNext().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2500);
+
+		//Submission of Overpayment Issue Details page...
+		String heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Overpayment Issue Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		opl.issueSource("Quality Control"); Thread.sleep(500);
+		opl.Date("issueCreateDate", f.d(0)); Thread.sleep(500);
+		opl.Date("issueStartDate", FutureDatePastDate.ConvertAndAddDays(EndDate, -5)); Thread.sleep(500);
+		opl.Date("issueEndDate", FutureDatePastDate.ConvertDate(EndDate)); Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		for(int j = 1 ; j <= 1 ; j++)
+		{
+			int counter = 0;
+			opl.clickAddEmployer();
+			Thread.sleep(2500);
+
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("Add Other State Employer"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			if(j==1)
+			{
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+				wcl.clickNext().click();
+				Thread.sleep(2500);
+
+				heading = wcl.heading();
+				if(heading.equalsIgnoreCase("Select Employer"))
+					Thread.sleep(1000);
+				else
+				{
+					System.out.println("Waiting for 15 more seconds for page to load...");
+					Thread.sleep(15000);
+				}
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+				driver.findElement(By.xpath("//input[@name='eanBean_-ean1']")).sendKeys("001245789");
+				wcl.clickSearch().click();
+				Thread.sleep(5000);
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+				driver.findElement(By.xpath("//input[@name='eanBean_-ean1']")).clear();Thread.sleep(1500);
+				driver.findElement(By.xpath("//input[@name='eanBean_-ean1']")).sendKeys("41314210");Thread.sleep(1500);
+				wcl.clickSearch().click();
+				Thread.sleep(3000);
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+				
+				Thread.sleep(30000);
+				do
+				{
+					wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(), 'Select')]//following::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(1000);
+					counter++;
+				}
+				while(counter<=10);
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			}
+			else
+			{
+				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//label[contains(text(), 'Yes')]//preceding::span[1]"))).click(); Thread.sleep(500);
+				opl.employerName(rg.randomStringGenerator(8)); Thread.sleep(500);
+				opl.address("Address Line 1", rg.randomStringGenerator(7)); Thread.sleep(500);
+				opl.address("Address Line 2", rg.randomStringGenerator(6)); Thread.sleep(500);
+				opl.address("City", rg.randomStringGenerator(5)); Thread.sleep(500);
+				opl.selectState("Connecticut"); Thread.sleep(500);
+				opl.address("ZIP Code", rg.randomNumberGenerator(5)); Thread.sleep(500);
+				opl.selectCountry("United States"); Thread.sleep(500);
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);				
+			}
+			wcl.clickNext().click();
+			Thread.sleep(5000);
+
+			heading = wcl.heading();
+			if(heading.equalsIgnoreCase("Overpayment Issue Details"))
+				Thread.sleep(1000);
+			else
+			{
+				System.out.println("Waiting for 15 more seconds for page to load...");
+				Thread.sleep(15000);
+			}
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			List<WebElement> element = driver.findElements(By.xpath("//td[contains(text(), 'Generate Wage Request Letter')]//following::label[contains(text(), 'Yes')]//preceding::span[1]"));
+			element.get(j-1).click(); Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		}
+		wcl.submit().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+
+	}
+
+	//Logging out of application...
+	@AfterTest
+	public void tearDownCT_ST() throws InterruptedException
+	{
+		wcl.clickHome();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickLogout();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.close();
+		driver.quit();
+	}
+}

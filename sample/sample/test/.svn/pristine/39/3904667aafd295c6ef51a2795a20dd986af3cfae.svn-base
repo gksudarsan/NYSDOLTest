@@ -1,0 +1,18 @@
+username
+password
+hostname=10.80.26.122
+Benefits_Batch_Path=cd /opt/app/accessms/bin/benefits/batch; 
+Tax_Batch_Path=cd /opt/app/accessms/bin/tax/batch;
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Benifts_Batches_Name
+#WorkShareWC=BatchCTProcessWorkShareWeeklyCert on_demand
+
+PaymentBatches=Pay010DetermineWeeklyCertType benefits_daily_515pm;./qclient.sh runJobOnly Pay030EstablishOverpaymentFromJournal benefits_daily_515pm ;./qclient.sh runJobOnly Pay040ProcessedWeeklyCert benefits_daily_515pm;
+#OverpaymentPreDeterminationBatch=BatchCTGenerateOvpPredeterminationNotice benefits_daily_515pm
+#CorrespondenceGenBatch=Batch1099UpdateBarcodeOnCorrespondence on_demand
+
+
+
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Tax_Batches_Name

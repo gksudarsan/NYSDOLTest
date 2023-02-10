@@ -1,0 +1,160 @@
+package com.ui.pages;
+
+/** @author mjape */
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.QuerySearch;
+import com.ui.utilities.screenShot;
+
+public class ChangeReportedEarnings extends TestBase
+{
+	Wc_locators wcl;
+	screenShot screen=new screenShot();
+	FutureDatePastDate f;
+	ClaimSummary cs;
+	String heading, query, cwed;
+	QuerySearch q;
+	int counter = 0;
+	Random rand = new Random();
+
+	public void changeEarning(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException, ClassNotFoundException, SQLException
+	{
+		wcl = new Wc_locators();
+		f = new FutureDatePastDate();
+		q = new QuerySearch();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.homeTabs("Weekly Certification").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Change Reported Earnings')]")).click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);
+		wcl.confirmssn1().sendKeys(SSN);
+		
+		query = "select CWE from t_weekly_certification where claimant_id in (select claimant_id from t_claimant "
+				+ "where ssn = '"+SSN+"')";
+		cwed = q.getClaimWeekEndingDate(query);
+		
+		cwed = cwed.substring(5, 7) + cwed.substring(8, 10) + cwed.substring(0, 4);
+		wcl.claimWeekEndingDate().sendKeys(cwed);
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Enter Final Earnings"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.AddEmployment().click();
+		Thread.sleep(5000);
+
+		//Submission of Employment Details page...
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Employment Details"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(2500);
+		wcl.enterEmployerName().sendKeys("LIBRARY"); Thread.sleep(500);
+		wcl.clickSearch().click();
+		Thread.sleep(10000);
+		int i = rand.nextInt(24);
+		i = i+1;
+		System.out.println("Selecting record no. "+i);
+		do
+		{
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr["+i+"]//child::span[contains(@class, 'radiobutton')]"))).click(); Thread.sleep(500);
+			counter++;
+		}
+		while(counter<=10);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(10000);
+		wcl.IndicateEmployStatus().click();	Thread.sleep(500);
+		wcl.SelectIndicateEmployStatusOption3().click(); Thread.sleep(500);
+		wcl.lastdayworked().sendKeys(cwed);	Thread.sleep(500);
+		wcl.EnterAmount().sendKeys("1000");	Thread.sleep(500);
+		wcl.EnterWorkingHrs().sendKeys("40");	Thread.sleep(500);
+		wcl.performWorkForAnotherEmployer("No").click();	Thread.sleep(500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		counter=0;
+		List<WebElement> times = driver.findElements(By.xpath("//input[contains(@id, ':investigateOpIssueWeeklyWages_-claimantFinalEarnings')]"));
+		for(WebElement element:times)
+		{
+			System.out.println(element);
+			counter++;
+		}
+		
+		for(int j = 0; j < counter; j++)
+		{
+			String b = Integer.toString(500+(i*10));
+			String a = Integer.toString(i);
+			String xpath = a+":investigateOpIssueWeeklyWages_-claimantFinalEarnings')]";
+			driver.findElement(By.xpath("//input[contains(@id, '"+xpath+"")).sendKeys(b);
+			Thread.sleep(500);
+		}
+		
+		counter=0;
+		times = driver.findElements(By.xpath("//input[contains(@id, ':investigateOpIssueWeeklyWages_-finalHoursOfWork')]"));
+		for(WebElement element:times)
+		{
+			System.out.println(element);
+			counter++;
+		}
+		
+		for(int j = 0; j < counter; j++)
+		{
+			String b = Integer.toString(30+(i*10));
+			String a = Integer.toString(i);
+			String xpath = a+":investigateOpIssueWeeklyWages_-finalHoursOfWork')]";
+			driver.findElement(By.xpath("//input[contains(@id, '"+xpath+"")).sendKeys(b);
+			Thread.sleep(500);
+		}
+		
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+		Thread.sleep(5000);
+		
+		heading = wcl.heading();
+		if(heading.equalsIgnoreCase("Earnings Verification"))
+			Thread.sleep(1000);
+		else
+		{
+			System.out.println("Waiting for 15 more seconds for page to load...");
+			Thread.sleep(15000);
+		}
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.submit().click();
+		Thread.sleep(5000);
+		cs = new ClaimSummary();
+		cs.claimsummary(SSN, snapshotPath, SimpleClassname, "Weekly Amount ");
+	}
+}

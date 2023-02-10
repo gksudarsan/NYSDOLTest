@@ -1,0 +1,69 @@
+package com.ui.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.Highlighter;
+import com.ui.utilities.screenShot;
+
+public class SearchWorkItem extends TestBase
+{
+	Wc_locators wcl;
+	screenShot screen = new screenShot();
+	Highlighter h;
+	
+	public void searchworkitem(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		wcl.clickHome();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickMyQ();
+		Thread.sleep(2500);
+		wcl.checkIRSDisclaimer().click(); Thread.sleep(2500);
+		wcl.clickNext().click();
+		Thread.sleep(2500);
+		wcl.ssn1().sendKeys(SSN);
+		wcl.clickSearch().click();
+		Thread.sleep(2500);
+		SSN = SSN.substring(0, 3) + "-" + SSN.substring(3, 5) + "-" + SSN.substring(5, 9);
+		h = new Highlighter();
+		h.highlight(driver, "//td[contains(text(), '"+SSN+"')]");
+		Thread.sleep(2500);
+	}
+	
+	public  void searchworkitem_claimIntake(WebDriver driver, String snapshotPath, String SimpleClassname, String ssn) throws InterruptedException
+	{
+		wcl = new Wc_locators();
+		wcl.clickHome();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		wcl.homeTabs("System Administration").click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Workflow Administrator')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//td/a/span[contains(text(), 'Reassign/Terminate Workitems')]")).click();
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		Thread.sleep(2500);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		driver.findElement(By.xpath("//span[contains(text(), 'Select All Units')]")).click();
+		Thread.sleep(2500);
+		
+		
+		wcl.ssn1().sendKeys(ssn);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickSearch().click();
+		Thread.sleep(5000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		
+		h = new Highlighter();
+		h.highlight(driver, "//tbody[@id='j_id_6m_data']/tr[1]/td[2]");
+		Thread.sleep(2500);
+	}
+}

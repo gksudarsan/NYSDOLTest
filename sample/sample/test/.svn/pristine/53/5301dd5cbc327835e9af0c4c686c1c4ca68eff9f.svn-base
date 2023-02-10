@@ -1,0 +1,99 @@
+package com.Payments;
+
+import java.text.ParseException;
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.WeeklyCertification.TC_FWC_WithNoPartialEmployment;
+import com.ui.base.TestBase;
+import com.ui.locators.Payments_Locators;
+import com.ui.locators.Wc_locators;
+import com.ui.pages.FileWeeklyCertification;
+import com.ui.pages.LoginLogoutPage;
+import com.ui.utilities.CreateDirectory;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+public class Searchreport extends TestBase {
+	PageHeading ph;
+	LoginLogoutPage lp;
+	Wc_locators wc;
+	static Payments_Locators pl ;
+	static screenShot screen=new screenShot();
+	static String classname;
+	static String SimpleClassname;
+	static String snapshotPath;
+	static Searchreport ClassObject;
+	
+	static  CreateDirectory CD;
+	
+
+	@Parameters({"browser"})
+	@BeforeTest
+	public void setup(String browser)
+
+	{
+		ClassObject =new Searchreport();
+		CD=new CreateDirectory();
+		classname=ClassObject.getClass().getName();
+		SimpleClassname =classname.substring(classname.lastIndexOf('.')+1);
+		snapshotPath=CD.artifactsPath(SimpleClassname);
+		System.out.println("Path of folder where screenshots are placed of Execution: " +snapshotPath);
+		
+		initialization(browser);
+		wait=new WebDriverWait(driver,Duration.ofSeconds(50));
+		//wait=new WebDriverWait(driver, Duration.ofSeconds(50));
+		driver.get(prop.getProperty("applicationUrl"));
+		
+		
+	}
+	@Test(priority=1,description="Log into CT ACCESS system")
+	public void applicationLogin() throws InterruptedException
+	{
+		lp=new LoginLogoutPage();
+		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		//driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+	}
+	@Test(priority=2,description ="Search Report")
+	public void DUAClaim() throws InterruptedException, ParseException
+	{
+		
+		pl = new Payments_Locators();
+		ph=new PageHeading();
+		
+		
+		
+		
+		driver.findElement(By.xpath("//td[2]/a[1]/span[text()='System Administration']")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//td[5]/a[1]/span[text()='Workflow Administrator']")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//tr/td/a[1]/span[text()='Reassign/Terminate Workitems']")).click();
+        
+		
+		driver.findElement(By.xpath("//*[text()='Select All Units']")).click();
+		driver.findElement(By.id("ssnBean_-ssn1")).sendKeys(prop.getProperty("DUASSN"));
+		driver.findElement(By.xpath("//*[text()='Search']")).click();
+		driver.findElement(By.xpath("//*[@id='j_id_6m_data']/tr/td[1]")).click();
+		driver.findElement(By.xpath("//*[text()='Next>']")).click();
+		driver.findElement(By.id("j_id_2p:0:j_id_3o")).sendKeys("sttestingcsr");
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//*[text()='Next>']")).click();
+		
+		
+		//ul[1]/li[2]/a[text()='My Q']
+	}
+
+
+}
+
+

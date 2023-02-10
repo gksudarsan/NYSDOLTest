@@ -1,0 +1,1059 @@
+package com.ui.pages;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+import java.util.Locale;
+import java.util.NoSuchElementException;
+import java.util.function.Function;
+
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+
+import com.ui.base.TestBase;
+import com.ui.locators.Wc_locators;
+import com.ui.utilities.FutureDatePastDate;
+import com.ui.utilities.PageHeading;
+import com.ui.utilities.screenShot;
+
+public class FileWeeklyCertification extends TestBase {
+
+	static PageHeading ph=new PageHeading();
+	static Wc_locators wcl=new Wc_locators();
+	static screenShot screen=new screenShot();
+	
+	static FutureDatePastDate Pdate=new FutureDatePastDate();
+	static String date1;
+    
+	public static Wait <WebDriver> wait1 = new FluentWait<WebDriver>(driver)
+			.withTimeout(Duration.ofSeconds(20000))
+			.pollingEvery(Duration.ofSeconds(5))
+			.ignoring(org.openqa.selenium.NoSuchElementException.class);
+			
+
+	
+		
+	
+	public static void  SubmitWeeklyCertification(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN) throws InterruptedException, ParseException
+	{
+			
+			Thread.sleep(2000);
+			wcl.homeTabs("Weekly Certification").click(); 
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.homeTabs("File Weekly Certification").click();
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.ssn1().sendKeys(SSN);
+
+			wcl.confirmssn1().sendKeys(SSN);
+
+			
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			//wcl.clickNext().click(); //optional
+			Thread.sleep(2000);
+			wcl.clickNext().click();
+			Thread.sleep(2000);
+			wcl.clickcheck().click();
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(5000);
+			wcl.clickicon().click();
+			wcl.selectEmployer().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext();
+			Thread.sleep(5000);
+
+			//*[@class='ui-panelgrid ui-widget tablefields']/tbody/tr[2]/td/b[3]
+			String dt = driver.findElement(By.xpath("//*[@class='ui-panelgrid ui-widget tablefields']/tbody/tr[2]/td/b[3]")).getText();
+
+			
+			System.out.println(FutureDatePastDate.dat(dt));
+			
+			wcl.selectWorkSearchDate().sendKeys(FutureDatePastDate.dat(dt));
+
+			Thread.sleep(2000);
+
+			wcl.clickSearch().click();
+			Thread.sleep(2000);
+			wcl.enterEmployerName().sendKeys("CITY OF ANSONIA");
+			wcl.clickSearch().click();
+
+// Verifying Employer name Page
+			ph.EmployerNameScreen();
+		
+
+			Thread.sleep(10000);
+
+			wcl.clickEmployerChecbox().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+
+			Thread.sleep(2000);	
+			wcl.positionAppliedFor().sendKeys("QA Engineer");
+			wcl.methoOfContact().click();
+			wcl.selectTelephone().click();
+			wcl.areaCode().sendKeys("601");
+			wcl.contactNum1().sendKeys("597");
+			wcl.contactNum2().sendKeys("8854");
+
+			wcl.result().click();
+			Thread.sleep(5000);
+			wcl.resultvalue().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			
+			
+			//Verifying work search page.
+			ph.WorkSearchSummary();
+			
+			wcl.submit().click();
+			
+			//Verify the screen "Weekly Certification and Work Search Record Acknowledgement"
+			ph.WKCAcknowledgementScreen();
+			
+			
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(1000);
+			wcl.ssnnum().sendKeys(SSN.substring(5));
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			
+			ph.buttonToFileWeeklyCertification();
+			
+			Thread.sleep(3000);
+			wcl.fileWeeklyCertBtn().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		
+
+	}
+	// File weekly certification with partial empolyment
+	public static void WCF_DeatilsForPartialEmpolyment(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN) throws InterruptedException
+	{
+		
+		ph.WeeklyCertificationDetails();
+		
+		
+		Thread.sleep(5000);
+		wcl.check1Yes().click(); Thread.sleep(500);
+		wcl.check2Yes().click();Thread.sleep(500);
+		wcl.check3No().click();Thread.sleep(500);
+		wcl.check4No().click();Thread.sleep(500);
+		wcl.check5Yes().click();Thread.sleep(500);
+		wcl.check5aNo().click();Thread.sleep(500);
+		wcl.check6No().click();Thread.sleep(500);
+		wcl.check7No().click();Thread.sleep(500);
+		wcl.check8No().click();Thread.sleep(500);
+		wcl.check9No().click();Thread.sleep(500);
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		wcl.clickNext().click();
+	
+		ph.WCEmploymentDetailsScreen();
+		wcl.clickSearch().click();
+		Thread.sleep(2000);
+		wcl.enterEmployerName().sendKeys("CITY OF ANSONIA");
+		wcl.clickSearch().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		ph.EmployerNameScreen();
+		
+
+
+		wcl.clickEmployerChecbox().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		wcl.clickNext().click();
+		Thread.sleep(2000);
+		wcl.IndicateEmployStatus().click();
+		wcl.SelectIndicateEmployStatus().click();
+		wcl.EnterAmount().sendKeys("50");
+		wcl.EnterWorkingHrs().sendKeys("10");
+		Thread.sleep(1000);
+		wcl.PerformWorkCheckNo().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+
+			
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		try {
+			wcl.clickNext().click();
+		} catch (Exception e) {
+			JavascriptExecutor executor = (JavascriptExecutor) driver;
+			executor.executeScript("arguments[0].click();",wcl.clickNext());
+		}
+		ph.WeeklyCertificationResponses_Screen();
+		
+		
+		Thread.sleep(1000);
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+		try {
+			wcl.clickNext().click();
+		} catch (Exception e) {
+			JavascriptExecutor executor = (JavascriptExecutor) driver;
+			executor.executeScript("arguments[0].click();",wcl.clickNext());
+		}
+		Thread.sleep(1000);
+		ph.WKCAcknowledgementScreen();
+		
+		
+		Thread.sleep(1000);
+		wcl.ssnnum().sendKeys(SSN.substring(5));
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(2000);
+		
+		wcl.submit().click();
+		driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		Thread.sleep(5000);
+	}
+	// File weekly certification for Non partial empolyment
+		public static void WCF_DeatilsForNonPartialEmpolyment(WebDriver driver, String snapshotPath, String SimpleClassname, String SSN) throws InterruptedException
+		{ 
+			WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='ctweeklycertform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Weekly Certification Details"))
+					{
+						String st2=ele.getText();
+						System.out.println("Element Found: " +st2);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text1.isDisplayed());
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(6000);
+			wcl.check1Yes().click();Thread.sleep(500);
+			wcl.check2Yes().click();Thread.sleep(500);
+			wcl.check3No().click();Thread.sleep(500);
+			wcl.check4No().click();Thread.sleep(500);
+			wcl.check5No().click();Thread.sleep(500);
+			wcl.check6No().click();Thread.sleep(500);
+			wcl.check7No().click();Thread.sleep(500);
+			wcl.check8No().click();Thread.sleep(500);
+			wcl.check9No().click();Thread.sleep(500);
+			Thread.sleep(2500);    Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2500);
+			wcl.clickNext().click();
+			
+			
+			
+			WebElement text2 = wait1.until(new Function<WebDriver, WebElement>() {
+			      public WebElement apply(WebDriver driver) {
+			        WebElement ele= driver.findElement(By.xpath("//*[@id='wcresponsereviewform']/div[2]"));
+			        if (ele.getText().equalsIgnoreCase("Verify Weekly Certification Responses"))
+			        {
+			        	System.out.println("Element Found :"+ ele.getText());
+			        	return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+			     }
+			    });
+			System.out.println(text2.isDisplayed());
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+		
+			Thread.sleep(5000);
+			try {
+				wcl.clickNext().click();
+			  } catch (Exception e) {
+			     JavascriptExecutor executor = (JavascriptExecutor) driver;
+			     executor.executeScript("arguments[0].click();",wcl.clickNext());
+			  }
+			
+			Thread.sleep(1000);
+			wcl.ssnnum().sendKeys(SSN.substring(5));
+			Thread.sleep(3000);
+			wcl.submit().click();
+			Thread.sleep(5000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(3000);
+			
+			WebElement text7 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcconfirmationform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Weekly Certification Confirmation"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text7.isDisplayed());
+			if(text7.isDisplayed())
+			{
+				System.out.println(SimpleClassname+" Passed");
+				driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			}
+			else
+			{
+			System.out.println(SimpleClassname+" Failed");
+			}
+		}
+		
+		public static void WKCForCTNonStateGov(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN) throws InterruptedException
+		{ 
+			
+			
+			WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//div[text()='Weekly Certification Details']"));
+					if (ele.getText().equalsIgnoreCase("Weekly Certification Details"))
+					{
+						String st2=ele.getText();
+						System.out.println("Element Found: " +st2);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text1.isDisplayed());
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(5000);
+			wcl.check1Yes().click(); Thread.sleep(500);
+			wcl.check2Yes().click(); Thread.sleep(500);
+			wcl.check3No().click();  Thread.sleep(500);
+			wcl.check4No().click();  Thread.sleep(500);
+			wcl.check5Yes().click(); Thread.sleep(500);
+			wcl.check5aNo().click(); Thread.sleep(500);
+			wcl.check6No().click();  Thread.sleep(500);
+			wcl.check7No().click();  Thread.sleep(500);
+			wcl.check8Yes().click(); Thread.sleep(500);
+			wcl.Check8aYes().click(); Thread.sleep(500);
+			wcl.check9No().click();   Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2500);
+			wcl.clickNext().click();
+			
+			
+			
+			WebElement text2 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcemploymentdetailform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Employment Details"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text2.isDisplayed());
+			wcl.clickSearch().click();
+			Thread.sleep(2000);
+			wcl.enterEmployerName().sendKeys("CITY OF ANSONIA");
+			wcl.clickSearch().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(15000);
+			WebElement text3 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[text()='Employer Name']/../../../../thead/tr/th[2]/span[1]"));
+					if (ele.getText().equalsIgnoreCase("Employer Name"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text3.isDisplayed());
+
+
+			wcl.clickEmployerChecbox().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+			wcl.clickNext().click();
+			Thread.sleep(2000);
+			
+			wcl.IndicateEmployStatus().click();
+			wcl.SelectIndicateEmployStatus().click();
+			wcl.EnterAmount().sendKeys("50");
+			wcl.EnterWorkingHrs().sendKeys("10");
+			Thread.sleep(1000);
+			wcl.PerformWorkCheckNo().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+
+				
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+			try {
+				wcl.clickNext().click();
+			} catch (Exception e) {
+				JavascriptExecutor executor = (JavascriptExecutor) driver;
+				executor.executeScript("arguments[0].click();",wcl.clickNext());
+			}
+			Thread.sleep(2000);
+			
+			WebElement text4 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//div[contains(text(),'Pension - Other')]"));
+					if (ele.getText().equalsIgnoreCase("Pension - Other"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text4.isDisplayed());
+			
+			
+			Thread.sleep(2000);
+			wcl.pensionSponseredByUnionNo().click();
+			Thread.sleep(2000);
+			
+			wcl.PaymentDate().sendKeys(Pdate.PasteDate(date1));
+			Thread.sleep(2000);
+			wcl.GrossMonthlyAmount().sendKeys("100");
+			wcl.EmployerContributeYes().click();
+			wcl.TotalDollarAmount().sendKeys("50");;
+			wcl.ContributeToPensionPlanYes().click();
+			wcl.DollarContribute().sendKeys("50");
+			wcl.DisabilityPensionPlan().click();
+			
+		
+			
+			
+			try {
+				wcl.clickNext().click();
+			} catch (Exception e) {
+				JavascriptExecutor executor = (JavascriptExecutor) driver;
+				executor.executeScript("arguments[0].click();",wcl.clickNext());
+			}
+			
+			
+			
+			
+			
+			
+			WebElement text5 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcresponsereviewform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Verify Weekly Certification Responses"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text5.isDisplayed());
+			
+			Thread.sleep(1000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			
+			try {
+				wcl.clickNext().click();
+			} catch (Exception e) {
+				JavascriptExecutor executor = (JavascriptExecutor) driver;
+				executor.executeScript("arguments[0].click();",wcl.clickNext());
+			}
+			WebElement text6 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcacknowledgementform']/div[3]"));
+					if (ele.getText().equalsIgnoreCase("Acknowledgement"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text6.isDisplayed());
+			
+			Thread.sleep(1000);
+			wcl.ssnnum().sendKeys(SSN.substring(5));
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+			
+			wcl.submit().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(5000);
+		}
+		
+		public static void WeeklyCertSelfService(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN) throws InterruptedException
+		{
+			Thread.sleep(5000);
+			Pdate=new FutureDatePastDate();
+			wcl=new Wc_locators();
+			Thread.sleep(2000);
+			wcl.clickWcLink().click();
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.fileWeeklyCertification().click();
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.ssn1().sendKeys(SSN);
+
+			wcl.confirmssn1().sendKeys(SSN);
+
+			
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(20000);
+			
+			WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//div[text()='Weekly Certification Details']"));
+					if (ele.getText().equalsIgnoreCase("Weekly Certification Details"))
+					{
+						String st2=ele.getText();
+						System.out.println("Element Found: " +st2);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text1.isDisplayed());
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(5000);
+			wcl.check1No().click(); Thread.sleep(500);
+			wcl.check1aNo().click(); Thread.sleep(500);
+			wcl.check1iNo().click(); Thread.sleep(500);
+			wcl.check2No().click(); Thread.sleep(500);
+			wcl.check2iTransport().click(); Thread.sleep(500);
+			wcl.check3No().click();  Thread.sleep(500);
+			wcl.check4No().click();  Thread.sleep(500);
+			wcl.check5No().click(); Thread.sleep(500);
+			//wcl.check5aNo().click(); Thread.sleep(500);
+			wcl.check6No().click();  Thread.sleep(500);
+			wcl.check7Yes().click();  Thread.sleep(500);
+			wcl.check8No().click(); Thread.sleep(500);
+			wcl.check9No().click();   Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2500);
+			wcl.clickNext().click();
+			Thread.sleep(2500);
+			WebElement text2 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='qeform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Medical Questionnaire"))
+					{
+						String st2=ele.getText();
+						System.out.println("Element Found: " +st2);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text2.isDisplayed());
+			Thread.sleep(2500);
+			wcl.selectReason().click();Thread.sleep(500);
+			wcl.selectValue().click();Thread.sleep(500);
+			wcl.MedicalConditionCheckNo().click();Thread.sleep(500);
+			wcl.DoctorCareCheckYes().click();Thread.sleep(500);
+			wcl.selectDate().sendKeys(Pdate.d(-15));//need to check
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(2500);
+			WebElement text3 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='qeform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Transportation Questionnaire"))
+					{
+						String st2=ele.getText();
+						System.out.println("Element Found: " +st2);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text3.isDisplayed());
+			Thread.sleep(2000);
+			wcl.TransportCheckNo().click();Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(2000);
+			
+			WebElement text4 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='qeform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Refusal for Work Offered"))
+					{
+						String st2=ele.getText();
+						System.out.println("Element Found: " +st2);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text4.isDisplayed());
+			
+			
+			wcl.clickSearch().click();
+			Thread.sleep(2000);
+			wcl.enterEmployerName().sendKeys("TOWN OF CANTERBURY");
+			wcl.clickSearch().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(15000);
+			
+			WebElement text5 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[text()='Employer Name']/../../../../thead/tr/th[3]/span[1]"));
+					if (ele.getText().equalsIgnoreCase("Employer Name"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text5.isDisplayed());
+			
+			wcl.SelectEmployerCheck().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+			wcl.clickNext().click();
+			Thread.sleep(2000);
+			
+			wcl.ZipCode().sendKeys("57489");
+			
+			wcl.TypeOfWork().sendKeys("QA Tester");
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+			wcl.StartDate1().sendKeys(Pdate.d(-30));
+			Thread.sleep(2000);
+			wcl.EndDate1().sendKeys(Pdate.d(-26));;
+			wcl.OfferMade().click();
+			wcl.OfferMadeVia().click();
+			wcl.JobTitle().sendKeys("John Doe,Manager");
+			wcl.AmountPerDay().sendKeys("20");
+			wcl.PerDay().click(); Thread.sleep(500);
+			wcl.SelectDay().click();Thread.sleep(500);
+			wcl.SelectShiftOfWork().click();Thread.sleep(500);
+			wcl.SelectShiftOfWorkValue().click();Thread.sleep(500);
+			wcl.WorkCity().sendKeys("Danbury");Thread.sleep(500);
+			wcl.JobLocationMiles().click();
+			wcl.JobLocationMilesValue().click();
+			Thread.sleep(500);
+			wcl.JobSupposedToLast().click();
+			wcl.JobSupposedToLastValue().click();
+			Thread.sleep(500);
+			wcl.reasonOfRefuseJob().sendKeys("Distance");
+			wcl.JobExpCheckYes().click();
+			Thread.sleep(500);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.PriorRate().sendKeys("30");
+			Thread.sleep(500);
+			wcl.SelectPriorRateDay().click();
+			wcl.SelectPriorRateDayValue().click();
+			Thread.sleep(500);
+			wcl.JobYouAreSeeking().sendKeys("Testing");
+			wcl.AvailableForWorkDay().click();
+			wcl.AvailableForWorkEve().click();
+			wcl.WillingAmount().sendKeys("50");
+			Thread.sleep(1000);
+			wcl.SelectWillingAmountDay().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.SelectWillingAmountDayValue().click();
+			Thread.sleep(2000);
+			
+			
+			try {
+				wcl.clickNext().click();
+			} catch (Exception e) {
+				JavascriptExecutor executor = (JavascriptExecutor) driver;
+				executor.executeScript("arguments[0].click();",wcl.clickNext());
+			}
+			WebElement text6 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcresponsereviewform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Verify Weekly Certification Responses"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text6.isDisplayed());
+			
+			Thread.sleep(1000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			
+			try {
+				wcl.clickNext().click();
+			} catch (Exception e) {
+				JavascriptExecutor executor = (JavascriptExecutor) driver;
+				executor.executeScript("arguments[0].click();",wcl.clickNext());
+			}
+			WebElement text7 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcacknowledgementform']/div[3]"));
+					if (ele.getText().equalsIgnoreCase("Acknowledgement"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text7.isDisplayed());
+			
+			Thread.sleep(1000);
+			wcl.ssnnum().sendKeys(SSN.substring(5));
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+			
+			wcl.submit().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(5000);
+			
+			
+		}
+		
+		public static void WKC_ViaSelfService(WebDriver driver, String snapshotPath, String SimpleClassname,String SSN) throws InterruptedException
+		{
+			
+			wcl=new Wc_locators();
+			Thread.sleep(2000);
+			wcl.clickWcLink().click();
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.fileWeeklyCertification().click();
+			Thread.sleep(2000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.ssn1().sendKeys(SSN);
+
+			wcl.confirmssn1().sendKeys(SSN);
+
+			
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			Thread.sleep(5000);
+			FileWeeklyCertification.WCF_DeatilsForNonPartialEmpolyment(driver, snapshotPath, SimpleClassname,SSN);
+		}
+		
+		public static void EmploymentDetailsPageForPartialEmplmnt(WebDriver driver,String selection,String snapshotPath, String SimpleClassname, String selection1,String SSN) throws InterruptedException, ParseException
+		{
+			
+			Thread.sleep(5000);
+			WebElement text1 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='ctweeklycertform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Weekly Certification Details"))
+					{
+						String st2=ele.getText();
+						System.out.println("Element Found: " +st2);
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text1.isDisplayed());
+			Thread.sleep(5000);
+			wcl.check1Yes().click(); Thread.sleep(500);
+			wcl.check2Yes().click();Thread.sleep(500);
+			wcl.check3No().click();Thread.sleep(500);
+			wcl.check4No().click();Thread.sleep(500);
+			wcl.check5Yes().click();Thread.sleep(500);
+			wcl.check5aNo().click();Thread.sleep(500);
+			wcl.check6No().click();Thread.sleep(500);
+			wcl.check7No().click();Thread.sleep(500);
+			wcl.check8No().click();Thread.sleep(500);
+			wcl.check9No().click();Thread.sleep(500);
+			Thread.sleep(1000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			wcl.clickNext().click();
+			
+			WebElement text2 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcemploymentdetailform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Employment Details"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text2.isDisplayed());
+			wcl.clickSearch().click();
+			Thread.sleep(2000);
+			wcl.enterEmployerName().sendKeys("CITY OF ANSONIA");
+			wcl.clickSearch().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+
+			WebElement text3 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[text()='Employer Name']/../../../../thead/tr/th[2]/span[1]"));
+					if (ele.getText().equalsIgnoreCase("Employer Name"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text3.isDisplayed());
+
+
+			wcl.clickEmployerChecbox().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+			wcl.clickNext().click();
+			Thread.sleep(2000);
+			wcl.IndicateEmployStatus().click();
+			wcl.SelectIndicateEmployStatus1(selection).click();
+			Thread.sleep(1000);
+			wcl.SelectvoluntaryQuit().click();
+			Thread.sleep(3000);
+			wcl.SelectvoluntaryQuitValue(selection1).click();
+			Thread.sleep(1000);
+			String dt=driver.findElement(By.xpath("//*[@id='j_id_3d']/tbody/tr[2]/td/b[3]")).getText();
+			DateFormat outputFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+			DateFormat inputFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.US);
+			Date date1 = inputFormat.parse(dt);
+			String outputText = outputFormat.format(date1);
+			wcl.lastdayworked().sendKeys(outputText);
+			wcl.EnterAmount().sendKeys("100");
+			wcl.EnterWorkingHrs().sendKeys("20");
+			Thread.sleep(1000);
+			wcl.PerformWorkCheckNo().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			
+			Thread.sleep(2000);
+			try {
+				wcl.clickNext().click();
+			} catch (Exception e) {
+				JavascriptExecutor executor = (JavascriptExecutor) driver;
+				executor.executeScript("arguments[0].click();",wcl.clickNext());
+			}
+			Thread.sleep(2000);
+			WebElement text4 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='qeform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Quit - Distance To Work Questionnaire"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text4.isDisplayed());
+			Thread.sleep(2000);
+			wcl.QuitDate().sendKeys(outputText);
+			wcl.MilesJobLoc().sendKeys("30");
+			wcl.JobSiteNo().click();
+			wcl.SelectvoluntaryleaveYes().click();
+			Thread.sleep(3000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(500);
+			wcl.clickNext().click();
+			Thread.sleep(2000);
+			
+			
+			WebElement text5 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcresponsereviewform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Verify Weekly Certification Responses"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text5.isDisplayed());
+			
+			Thread.sleep(1000);
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+			try {
+				wcl.clickNext().click();
+			} catch (Exception e) {
+				JavascriptExecutor executor = (JavascriptExecutor) driver;
+				executor.executeScript("arguments[0].click();",wcl.clickNext());
+			}
+			WebElement text6 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcacknowledgementform']/div[3]"));
+					if (ele.getText().equalsIgnoreCase("Acknowledgement"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text6.isDisplayed());
+			
+			Thread.sleep(1000);
+			wcl.ssnnum().sendKeys(SSN.substring(5));
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(2000);
+			
+			wcl.submit().click();
+			driver=screen.getScreenShot(driver, snapshotPath, SimpleClassname);
+			Thread.sleep(5000);
+			
+			WebElement text7 = wait1.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					WebElement ele= driver.findElement(By.xpath("//*[@id='wcconfirmationform']/div[2]"));
+					if (ele.getText().equalsIgnoreCase("Weekly Certification Confirmation"))
+					{
+						String st=ele.getText();
+						System.out.println("Element Found " +st);
+
+						return ele;
+
+					}
+					else
+					{
+						return null;
+					}
+				}
+			});
+			System.out.println(text7.isDisplayed());
+			
+			
+			
+			
+			
+			
+		}
+		
+		public static void DissmisalPay()
+		{
+			
+		}
+		
+		
+		
+}
